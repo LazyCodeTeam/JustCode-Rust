@@ -1,8 +1,8 @@
 {
-  "name": "tessar",
+  "name": "lazycode",
   "version": "0.1.0",
   "bin": {
-    "tessar": "bin/tessar.js"
+    "lazycode": "bin/lazycode.js"
   },
   "scripts": {
     "build": "tsc",

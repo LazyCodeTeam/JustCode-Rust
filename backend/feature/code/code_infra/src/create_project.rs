@@ -22,7 +22,7 @@ macro_rules! new_lang {
 }
 
 pub fn base_projects_path() -> PathBuf {
-    temp_dir().join("tessar").join("base")
+    temp_dir().join("lazycode").join("base")
 }
 
 async fn copy_project(from: &PathBuf, to: &PathBuf) -> Result<()> {

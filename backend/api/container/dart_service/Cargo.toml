@@ -1,0 +1,14 @@
+[package]
+name = "dart_service"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+actix-web = { workspace = true }
+code_domain = { path = "../../../feature/code/code_domain" }
+code_infra = { path = "../../../feature/code/code_infra" }
+common_api = { path = "../../common_api", features = ["code"] }
+common_domain = { path = "../../../feature/common/common_domain" }
+common_infra = { path = "../../../feature/common/common_infra" }
+futures = { workspace = true }
+use_case = { path = "../../../use_case" }

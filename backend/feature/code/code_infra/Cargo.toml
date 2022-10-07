@@ -1,0 +1,9 @@
+[package]
+name = "code_infra"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+code_domain = { path = "../code_domain" }
+common_domain = { path = "../../common/common_domain" }
+fs_extra = { workspace = true }

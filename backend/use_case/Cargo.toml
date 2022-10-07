@@ -1,0 +1,8 @@
+[package]
+name = "use_case"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+code_domain = { path = "../feature/code/code_domain" }
+common_domain = { path = "../feature/common/common_domain" }

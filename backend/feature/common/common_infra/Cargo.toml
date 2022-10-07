@@ -1,0 +1,8 @@
+[package]
+name = "common_infra"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+common_domain = { path = "../common_domain" }
+nanoid = { workspace = true }

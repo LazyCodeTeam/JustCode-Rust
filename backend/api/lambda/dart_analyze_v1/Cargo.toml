@@ -1,0 +1,11 @@
+[package]
+name = "dart_analyze_v1"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+lambda_http = { workspace = true, features = ["apigw_rest"] }
+lambda_runtime = { workspace = true }
+tokio = { workspace = true, features = ["macros"] }
+tracing = { workspace = true, features = ["log"] }
+tracing-subscriber = { workspace = true, features = ["fmt"] }

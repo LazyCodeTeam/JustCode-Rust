@@ -1,0 +1,87 @@
+name: 'Build and deploy - dev'
+
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches: 
+  #     - master
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      cache_id: hello-lambda
+      flutter_version: 3.3.2
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: master
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ./tmp/flutter
+          key: ${{ env.cache_id }}-${{ runner.os }}-${{ env.flutter_version }}
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/
+            ./target/
+          key: ${{ env.cache_id }}-${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ env.RUSTC_HASH }}
+
+      - name: Install latest rust
+        uses: actions-rs/toolchain@v1
+        with:
+            toolchain: stable
+            override: true
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Add target
+        run: rustup target add aarch64-unknown-linux-gnu
+
+      - name: Install cross
+        run: cargo install cross
+
+      - name: Build target
+        uses: actions-rs/cargo@v1
+        with:
+          command: xtask
+          args: build-lambda --use-cross --target aarch64-unknown-linux-gnu
+
+      - name: Fetch flutter
+        uses: actions-rs/cargo@v1
+        with:
+          command: xtask
+          args: fetch-flutter --version ${{ env.flutter_version }}
+
+      - name: Create dart layer
+        uses: actions-rs/cargo@v1
+        with:
+          command: xtask
+          args: create-dart-layer --version 2.18.1
+
+      - name: Create dart project layer
+        uses: actions-rs/cargo@v1
+        with:
+          command: xtask
+          args: create-dart-project-layer -p rxdart
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Synth stack
+        run: yarn cdk synth
+
+      - name: Deploy stack
+        run: yarn cdk deploy --all --require-approval never

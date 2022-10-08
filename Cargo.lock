@@ -449,6 +449,7 @@ dependencies = [
 name = "common_api"
 version = "0.1.0"
 dependencies = [
+ "actix-web",
  "code_domain",
  "common_domain",
  "serde",

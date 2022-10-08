@@ -25,7 +25,7 @@ mod test {
     use super::*;
 
     #[test]
-    fn from() {
+    fn from_error_details() {
         let message = "Test message".to_owned();
         let code = "error.test_code".to_owned();
         let args = Some(HashMap::from([("key".to_owned(), "value".to_owned())]));

@@ -9,7 +9,7 @@ pub enum ErrorType {
     Unknown,
 }
 
-#[derive(PartialEq, Eq, Debug)]
+#[derive(PartialEq, Eq, Clone, Debug)]
 pub struct Error {
     pub debug_message: String,
     pub error_type: ErrorType,

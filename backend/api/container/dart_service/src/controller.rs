@@ -7,6 +7,7 @@ use code_infra::{
     create_project::create_dart_project, raw_analyze_code::analyze_dart, save_files::save_files,
 };
 use common_api::dto::code::{file_dto::FileDto, raw_message_dto::RawMessageDto};
+use common_api::handle_error;
 use common_infra::tmp::TmpDir;
 use futures::TryFutureExt;
 use use_case::raw_code_analyze::raw_code_analyze;
@@ -31,12 +32,8 @@ async fn analyze_raw(files: Json<Vec<FileDto>>) -> impl Responder {
             )
         })
         .await;
-    println!("Result: {result:?}");
 
-    let dto = RawMessageDto {
-        success: true,
-        message: "Raw dart analyze result".to_owned(),
-    };
+    let dto = RawMessageDto::from(handle_error!(result));
 
     HttpResponse::Ok().json(dto)
 }

@@ -6,10 +6,15 @@ use common_domain::error::{Error, Result};
 pub async fn save_files(path: &Path, files: &[CodeFile]) -> Result<()> {
     for file in files.iter() {
         let file_path = path.join(&file.path);
-        let mut f = File::create(file_path).map_err(|e| Error::unknown(&e.to_string()))?;
+
+        if let Some(parent) = file_path.parent() {
+            std::fs::create_dir_all(parent).ok();
+        }
+
+        let mut f = File::create(file_path).map_err(|e| Error::unknown(e.to_string()))?;
 
         f.write_all(file.content.as_bytes())
-            .map_err(|e| Error::unknown(&e.to_string()))?;
+            .map_err(|e| Error::unknown(e.to_string()))?;
     }
 
     Ok(())

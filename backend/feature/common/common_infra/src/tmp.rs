@@ -15,7 +15,7 @@ impl TmpDir {
         let name = nanoid!();
         let dir = std::env::temp_dir().join("lazycode").join(name);
         std::fs::create_dir_all(&dir)
-            .map_err(|e| Error::unknown(&format!("Failed to create tmp dir {dir:?} - {e:?}")))?;
+            .map_err(|e| Error::unknown(format!("Failed to create tmp dir {dir:?} - {e:?}")))?;
 
         Ok(TmpDir { path: dir })
     }

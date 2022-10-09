@@ -30,7 +30,7 @@ macro_rules! new_lang {
                     .current_dir(base_projects_path())
                     .args([$($args1),*, [<$lang _base_project_name>]().as_str(), $($args2),*])
                     .status()
-                    .map_err(|e| Error::unknown(&e.to_string()))?;
+                    .map_err(|e| Error::unknown(e.to_string()))?;
 
                 let code_dir = [<$lang _base_project_path>]().join($code);
                 std::fs::remove_dir_all(&code_dir).ok();
@@ -39,7 +39,7 @@ macro_rules! new_lang {
                 if result.success() {
                     Ok(())
                 } else {
-                    Err(Error::unknown(&format!("Failed to create base {} project", $lang)))
+                    Err(Error::unknown(format!("Failed to create base {} project", $lang)))
 
                 }
             }
@@ -53,15 +53,15 @@ pub fn base_projects_path() -> PathBuf {
 
 fn copy_project(from: &Path, to: &Path) -> Result<()> {
     fs::create_dir_all(to)
-        .map_err(|e| Error::unknown(&format!("Failed to copy base project to {to:?} ({e:?})",)))?;
+        .map_err(|e| Error::unknown(format!("Failed to copy base project to {to:?} ({e:?})",)))?;
 
     let subdirs = fs::read_dir(from)
-        .map_err(|e| Error::unknown(&format!("Failed to read subdirs of {from:?} ({e:?})")))?;
+        .map_err(|e| Error::unknown(format!("Failed to read subdirs of {from:?} ({e:?})")))?;
     for entry in subdirs {
         let entry =
-            entry.map_err(|e| Error::unknown(&format!("Failed to read data of file ({e:?})")))?;
+            entry.map_err(|e| Error::unknown(format!("Failed to read data of file ({e:?})")))?;
         let file_type = entry.file_type().map_err(|e| {
-            Error::unknown(&format!("Failed to read file type of {entry:?} ({e:?})"))
+            Error::unknown(format!("Failed to read file type of {entry:?} ({e:?})"))
         })?;
 
         if file_type.is_dir() {
@@ -70,7 +70,7 @@ fn copy_project(from: &Path, to: &Path) -> Result<()> {
             let from = entry.path();
             let to = to.join(entry.file_name());
             fs::copy(&from, &to).map_err(|e| {
-                Error::unknown(&format!("Failed to copy from {from:?} to {to:?} ({e:?})"))
+                Error::unknown(format!("Failed to copy from {from:?} to {to:?} ({e:?})"))
             })?;
         }
     }

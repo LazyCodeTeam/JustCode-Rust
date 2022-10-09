@@ -46,7 +46,7 @@ mod test {
 
     #[test]
     fn from_error() {
-        let error = Error::unknown("");
+        let error = Error::unknown("".to_owned());
 
         let result = ErrorResponseDto::from(error.clone());
 

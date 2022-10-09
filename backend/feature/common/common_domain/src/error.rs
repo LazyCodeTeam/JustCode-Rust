@@ -37,10 +37,8 @@ impl Default for Error {
 }
 
 impl Error {
-    pub fn unknown(message: &str) -> Error {
-        Error::builder()
-            .set_debug_message(message.to_owned())
-            .build()
+    pub fn unknown(message: String) -> Error {
+        Error::builder().set_debug_message(message).build()
     }
 
     pub fn builder() -> ErrorBuilder {
@@ -117,7 +115,7 @@ pub mod test {
 
     #[test]
     fn unknown() {
-        let value = Error::unknown("Custom message");
+        let value = Error::unknown("Custom message".to_owned());
 
         assert_eq!(
             value,

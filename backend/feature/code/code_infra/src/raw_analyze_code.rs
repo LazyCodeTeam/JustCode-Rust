@@ -17,7 +17,7 @@ async fn analyze(path: &PathBuf, command: &str, args: &[&str]) -> Result<RawMess
         .current_dir(path)
         .args(args)
         .output()
-        .map_err(|e| Error::unknown(&e.to_string()))?;
+        .map_err(|e| Error::unknown(e.to_string()))?;
 
     let message = String::from_utf8_lossy(&result.stdout).to_string();
 

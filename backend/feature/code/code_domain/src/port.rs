@@ -9,3 +9,7 @@ define_port!(CreateProject = FnOnce<'a>(&'a Path) -> Result<PathBuf>);
 define_port!(RawAnalaze = FnOnce<'a>(&'a PathBuf) -> Result<RawMessage>);
 
 define_port!(SaveFiles = FnOnce<'a>(&'a Path, &'a[CodeFile]) -> Result<()>);
+
+define_port!(ReadFiles = FnOnce<'a>(&'a Path) -> Result<Vec<CodeFile>>);
+
+define_port!(FormatFiles = FnOnce<'a>(&'a Path) -> Result<()>);

@@ -1,14 +1,32 @@
-# Welcome to your CDK TypeScript project
+# JustCode - Backend
 
-This is a blank project for CDK development with TypeScript.
+## Setup for mobile app testing
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+### Requirements
 
-## Useful commands
+* Docker installed ([link](https://docs.docker.com/get-docker/))
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `cdk deploy`      deploy this stack to your default AWS account/region
-* `cdk diff`        compare deployed stack with current state
-* `cdk synth`       emits the synthesized CloudFormation template
+### Command
+
+`docker build -t {lang}_service -f Dockerfile.dart_service . && docker run -p {port}:8080 {lang}_service`
+
+Arguments:
+* `{lang}` - one of supported languages:
+  * `dart`
+* `{port}` - port on which service will be exposed
+
+## Setup for development
+
+### Requirements
+
+* Rust installed (`curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`)
+
+### Commands
+
+* `cargo run -p {package}` - build and run app
+* `cargo test` - run tests
+* `cargo clippy --all-targets --all-features -- -D warnings` - analyze code with clippy
+
+## Deployment
+
+TODO

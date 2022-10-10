@@ -4,12 +4,12 @@ use common_domain::{define_port, error::Result};
 
 use crate::model::{code_file::CodeFile, raw_message::RawMessage};
 
-define_port!(CreateProject = FnOnce<'a>(&'a Path) -> Result<PathBuf>);
+define_port!(CreateProject = FnOnce<'a>(path: &'a Path) -> Result<PathBuf>);
 
-define_port!(RawAnalaze = FnOnce<'a>(&'a PathBuf) -> Result<RawMessage>);
+define_port!(RawAnalaze = FnOnce<'a>(path: &'a Path) -> Result<RawMessage>);
 
-define_port!(SaveFiles = FnOnce<'a>(&'a Path, &'a[CodeFile]) -> Result<()>);
+define_port!(SaveFiles = FnOnce<'a>(path: &'a Path, files: &'a[CodeFile]) -> Result<()>);
 
-define_port!(ReadFiles = FnOnce<'a>(&'a Path) -> Result<Vec<CodeFile>>);
+define_port!(ReadFiles = FnOnce<'a>(path: &'a Path) -> Result<Vec<CodeFile>>);
 
-define_port!(FormatFiles = FnOnce<'a>(&'a Path) -> Result<()>);
+define_port!(FormatFiles = FnOnce<'a>(path: &'a Path) -> Result<()>);

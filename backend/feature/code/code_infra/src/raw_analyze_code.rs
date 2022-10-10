@@ -1,18 +1,18 @@
 use code_domain::model::raw_message::RawMessage;
 use common_domain::error::{Error, Result};
-use std::{path::PathBuf, process::Command};
+use std::{path::Path, process::Command};
 
 macro_rules! new_lang {
     ($i:literal => $com:literal $($args:literal)*) => {
         paste::paste! {
-            pub async fn [<analyze_ $i>](path: &PathBuf) -> Result<RawMessage> {
+            pub async fn [<analyze_ $i>](path: &Path) -> Result<RawMessage> {
                 analyze(path, $com, &[$($args),*]).await
             }
         }
     };
 }
 
-async fn analyze(path: &PathBuf, command: &str, args: &[&str]) -> Result<RawMessage> {
+async fn analyze(path: &Path, command: &str, args: &[&str]) -> Result<RawMessage> {
     let result = Command::new(command)
         .current_dir(path)
         .args(args)

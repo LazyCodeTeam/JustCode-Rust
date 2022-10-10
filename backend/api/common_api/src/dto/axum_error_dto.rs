@@ -1,6 +1,10 @@
 use std::fmt::Display;
 
-use actix_web::{http::StatusCode, HttpResponse, ResponseError};
+use axum::{
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    Json,
+};
 use common_domain::error::{Error, ErrorType};
 
 use super::error_dto::ErrorDto;
@@ -16,6 +20,11 @@ impl Display for ErrorResponseDto {
         write!(f, "{:?}", self)
     }
 }
+impl IntoResponse for ErrorResponseDto {
+    fn into_response(self) -> Response {
+        (self.status_code, Json(self.error_dto)).into_response()
+    }
+}
 
 impl From<Error> for ErrorResponseDto {
     fn from(error: Error) -> Self {
@@ -27,16 +36,6 @@ impl From<Error> for ErrorResponseDto {
             status_code,
             error_dto: ErrorDto::from(*error.details),
         }
-    }
-}
-
-impl ResponseError for ErrorResponseDto {
-    fn status_code(&self) -> StatusCode {
-        self.status_code
-    }
-
-    fn error_response(&self) -> HttpResponse {
-        HttpResponse::build(self.status_code()).json(&self.error_dto)
     }
 }
 

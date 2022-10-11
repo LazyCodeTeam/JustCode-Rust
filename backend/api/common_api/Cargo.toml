@@ -4,12 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-actix-web = { workspace = true, optional = true }
+axum = { workspace = true }
 code_domain = { path = "../../feature/code/code_domain" }
 common_domain = { path = "../../feature/common/common_domain" }
 serde = { workspace = true, features = ["derive"] }
 
 [features]
 code = []
-actix = ["actix-web"]
 default = []

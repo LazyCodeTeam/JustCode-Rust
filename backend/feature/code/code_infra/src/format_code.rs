@@ -21,4 +21,4 @@ async fn format(path: &Path, command: &str, args: &[&str]) -> Result<()> {
     Ok(())
 }
 
-new_lang!("dart" => "dart" "format" ".");
+new_lang!("dart" => "dart" "format" "." "--show" "none" "--summary" "none");

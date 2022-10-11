@@ -12,4 +12,10 @@ common_domain = { path = "../../../feature/common/common_domain" }
 common_infra = { path = "../../../feature/common/common_infra" }
 futures = { workspace = true }
 tokio = { workspace = true, features = ["full"] }
+tower-http = { workspace = true, features = ["trace"] }
+tracing = { workspace = true, features = [
+  "release_max_level_info",
+  "max_level_debug",
+] }
+tracing-subscriber = { workspace = true }
 use_case = { path = "../../../use_case" }

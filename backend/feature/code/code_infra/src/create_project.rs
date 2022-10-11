@@ -7,7 +7,7 @@ use std::{
 use common_domain::error::{Error, Result};
 
 macro_rules! new_lang {
-    ($lang:literal, $code: literal => $com:literal $($args1:literal)* {} $($args2:literal)*) => {
+    ($lang:literal, $code: literal => $url:literal) => {
         paste::paste! {
             pub async fn [<create_ $lang _project>](target: &Path) -> Result<PathBuf> {
                 let path = [<$lang _base_project_path>]();
@@ -20,21 +20,18 @@ macro_rules! new_lang {
             }
 
             pub fn [<$lang _base_project_name>]() -> String {
-                format!("{}_project", $lang)
+                format!("{}_base_project", $lang)
             }
 
             pub fn [<create_base_ $lang _project>]() -> Result<()> {
                 std::fs::remove_dir_all([<$lang _base_project_path>]()).ok();
-                std::fs::create_dir_all(base_projects_path()).ok();
-                let result = std::process::Command::new($com)
+                let result = std::process::Command::new("git")
                     .current_dir(base_projects_path())
-                    .args([$($args1),*, [<$lang _base_project_name>]().as_str(), $($args2),*])
+                    .args(["clone", $url])
                     .status()
                     .map_err(|e| Error::unknown(e.to_string()))?;
 
-                let code_dir = [<$lang _base_project_path>]().join($code);
-                std::fs::remove_dir_all(&code_dir).ok();
-                std::fs::create_dir_all(&code_dir).ok();
+                std::fs::remove_dir_all([<$lang _base_project_path>]().join(".git")).ok();
 
                 if result.success() {
                     Ok(())
@@ -78,4 +75,4 @@ fn copy_project(from: &Path, to: &Path) -> Result<()> {
     Ok(())
 }
 
-new_lang!("dart", "bin" => "dart" "create" {});
+new_lang!("dart", "lib" => "https://github.com/LazyCodeTeam/dart_base_project.git");

@@ -1,9 +1,11 @@
+use log::Level;
+
 use crate::boxed::Boxed;
 use std::collections::HashMap;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(PartialEq, Eq, Clone, Copy, Debug)]
 pub enum ErrorType {
     InvalidData,
     Unknown,
@@ -46,6 +48,15 @@ impl Error {
     }
 }
 
+impl From<ErrorType> for Level {
+    fn from(ty: ErrorType) -> Self {
+        match ty {
+            ErrorType::InvalidData => Level::Warn,
+            ErrorType::Unknown => Level::Error,
+        }
+    }
+}
+
 impl ErrorBuilder {
     fn new() -> Self {
         Self {
@@ -81,6 +92,8 @@ impl ErrorBuilder {
             }
             .boxed()
         });
+
+        log::log!(Level::from(error_type), "{debug_message:?} - {details:?}");
 
         Error {
             debug_message,
@@ -143,7 +156,7 @@ pub mod test {
         };
         let value = Error::builder()
             .set_debug_message(debug_message.to_owned())
-            .set_error_type(error_type.clone())
+            .set_error_type(error_type)
             .set_details(details.clone())
             .build();
 

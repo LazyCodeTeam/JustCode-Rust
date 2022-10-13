@@ -5,9 +5,6 @@ edition = "2021"
 
 [dependencies]
 clap = { workspace = true, features = ["derive"] }
-nanoid = { workspace = true }
-openssl = { workspace = true, features = ["vendored"] }
-reqwest = { workspace = true, features = ["blocking"] }
 serde = { workspace = true, features = ["derive"] }
 toml = { workspace = true }
 walkdir = { workspace = true }

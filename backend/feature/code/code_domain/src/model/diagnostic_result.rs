@@ -9,6 +9,7 @@ pub struct Diagnostic {
     pub code: String,
     pub severity: Severity,
     pub message: String,
+    pub range: Range,
 }
 
 #[derive(PartialEq, Eq, Clone, Debug)]
@@ -29,4 +30,5 @@ pub enum Severity {
     WARNING,
     INFO,
     HINT,
+    UNKNOWN,
 }

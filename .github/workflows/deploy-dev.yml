@@ -21,18 +21,12 @@ jobs:
         with:
           ref: master
 
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ./tmp/flutter
-          key: ${{ env.cache_id }}-${{ runner.os }}-${{ env.flutter_version }}
-
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             ~/.cargo/
             ./target/
-          key: ${{ env.cache_id }}-${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ env.RUSTC_HASH }}
+          key: ${{ env.cache_id }}-${{ runner.os }}
 
       - name: Install latest rust
         uses: actions-rs/toolchain@v1
@@ -58,24 +52,6 @@ jobs:
         with:
           command: xtask
           args: build-lambda --use-cross --target aarch64-unknown-linux-gnu
-
-      - name: Fetch flutter
-        uses: actions-rs/cargo@v1
-        with:
-          command: xtask
-          args: fetch-flutter --version ${{ env.flutter_version }}
-
-      - name: Create dart layer
-        uses: actions-rs/cargo@v1
-        with:
-          command: xtask
-          args: create-dart-layer --version 2.18.1
-
-      - name: Create dart project layer
-        uses: actions-rs/cargo@v1
-        with:
-          command: xtask
-          args: create-dart-project-layer -p rxdart
 
       - name: Install dependencies
         run: yarn

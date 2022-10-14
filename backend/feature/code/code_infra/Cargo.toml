@@ -6,4 +6,8 @@ edition = "2021"
 [dependencies]
 code_domain = { path = "../code_domain" }
 common_domain = { path = "../../common/common_domain" }
+itertools = { workspace = true }
+log = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
 paste = { workspace = true }

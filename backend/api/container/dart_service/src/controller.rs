@@ -63,3 +63,22 @@ pub async fn analyze_raw(Json(files): Json<Vec<FileDto>>) -> Result<Response, Er
         .map(RawMessageDto::from)
         .map(|dto| (StatusCode::OK, Json(dto)).into_response())
 }
+
+pub async fn analyze(Json(files): Json<Vec<FileDto>>) -> Result<Response, ErrorResponseDto> {
+    let files: Vec<CodeFile> = files.into_iter().map(CodeFile::from).collect();
+
+    future::ready(TmpDir::new())
+        .and_then(|tmp_dir| {
+            raw_code_analyze(
+                tmp_dir,
+                create_dart_project,
+                save_files,
+                analyze_dart,
+                &files,
+            )
+        })
+        .await
+        .map_err(ErrorResponseDto::from)
+        .map(RawMessageDto::from)
+        .map(|dto| (StatusCode::OK, Json(dto)).into_response())
+}

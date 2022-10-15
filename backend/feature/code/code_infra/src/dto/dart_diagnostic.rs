@@ -17,8 +17,8 @@ pub struct DiagnosticDto {
     pub code: String,
     pub severity: SeverityDto,
     pub problem_message: String,
-    pub correction_message: String,
-    pub documentation: String,
+    pub correction_message: Option<String>,
+    pub documentation: Option<String>,
     pub location: LocationDto,
 }
 
@@ -66,8 +66,14 @@ impl From<DiagnosticDto> for Diagnostic {
             code: dto.code,
             severity: dto.severity.into(),
             message: format!(
-                "{} - {} - {}",
-                dto.problem_message, dto.correction_message, dto.documentation
+                "{}{}{}",
+                dto.problem_message,
+                dto.correction_message
+                    .map(|s| format!(" - {}", s))
+                    .unwrap_or_else(|| "".to_owned()),
+                dto.documentation
+                    .map(|s| format!(" - {}", s))
+                    .unwrap_or_else(|| "".to_owned()),
             ),
             range: dto.location.range.into(),
         }
@@ -118,8 +124,8 @@ mod test {
             code: "diagnostic_code_1".to_owned(),
             severity: SeverityDto("INFO".to_owned()),
             problem_message: "problem_1".to_owned(),
-            correction_message: "correction_1".to_owned(),
-            documentation: "documentation_1".to_owned(),
+            correction_message: Some("correction_1".to_owned()),
+            documentation: Some("documentation_1".to_owned()),
             location: LocationDto {
                 file: "file".to_owned(),
                 range: RangeDto {
@@ -140,8 +146,8 @@ mod test {
             code: "diagnostic_code_2".to_owned(),
             severity: SeverityDto("INFO".to_owned()),
             problem_message: "problem_2".to_owned(),
-            correction_message: "correction_2".to_owned(),
-            documentation: "documentation_2".to_owned(),
+            correction_message: Some("correction_2".to_owned()),
+            documentation: Some("documentation_2".to_owned()),
             location: LocationDto {
                 file: "file_2".to_owned(),
                 range: RangeDto {
@@ -162,8 +168,8 @@ mod test {
             code: "diagnostic_code_3".to_owned(),
             severity: SeverityDto("INFO".to_owned()),
             problem_message: "problem_3".to_owned(),
-            correction_message: "correction_3".to_owned(),
-            documentation: "documentation_3".to_owned(),
+            correction_message: Some("correction_3".to_owned()),
+            documentation: Some("documentation_3".to_owned()),
             location: LocationDto {
                 file: "file".to_owned(),
                 range: RangeDto {
@@ -212,8 +218,8 @@ mod test {
             code: "diagnostic_code".to_owned(),
             severity: SeverityDto("INFO".to_owned()),
             problem_message: "problem".to_owned(),
-            correction_message: "correction".to_owned(),
-            documentation: "documentation".to_owned(),
+            correction_message: Some("correction".to_owned()),
+            documentation: Some("documentation".to_owned()),
             location: LocationDto {
                 file: "file".to_owned(),
                 range: RangeDto {

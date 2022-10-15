@@ -25,15 +25,16 @@ macro_rules! new_lang {
 
             pub fn [<create_base_ $lang _project>]() -> Result<()> {
                 std::fs::remove_dir_all([<$lang _base_project_path>]()).ok();
+                std::fs::create_dir_all(base_projects_path()).ok();
                 let result = std::process::Command::new("git")
                     .current_dir(base_projects_path())
                     .args(["clone", $url])
                     .status()
                     .map_err(|e| Error::unknown(e.to_string()))?;
 
-                std::fs::remove_dir_all([<$lang _base_project_path>]().join(".git")).ok();
 
                 if result.success() {
+                    std::fs::remove_dir_all([<$lang _base_project_path>]().join(".git")).ok();
                     Ok(())
                 } else {
                     Err(Error::unknown(format!("Failed to create base {} project", $lang)))

@@ -13,3 +13,6 @@ serde = { workspace = true, features = ["derive"] }
 serde_json = { workspace = true }
 regex = { workspace = true }
 paste = { workspace = true }
+
+[features]
+dart = []

@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 axum = { workspace = true }
 code_domain = { path = "../../../feature/code/code_domain" }
-code_infra = { path = "../../../feature/code/code_infra" }
+code_infra = { path = "../../../feature/code/code_infra", features = ["dart"] }
 common_api = { path = "../../common_api", features = ["code"] }
 common_domain = { path = "../../../feature/common/common_domain" }
 common_infra = { path = "../../../feature/common/common_infra" }

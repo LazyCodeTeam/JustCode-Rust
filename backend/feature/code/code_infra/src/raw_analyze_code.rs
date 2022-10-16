@@ -5,7 +5,7 @@ use std::{path::Path, process::Command};
 macro_rules! new_lang {
     ($i:literal => $com:literal $($args:literal)*) => {
         paste::paste! {
-            pub async fn [<analyze_ $i>](path: &Path) -> Result<RawMessage> {
+            pub async fn [<raw_analyze_ $i>](path: &Path) -> Result<RawMessage> {
                 analyze(path, $com, &[$($args),*]).await
             }
         }

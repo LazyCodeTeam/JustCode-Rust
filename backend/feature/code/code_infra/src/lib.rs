@@ -1,3 +1,4 @@
+pub mod analyze_code;
 pub mod create_project;
 pub(crate) mod dto;
 pub mod format_code;

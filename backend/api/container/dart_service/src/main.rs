@@ -17,7 +17,8 @@ async fn main() {
     let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
     let router = Router::new()
         .layer(TraceLayer::new_for_http())
-        .route("/api/v1/dart/analyze", post(controller::analyze_raw))
+        .route("/api/v1/dart/analyze/raw", post(controller::analyze_raw))
+        .route("/api/v1/dart/analyze", post(controller::analyze))
         .route("/api/v1/dart/format", post(controller::format));
 
     axum::Server::bind(&addr)

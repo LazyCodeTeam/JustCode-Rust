@@ -253,8 +253,10 @@ dependencies = [
  "code_domain",
  "common_domain",
  "itertools",
+ "lazy_static",
  "log",
  "paste",
+ "regex",
  "serde",
  "serde_json",
 ]

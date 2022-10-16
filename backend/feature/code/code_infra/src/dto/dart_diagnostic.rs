@@ -2,16 +2,16 @@ use code_domain::model::diagnostic_result::{
     Diagnostic, DocumentDiagnostics, Position, Range, Severity,
 };
 use itertools::Itertools;
-use serde::Serialize;
+use serde::Deserialize;
 
-#[derive(Serialize, PartialEq, Eq, Clone, Debug)]
+#[derive(Deserialize, PartialEq, Eq, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct DiagnosticResultDto {
-    pub version: String,
+    pub version: u8,
     pub diagnostics: Vec<DiagnosticDto>,
 }
 
-#[derive(Serialize, PartialEq, Eq, Clone, Debug)]
+#[derive(Deserialize, PartialEq, Eq, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct DiagnosticDto {
     pub code: String,
@@ -22,23 +22,23 @@ pub struct DiagnosticDto {
     pub location: LocationDto,
 }
 
-#[derive(Serialize, PartialEq, Eq, Clone, Debug)]
+#[derive(Deserialize, PartialEq, Eq, Clone, Debug)]
 pub struct SeverityDto(String);
 
-#[derive(Serialize, PartialEq, Eq, Clone, Debug)]
+#[derive(Deserialize, PartialEq, Eq, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct LocationDto {
     pub file: String,
     pub range: RangeDto,
 }
-#[derive(Serialize, PartialEq, Eq, Clone, Debug)]
+#[derive(Deserialize, PartialEq, Eq, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct RangeDto {
     pub start: PositionDto,
     pub end: PositionDto,
 }
 
-#[derive(Serialize, PartialEq, Eq, Clone, Debug)]
+#[derive(Deserialize, PartialEq, Eq, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct PositionDto {
     pub offset: u64,
@@ -187,7 +187,7 @@ mod test {
             },
         };
         let dto = DiagnosticResultDto {
-            version: "1".to_owned(),
+            version: 1,
             diagnostics: vec![
                 diagnostic_dto_1.clone(),
                 diagnostic_dto_2.clone(),

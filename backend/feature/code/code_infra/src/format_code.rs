@@ -19,3 +19,6 @@ macro_rules! new_lang {
 
 #[cfg(feature = "dart")]
 new_lang!("dart" => "dart" "format" "." "--show" "none" "--summary" "none");
+
+#[cfg(feature = "flutter")]
+new_lang!("flutter" => "dart" "format" "." "--show" "none" "--summary" "none");

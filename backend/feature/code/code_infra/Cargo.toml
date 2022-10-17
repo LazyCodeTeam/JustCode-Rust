@@ -16,3 +16,4 @@ paste = { workspace = true }
 
 [features]
 dart = []
+flutter = []

@@ -25,3 +25,6 @@ macro_rules! new_lang {
 
 #[cfg(feature = "dart")]
 new_lang!("dart" => "dart" "analyze" ".");
+
+#[cfg(feature = "flutter")]
+new_lang!("flutter" => "dart" "analyze" ".");

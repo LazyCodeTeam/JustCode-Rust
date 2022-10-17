@@ -5,10 +5,8 @@ use regex::Regex;
 use std::{path::Path, process::Command};
 
 macro_rules! new_lang {
-    ($i:literal, $files:literal => $com:literal $($args:literal)*) => {
+    ($i:literal, $files:literal, $dto:ident => $com:literal $($args:literal)*) => {
         paste::paste! {
-            use crate::dto::[<$i _diagnostic>]::DiagnosticResultDto;
-
             pub async fn [<analyze_ $i>](path: &Path) -> Result<Vec<DocumentDiagnostics>> {
                 lazy_static! {
                     static ref RE: Regex = Regex::new(r"\{.*\}").expect("Failed to compile regex");
@@ -43,7 +41,7 @@ macro_rules! new_lang {
                             .to_owned()
                             .replace("\\\"", "\"");
 
-                        let diagnostic: DiagnosticResultDto = serde_json::from_str(&message)
+                        let diagnostic: crate::dto::$dto::DiagnosticResultDto = serde_json::from_str(&message)
                             .map_err(|e| Error::unknown(format!("Failed to parse diagnostics: {e:?}")))?;
 
                         Ok(diagnostic.into())
@@ -56,4 +54,7 @@ macro_rules! new_lang {
 }
 
 #[cfg(feature = "dart")]
-new_lang!("dart", "lib" => "dart" "analyze" "." "--format" "json");
+new_lang!("dart", "lib", dart_diagnostic => "dart" "analyze" "." "--format" "json");
+
+#[cfg(feature = "flutter")]
+new_lang!("flutter", "lib", dart_diagnostic => "dart" "analyze" "." "--format" "json");

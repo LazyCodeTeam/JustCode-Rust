@@ -84,4 +84,8 @@ fn copy_project(from: &Path, to: &Path) -> Result<()> {
     Ok(())
 }
 
+#[cfg(feature = "dart")]
 new_lang!("dart", "lib" => "dart" "pub" "get");
+
+#[cfg(feature = "flutter")]
+new_lang!("flutter", "lib" => "dart" "pub" "get");

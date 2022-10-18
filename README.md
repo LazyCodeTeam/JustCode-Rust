@@ -8,12 +8,15 @@
 
 ### Command
 
-`docker build -t {lang}_service -f Dockerfile.dart_service . && docker run -p {port}:8080 {lang}_service`
+`docker build -t {tag} -f Dockerfile.{lang}_service . && docker run -p {port}:8080 {tag}`
 
 Arguments:
 * `{lang}` - one of supported languages:
   * `dart`
+  * `flutter`
+  * `full`
 * `{port}` - port on which service will be exposed
+* `{tag}` - tag (name) of container
 
 ## Setup for development
 

@@ -262,6 +262,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "code_service"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "code_domain",
+ "code_infra",
+ "common_api",
+ "common_domain",
+ "common_infra",
+ "futures",
+ "paste",
+ "tokio",
+ "tower-http",
+ "tracing",
+ "tracing-subscriber",
+ "use_case",
+]
+
+[[package]]
 name = "common_api"
 version = "0.1.0"
 dependencies = [
@@ -321,24 +340,6 @@ dependencies = [
  "tokio",
  "tracing",
  "tracing-subscriber",
-]
-
-[[package]]
-name = "dart_service"
-version = "0.1.0"
-dependencies = [
- "axum",
- "code_domain",
- "code_infra",
- "common_api",
- "common_domain",
- "common_infra",
- "futures",
- "tokio",
- "tower-http",
- "tracing",
- "tracing-subscriber",
- "use_case",
 ]
 
 [[package]]

@@ -56,16 +56,20 @@ mod test {
             .times(1)
             .returning(move || out.clone());
 
-        let out = project_path.clone();
+        let _create_project_lock = code_domain::port::create_project_lock().await;
         let ctx = code_domain::port::mock_create_project::call_context();
+        let out = project_path.clone();
         ctx.expect().times(1).returning(move |_| Ok(out.clone()));
 
+        let _save_files_lock = code_domain::port::save_files_lock().await;
         let ctx = code_domain::port::mock_save_files::call_context();
         ctx.expect().times(1).returning(|_, _| Ok(()));
 
+        let _format_files_lock = code_domain::port::format_files_lock().await;
         let ctx = code_domain::port::mock_format_files::call_context();
         ctx.expect().times(1).returning(|_| Ok(()));
 
+        let _read_files_lock = code_domain::port::read_files_lock().await;
         let ctx = code_domain::port::mock_read_files::call_context();
         let out = files_out.clone();
         ctx.expect().times(1).returning(move |_| Ok(out.clone()));

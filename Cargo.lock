@@ -243,7 +243,6 @@ version = "0.1.0"
 dependencies = [
  "common_domain",
  "mockall",
- "paste",
 ]
 
 [[package]]
@@ -294,8 +293,11 @@ dependencies = [
 name = "common_domain"
 version = "0.1.0"
 dependencies = [
+ "lazy_static",
  "log",
  "mockall",
+ "paste",
+ "tokio",
 ]
 
 [[package]]

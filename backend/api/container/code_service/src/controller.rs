@@ -7,12 +7,7 @@ macro_rules! new_lang {
                 use axum::response::Response;
                 use axum::{response::IntoResponse, Json};
                 use code_domain::model::code_file::CodeFile;
-                use code_infra::format_code::[<format_ $lang>];
-                use code_infra::read_files::read_files;
-                use code_infra::{
-                    analyze_code::[<analyze_ $lang>], create_project::[<create_ $lang _project>],
-                    raw_analyze_code::[<raw_analyze_ $lang>], save_files::save_files,
-                };
+                use code_infra::repository::{read_files, save_files};
                 use common_api::dto::axum_error_dto::ErrorResponseDto;
                 use common_api::dto::code::diagnostic_result_dto::DocumentDiagnosticsDto;
                 use common_api::dto::code::{file_dto::FileDto, raw_message_dto::RawMessageDto};
@@ -28,9 +23,9 @@ macro_rules! new_lang {
                         .and_then(|tmp_dir| {
                             format_code(
                                 tmp_dir,
-                                [<create_ $lang _project>],
+                                code_infra::repository::[<$lang>]::create_project,
                                 save_files,
-                                [<format_ $lang>],
+                                code_infra::repository::[<$lang>]::format,
                                 read_files,
                                 &files,
                             )
@@ -58,9 +53,9 @@ macro_rules! new_lang {
                         .and_then(|tmp_dir| {
                             raw_code_analyze(
                                 tmp_dir,
-                                [<create_ $lang _project>],
+                                code_infra::repository::[<$lang>]::create_project,
                                 save_files,
-                                [<raw_analyze_ $lang>],
+                                code_infra::repository::[<$lang>]::raw_analyze,
                                 &files,
                             )
                         })
@@ -77,9 +72,9 @@ macro_rules! new_lang {
                         .and_then(|tmp_dir| {
                             analyze_code(
                                 tmp_dir,
-                                [<create_ $lang _project>],
+                                code_infra::repository::[<$lang>]::create_project,
                                 save_files,
-                                [<analyze_ $lang>],
+                                code_infra::repository::[<$lang>]::analyze,
                                 &files,
                             )
                         })

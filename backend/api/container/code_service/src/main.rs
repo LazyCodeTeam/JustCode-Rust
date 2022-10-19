@@ -8,7 +8,8 @@ use tracing_subscriber::prelude::*;
 macro_rules! new_lang {
     ($lang:literal, $router:ident) => {
         paste::paste! {
-            code_infra::create_project::[<create_base_ $lang _project>]().expect(&format!("Failed to create base {} project", $lang));
+            code_infra::repository::[<$lang>]::create_base_project().await
+                .expect(&format!("Failed to create base {} project", $lang));
 
             let [<$lang _router>] = Router::new()
                 .route("/analyze/raw", post(controller::[<$lang>]::analyze_raw))

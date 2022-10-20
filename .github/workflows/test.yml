@@ -35,6 +35,5 @@ jobs:
 
       - name: Test
         run: |
-          cargo check
           cargo clippy --all-targets --all-features -- -D warnings
           cargo test -- --nocapture --test-threads 1

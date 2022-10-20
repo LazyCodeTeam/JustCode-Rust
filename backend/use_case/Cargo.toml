@@ -7,6 +7,3 @@ edition = "2021"
 code_domain = { path = "../feature/code/code_domain" }
 common_domain = { path = "../feature/common/common_domain" }
 tokio = { workspace = true }
-
-[dev-dependencies]
-code_domain = { path = "../feature/code/code_domain", features = ["mocks"] }

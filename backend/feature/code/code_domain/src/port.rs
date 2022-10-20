@@ -8,9 +8,9 @@ use crate::model::{
 
 define_port!(CreateProject = FnOnce<'a>(path: &'a Path) -> Result<PathBuf>);
 
-define_port!(RawAnalaze = FnOnce<'a>(path: &'a Path) -> Result<RawMessage>);
+define_port!(RawAnalyze = FnOnce<'a>(path: &'a Path) -> Result<RawMessage>);
 
-define_port!(Analaze = FnOnce<'a>(path: &'a Path) -> Result<Vec<DocumentDiagnostics>>);
+define_port!(Analyze = FnOnce<'a>(path: &'a Path) -> Result<Vec<DocumentDiagnostics>>);
 
 define_port!(SaveFiles = FnOnce<'a>(path: &'a Path, files: &'a[CodeFile]) -> Result<()>);
 

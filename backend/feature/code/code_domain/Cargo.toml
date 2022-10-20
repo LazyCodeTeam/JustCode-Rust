@@ -6,4 +6,6 @@ edition = "2021"
 [dependencies]
 common_domain = { path = "../../common/common_domain" }
 mockall = { workspace = true }
-paste = { workspace = true }
+
+[features]
+mocks = []

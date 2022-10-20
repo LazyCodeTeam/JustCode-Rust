@@ -1,7 +1,7 @@
 #[macro_export]
 macro_rules! define_port {
     ($id:ident = $f:tt<$($gen:tt),+>($($types:ident: $args:ty),*) -> $($out:tt)+) => {
-        paste::paste! {
+        common_domain::paste::paste! {
             pub trait $id<$($gen),+>: $f($($args),*) -> Self::OutputFuture {
                 type OutputFuture: std::future::Future<Output = $($out)+>;
             }
@@ -14,7 +14,18 @@ macro_rules! define_port {
                 type OutputFuture = FUT;
             }
 
+            #[cfg(feature = "mocks")]
+            common_domain::lazy_static::lazy_static! {
+                static ref [<$id:snake:upper>]: common_domain::tokio::sync::Mutex<()> = common_domain::tokio::sync::Mutex::new(());
+            }
 
+
+            #[cfg(feature = "mocks")]
+            pub async fn [<$id:snake _lock>]() -> common_domain::tokio::sync::MutexGuard<'static, ()> {
+                [<$id:snake:upper>].lock().await
+            }
+
+            #[cfg(feature = "mocks")]
             #[mockall::automock]
             pub mod [<$id:snake>] {
                 use super::*;

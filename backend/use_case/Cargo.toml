@@ -4,6 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-code_domain = { path = "../feature/code/code_domain" }
+code_domain = { path = "../feature/code/code_domain", optional = true }
 common_domain = { path = "../feature/common/common_domain" }
 tokio = { workspace = true }
+
+[features]
+analyze_code = ["code_domain"]
+raw_code_analyze = ["code_domain"]
+format_code = ["code_domain"]

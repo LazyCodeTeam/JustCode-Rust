@@ -22,7 +22,11 @@ tracing = { workspace = true, features = [
   "max_level_debug",
 ] }
 tracing-subscriber = { workspace = true }
-use_case = { path = "../../../use_case" }
+use_case = { path = "../../../use_case", features = [
+  "raw_code_analyze",
+  "format_code",
+  "analyze_code",
+] }
 
 [features]
 default = ["dart", "flutter"]

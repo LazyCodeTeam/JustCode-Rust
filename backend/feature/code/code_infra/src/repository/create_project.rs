@@ -9,10 +9,11 @@ use common_domain::error::{Error, Result};
 const REPO: &str = "https://github.com/LazyCodeTeam";
 
 pub async fn init_base_project(path: &Path, command: &str, args: &[&str]) -> Result<()> {
-    std::process::Command::new(command)
+    tokio::process::Command::new(command)
         .current_dir(path)
         .args(args)
         .status()
+        .await
         .map_err(|e| Error::unknown(e.to_string()))?;
 
     std::fs::remove_dir_all(path.join(".git")).ok();
@@ -22,12 +23,13 @@ pub async fn init_base_project(path: &Path, command: &str, args: &[&str]) -> Res
 pub async fn clone_base_project(repo_name: &str) -> Result<PathBuf> {
     let base_path = base_projects_path();
     let repo_path = base_path.join(repo_name);
-    std::fs::remove_dir_all(&repo_path).ok();
-    std::fs::create_dir_all(&base_path).ok();
-    let result = std::process::Command::new("git")
+    tokio::fs::remove_dir_all(&repo_path).await.ok();
+    tokio::fs::create_dir_all(&base_path).await.ok();
+    let result = tokio::process::Command::new("git")
         .current_dir(&base_path)
         .args(["clone", &format!("{}/{}.git", REPO, repo_name)])
         .status()
+        .await
         .map_err(|e| Error::unknown(e.to_string()))?;
 
     if result.success() {

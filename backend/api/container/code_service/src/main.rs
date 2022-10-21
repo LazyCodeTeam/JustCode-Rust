@@ -1,6 +1,10 @@
 mod controller;
+pub mod dto;
 
-use axum::{routing::post, Router};
+use axum::{
+    routing::{get, post},
+    Router,
+};
 use std::net::SocketAddr;
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::prelude::*;
@@ -14,7 +18,8 @@ macro_rules! new_lang {
             let [<$lang _router>] = Router::new()
                 .route("/analyze/raw", post(controller::[<$lang>]::analyze_raw))
                 .route("/analyze", post(controller::[<$lang>]::analyze))
-                .route("/format", post(controller::[<$lang>]::format));
+                .route("/format", post(controller::[<$lang>]::format))
+                .route("/version", get(controller::[<$lang>]::get_version));
             let $router = $router.nest(&format!("/api/v1/{}", $lang), [<$lang _router>]);
         }
     };

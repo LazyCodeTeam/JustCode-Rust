@@ -10,5 +10,7 @@ tokio = { workspace = true }
 
 [features]
 analyze_code = ["code_domain"]
-raw_code_analyze = ["code_domain"]
+get_version = ["code_domain"]
 format_code = ["code_domain"]
+raw_code_analyze = ["code_domain"]
+get_lang_version = ["code_domain"]

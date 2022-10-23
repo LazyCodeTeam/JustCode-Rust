@@ -3,7 +3,7 @@ import * as cognito from 'aws-cdk-lib/aws-cognito'
 import { Construct } from 'constructs';
 import { Duration, RemovalPolicy } from 'aws-cdk-lib';
 
-export class LazycodeStack extends cdk.Stack {
+export class JustCodeStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
     const pool = new cognito.UserPool(this, 'Pool', {
@@ -26,7 +26,7 @@ export class LazycodeStack extends cdk.Stack {
         requireSymbols: false,
         tempPasswordValidity: Duration.days(3),
       },
-      userPoolName: 'LazycodeDevUserGroup',
+      userPoolName: 'JustCodeDevUserGroup',
       standardAttributes: {
         email: {
           required: true,
@@ -61,7 +61,7 @@ export class LazycodeStack extends cdk.Stack {
 
     const domain = pool.addDomain('Domain', {
       cognitoDomain: {
-        domainPrefix: 'lazycode',
+        domainPrefix: 'justcode',
       }
     });
 

@@ -1,8 +1,8 @@
 {
-  "name": "lazycode",
+  "name": "JustCode",
   "version": "0.1.0",
   "bin": {
-    "lazycode": "bin/lazycode.js"
+    "just-code": "bin/just-code.js"
   },
   "scripts": {
     "build": "tsc",

@@ -1,6 +1,5 @@
 use std::{
     env::temp_dir,
-    fs,
     path::{Path, PathBuf},
 };
 
@@ -16,7 +15,7 @@ pub async fn init_base_project(path: &Path, command: &str, args: &[&str]) -> Res
         .await
         .map_err(|e| Error::unknown(e.to_string()))?;
 
-    std::fs::remove_dir_all(path.join(".git")).ok();
+    tokio::fs::remove_dir_all(path.join(".git")).await.ok();
     Ok(())
 }
 
@@ -46,14 +45,14 @@ pub async fn create_project(target: &Path, repo_name: &str, code_dir: &str) -> R
 }
 
 pub fn base_projects_path() -> PathBuf {
-    temp_dir().join("lazycode")
+    temp_dir().join("just_code")
 }
 
 fn copy_project(from: &Path, to: &Path) -> Result<()> {
-    fs::create_dir_all(to)
+    std::fs::create_dir_all(to)
         .map_err(|e| Error::unknown(format!("Failed to copy base project to {to:?} ({e:?})",)))?;
 
-    let subdirs = fs::read_dir(from)
+    let subdirs = std::fs::read_dir(from)
         .map_err(|e| Error::unknown(format!("Failed to read subdirs of {from:?} ({e:?})")))?;
     for entry in subdirs {
         let entry =
@@ -67,7 +66,7 @@ fn copy_project(from: &Path, to: &Path) -> Result<()> {
         } else {
             let from = entry.path();
             let to = to.join(entry.file_name());
-            fs::copy(&from, &to).map_err(|e| {
+            std::fs::copy(&from, &to).map_err(|e| {
                 Error::unknown(format!("Failed to copy from {from:?} to {to:?} ({e:?})"))
             })?;
         }

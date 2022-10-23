@@ -5,6 +5,10 @@ use common_domain::error::Result;
 
 const BASE_PROJECT_NAME: &str = "dart_base_project";
 
+pub async fn get_version() -> Result<String> {
+    crate::repository::version::get_version("dart", &["--version"]).await
+}
+
 pub async fn create_project(path: &Path) -> Result<PathBuf> {
     crate::repository::create_project::create_project(path, BASE_PROJECT_NAME, "lib").await
 }

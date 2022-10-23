@@ -10,11 +10,12 @@ code_infra = { path = "../../../feature/code/code_infra", features = [
   "dart",
   "flutter",
 ] }
-common_api = { path = "../../common_api", features = ["code"] }
+common_api = { path = "../../common_api" }
 common_domain = { path = "../../../feature/common/common_domain" }
 common_infra = { path = "../../../feature/common/common_infra" }
 futures = { workspace = true }
 paste = { workspace = true }
+serde = { workspace = true }
 tokio = { workspace = true, features = ["full"] }
 tower-http = { workspace = true, features = ["trace"] }
 tracing = { workspace = true, features = [
@@ -26,6 +27,7 @@ use_case = { path = "../../../use_case", features = [
   "raw_code_analyze",
   "format_code",
   "analyze_code",
+  "get_lang_version",
 ] }
 
 [features]

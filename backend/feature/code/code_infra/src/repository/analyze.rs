@@ -3,7 +3,8 @@ use common_domain::error::{Error, Result};
 use lazy_static::lazy_static;
 use regex::Regex;
 use serde::Deserialize;
-use std::{path::Path, process::Command};
+use std::path::Path;
+use tokio::process::Command;
 
 pub(crate) async fn analyze<'a, T>(
     path: &'a Path,
@@ -21,6 +22,7 @@ where
         .current_dir(path)
         .args(args)
         .output()
+        .await
         .map_err(|e| Error::unknown(format!("Failed to execute analyze command: {e:?}",)))?;
 
     let message = String::from_utf8_lossy(&result.stdout).to_string();

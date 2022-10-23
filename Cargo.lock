@@ -258,6 +258,7 @@ dependencies = [
  "regex",
  "serde",
  "serde_json",
+ "tokio",
 ]
 
 [[package]]
@@ -272,6 +273,7 @@ dependencies = [
  "common_infra",
  "futures",
  "paste",
+ "serde",
  "tokio",
  "tower-http",
  "tracing",

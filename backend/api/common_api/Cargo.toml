@@ -10,5 +10,4 @@ common_domain = { path = "../../feature/common/common_domain" }
 serde = { workspace = true, features = ["derive"] }
 
 [features]
-code = []
 default = []

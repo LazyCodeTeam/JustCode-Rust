@@ -17,3 +17,5 @@ define_port!(SaveFiles = FnOnce<'a>(path: &'a Path, files: &'a[CodeFile]) -> Res
 define_port!(ReadFiles = FnOnce<'a>(path: &'a Path) -> Result<Vec<CodeFile>>);
 
 define_port!(FormatFiles = FnOnce<'a>(path: &'a Path) -> Result<()>);
+
+define_port!(GetVersion = FnOnce() -> Result<String>);

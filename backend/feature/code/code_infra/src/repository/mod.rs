@@ -3,6 +3,7 @@ pub(crate) mod create_project;
 pub(crate) mod format;
 pub(crate) mod language;
 pub(crate) mod raw_analyze;
+pub(crate) mod version;
 
 mod read_files;
 mod save_files;

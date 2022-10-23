@@ -9,13 +9,15 @@ macro_rules! new_lang {
                 use code_domain::model::code_file::CodeFile;
                 use code_infra::repository::{read_files, save_files};
                 use common_api::dto::axum_error_dto::ErrorResponseDto;
-                use common_api::dto::code::diagnostic_result_dto::DocumentDiagnosticsDto;
-                use common_api::dto::code::{file_dto::FileDto, raw_message_dto::RawMessageDto};
+                use crate::dto::diagnostic_result_dto::DocumentDiagnosticsDto;
+                use crate::dto::version_response_dto::VersionResponseDto;
+                use crate::dto::{file_dto::FileDto, raw_message_dto::RawMessageDto};
                 use common_infra::tmp::TmpDir;
                 use futures::TryFutureExt;
                 use use_case::analyze_code::analyze_code;
                 use use_case::format_code::format_code;
                 use use_case::raw_code_analyze::raw_code_analyze;
+                use use_case::get_lang_version::get_lang_version;
 
                 pub async fn format(Json(files): Json<Vec<FileDto>>) -> Result<Response, ErrorResponseDto> {
                     let files: Vec<CodeFile> = files.into_iter().map(CodeFile::from).collect();
@@ -87,6 +89,14 @@ macro_rules! new_lang {
                                 .collect::<Vec<DocumentDiagnosticsDto>>()
                         })
                         .map(|dto| (StatusCode::OK, Json(dto)).into_response())
+                }
+
+                pub async fn get_version() -> Result<Response, ErrorResponseDto> {
+                    get_lang_version(code_infra::repository::[<$lang>]::get_version).await
+                        .map_err(ErrorResponseDto::from)
+                        .map(VersionResponseDto::from)
+                        .map(|dto| (StatusCode::OK, Json(dto)).into_response())
+
                 }
 
             }

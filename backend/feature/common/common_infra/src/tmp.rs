@@ -13,7 +13,7 @@ pub struct TmpDir {
 impl TmpDir {
     pub fn new() -> Result<TmpDir> {
         let name = nanoid!();
-        let dir = std::env::temp_dir().join("lazycode").join(name);
+        let dir = std::env::temp_dir().join("just_code").join(name);
         std::fs::create_dir_all(&dir)
             .map_err(|e| Error::unknown(format!("Failed to create tmp dir {dir:?} - {e:?}")))?;
 

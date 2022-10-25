@@ -18,4 +18,6 @@ define_port!(ReadFiles = FnOnce<'a>(path: &'a Path) -> Result<Vec<CodeFile>>);
 
 define_port!(FormatFiles = FnOnce<'a>(path: &'a Path) -> Result<()>);
 
+define_port!(Build = FnOnce<'a>(path: &'a Path) -> Result<PathBuf>);
+
 define_port!(GetVersion = FnOnce() -> Result<String>);

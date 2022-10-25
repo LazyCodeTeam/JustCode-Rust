@@ -23,6 +23,7 @@ nanoid = { version = "0.4" }
 serde = { version = "1.0" }
 serde_json = { version = "1.0" }
 tokio = { version = "1.21" }
+tokio-util = { version = "0.7" }
 toml = { version = "0.5" }
 tower-http = { version = "0.3" }
 tracing = { version = "0.1" }

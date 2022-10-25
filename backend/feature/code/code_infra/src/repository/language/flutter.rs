@@ -9,6 +9,12 @@ pub use crate::repository::dart::raw_analyze;
 
 const BASE_PROJECT_NAME: &str = "flutter_base_project";
 
+pub async fn build(path: &Path) -> Result<PathBuf> {
+    crate::repository::build::build(path, "flutter", &["build", "web", "--no-pub", "--release"])
+        .await
+        .map(|_| path.join("build").join("web"))
+}
+
 pub async fn get_version() -> Result<String> {
     crate::repository::version::get_version("flutter", &["--version"]).await
 }

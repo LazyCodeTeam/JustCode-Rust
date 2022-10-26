@@ -29,6 +29,7 @@ use_case = { path = "../../../use_case", features = [
   "format_code",
   "analyze_code",
   "get_lang_version",
+  "build_code",
 ] }
 zip = { workspace = true }
 

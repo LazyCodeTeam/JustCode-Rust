@@ -1,4 +1,5 @@
 pub(crate) mod analyze;
+pub(crate) mod build;
 pub(crate) mod create_project;
 pub(crate) mod format;
 pub(crate) mod language;

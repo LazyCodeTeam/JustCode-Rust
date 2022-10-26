@@ -19,6 +19,7 @@ macro_rules! new_lang {
                 .route("/analyze/raw", post(controller::[<$lang>]::analyze_raw))
                 .route("/analyze", post(controller::[<$lang>]::analyze))
                 .route("/format", post(controller::[<$lang>]::format))
+                .route("/build", post(controller::[<$lang>]::build))
                 .route("/version", get(controller::[<$lang>]::get_version));
             let $router = $router.nest(&format!("/api/v1/{}", $lang), [<$lang _router>]);
         }

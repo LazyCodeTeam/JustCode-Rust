@@ -6,3 +6,6 @@ edition = "2021"
 [dependencies]
 common_domain = { path = "../common_domain" }
 nanoid = { workspace = true }
+tokio = { workspace = true }
+walkdir = { workspace = true }
+zip = { workspace = true }

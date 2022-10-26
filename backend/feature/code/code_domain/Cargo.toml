@@ -5,4 +5,7 @@ edition = "2021"
 
 [dependencies]
 common_domain = { path = "../../common/common_domain" }
+lazy_static = { workspace = true }
 mockall = { workspace = true }
+tokio = { workspace = true }
+paste = { workspace = true }

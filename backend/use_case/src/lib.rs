@@ -1,5 +1,6 @@
 #[cfg(feature = "analyze_code")]
 pub mod analyze_code;
+pub mod build_code;
 #[cfg(feature = "format_code")]
 pub mod format_code;
 #[cfg(feature = "get_lang_version")]

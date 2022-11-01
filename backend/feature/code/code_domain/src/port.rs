@@ -20,4 +20,6 @@ define_port!(FormatFiles = FnOnce<'a>(path: &'a Path) -> Result<()>);
 
 define_port!(Build = FnOnce<'a>(path: &'a Path) -> Result<PathBuf>);
 
+define_port!(ReadJs = FnOnce<'a>(path: &'a Path) -> Result<String>);
+
 define_port!(GetVersion = FnOnce() -> Result<String>);

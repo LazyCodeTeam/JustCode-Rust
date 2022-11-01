@@ -18,6 +18,7 @@ macro_rules! new_lang {
             new_lang!(analyze: lang_repo);
             new_lang!(get_version: lang_repo);
             new_lang!(build: lang_repo);
+            new_lang!(build_2js: lang_repo);
         }
     };
     (format: $repo:path) => {
@@ -150,6 +151,34 @@ macro_rules! new_lang {
                     )
                         .into_response()
                 })
+        }
+    };
+
+    (build_2js: $repo:path) => {
+        pub async fn build_2js(
+            Json(files): Json<Vec<FileDto>>,
+        ) -> Result<Response, ErrorResponseDto> {
+            use crate::dto::js_response_dto::JsResponseDto;
+
+            use $repo as repo;
+
+            let files: Vec<CodeFile> = files.into_iter().map(CodeFile::from).collect();
+
+            future::ready(TmpDir::new())
+                .and_then(|tmp_dir| {
+                    use_case::build_code_2js::build_code_2js(
+                        tmp_dir,
+                        repo::create_project,
+                        code_infra::repository::save_files,
+                        repo::build,
+                        repo::read_js,
+                        &files,
+                    )
+                })
+                .await
+                .map_err(ErrorResponseDto::from)
+                .map(JsResponseDto::from)
+                .map(|dto| (StatusCode::OK, Json(dto)).into_response())
         }
     };
 }

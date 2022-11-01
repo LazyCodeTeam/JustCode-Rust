@@ -1,27 +1,31 @@
 use code_domain::{
-    model::{code_file::CodeFile, raw_message::RawMessage},
-    port::{CreateProject, RawAnalyze, SaveFiles},
+    model::code_file::CodeFile,
+    port::{Build, CreateProject, ReadJs, SaveFiles},
 };
 use common_domain::{error::Result, tmp::TmpDirProvider};
 
-pub async fn raw_code_analyze<A, B, C, D>(
+pub async fn build_code_2js<A, B, C, D, E>(
     tmp_dir: A,
     create_project: B,
     save_files: C,
-    raw_analyze: D,
+    build: D,
+    read_js: E,
     files: &[CodeFile],
-) -> Result<RawMessage>
+) -> Result<String>
 where
     A: TmpDirProvider,
     for<'a> B: CreateProject<'a>,
     for<'a> C: SaveFiles<'a>,
-    for<'a> D: RawAnalyze<'a>,
+    for<'a> D: Build<'a>,
+    for<'a> E: ReadJs<'a>,
 {
     let path = tmp_dir.path();
     let files_path = create_project(&path).await?;
     save_files(&files_path, files).await?;
 
-    raw_analyze(&path).await
+    let output_path = build(&path).await?;
+
+    read_js(&output_path).await
 }
 
 #[cfg(test)]
@@ -33,18 +37,16 @@ mod test {
     use super::*;
 
     #[tokio::test]
-    async fn raw_analyze() {
+    async fn build_2js() {
         let mut mock_tmp = MockTmpDirProvider::new();
         let files = vec![CodeFile {
             path: "main.dart".to_owned(),
             content: "void main() {print('test');}".to_owned(),
         }];
-        let message = RawMessage {
-            success: false,
-            message: "some_message".to_owned(),
-        };
         let tmp_dir = temp_dir();
+        let out_dir = temp_dir().join("out");
         let project_path = tmp_dir.join("project");
+        let js_content = "main() {console.log('test')}".to_owned();
 
         let out = tmp_dir.clone();
         mock_tmp
@@ -61,20 +63,26 @@ mod test {
         let ctx = code_domain::port::mock_save_files::call_context();
         ctx.expect().times(1).returning(|_, _| Ok(()));
 
-        let _raw_analyze_lock = code_domain::port::raw_analyze_lock().await;
-        let ctx = code_domain::port::mock_raw_analyze::call_context();
-        let out = message.clone();
+        let _build_lock = code_domain::port::build_lock().await;
+        let ctx = code_domain::port::mock_build::call_context();
+        let out = out_dir.clone();
         ctx.expect().times(1).returning(move |_| Ok(out.clone()));
 
-        let result = raw_code_analyze(
+        let _read_js_lock = code_domain::port::read_js_lock().await;
+        let ctx = code_domain::port::mock_read_js::call_context();
+        let out = js_content.clone();
+        ctx.expect().times(1).return_once(move |_| Ok(out));
+
+        let result = build_code_2js(
             mock_tmp,
             code_domain::port::mock_create_project::call,
             code_domain::port::mock_save_files::call,
-            code_domain::port::mock_raw_analyze::call,
+            code_domain::port::mock_build::call,
+            code_domain::port::mock_read_js::call,
             &files,
         )
         .await;
 
-        assert_eq!(result, Ok(message));
+        assert_eq!(result, Ok(js_content))
     }
 }

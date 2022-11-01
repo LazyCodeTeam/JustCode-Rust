@@ -34,7 +34,7 @@ mod test {
     use super::*;
 
     #[tokio::test]
-    async fn format() {
+    async fn analyze() {
         let mut mock_tmp = MockTmpDirProvider::new();
         let files = vec![CodeFile {
             path: "main.dart".to_owned(),

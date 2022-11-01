@@ -43,6 +43,10 @@ pub async fn format(path: &Path) -> Result<()> {
     crate::repository::format::format(path, "dart", &["format", "."]).await
 }
 
+pub async fn read_js(path: &Path) -> Result<String> {
+    crate::repository::read_js::read_js(path).await
+}
+
 pub async fn raw_analyze(path: &Path) -> Result<RawMessage> {
     crate::repository::raw_analyze::raw_analyze(path, "dart", &["analyze", "."]).await
 }

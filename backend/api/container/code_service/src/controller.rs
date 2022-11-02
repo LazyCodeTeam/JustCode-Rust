@@ -172,10 +172,12 @@ macro_rules! new_lang {
                 .and_then(|tmp_dir| {
                     use_case::build_code_2js::build_code_2js(
                         tmp_dir,
-                        repo::create_project,
-                        code_infra::repository::save_files,
-                        repo::build,
-                        repo::read_js,
+                        use_case::build_code_2js::BuildCode2jsRepository {
+                            create_project: repo::create_project,
+                            save_files: code_infra::repository::save_files,
+                            build: repo::build,
+                            read_js: repo::read_js,
+                        },
                         &files,
                     )
                 })

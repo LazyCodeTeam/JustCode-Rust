@@ -5,12 +5,16 @@ use code_domain::{
 use common_domain::{error::Result, port::Compress, tmp::TmpDirProvider};
 use tokio::fs::File;
 
+pub struct BuildCodeRepository<B, C, D, E> {
+    pub create_project: B,
+    pub save_files: C,
+    pub build: D,
+    pub compress: E,
+}
+
 pub async fn build_code<A, B, C, D, E>(
     tmp_dir: A,
-    create_project: B,
-    save_files: C,
-    build: D,
-    compress: E,
+    repo: BuildCodeRepository<B, C, D, E>,
     files: &[CodeFile],
 ) -> Result<File>
 where
@@ -21,14 +25,14 @@ where
     for<'a> E: Compress<'a>,
 {
     let path = tmp_dir.path();
-    let files_path = create_project(&path).await?;
-    save_files(&files_path, files).await?;
+    let files_path = (repo.create_project)(&path).await?;
+    (repo.save_files)(&files_path, files).await?;
 
-    let output_path = build(&path).await?;
+    let output_path = (repo.build)(&path).await?;
 
     let output_zip = path.join("output.zip");
 
-    compress(&output_path, &output_zip).await
+    (repo.compress)(&output_path, &output_zip).await
 }
 
 #[cfg(test)]
@@ -80,10 +84,12 @@ mod test {
 
         let result = build_code(
             mock_tmp,
-            code_domain::port::mock_create_project::call,
-            code_domain::port::mock_save_files::call,
-            code_domain::port::mock_build::call,
-            common_domain::port::mock_compress::call,
+            BuildCodeRepository {
+                create_project: code_domain::port::mock_create_project::call,
+                save_files: code_domain::port::mock_save_files::call,
+                build: code_domain::port::mock_build::call,
+                compress: common_domain::port::mock_compress::call,
+            },
             &files,
         )
         .await

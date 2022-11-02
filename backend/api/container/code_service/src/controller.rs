@@ -130,10 +130,12 @@ macro_rules! new_lang {
                 .and_then(|tmp_dir| {
                     use_case::build_code::build_code(
                         tmp_dir,
-                        repo::create_project,
-                        code_infra::repository::save_files,
-                        repo::build,
-                        common_infra::repository::compress,
+                        use_case::build_code::BuildCodeRepository {
+                            create_project: repo::create_project,
+                            save_files: code_infra::repository::save_files,
+                            build: repo::build,
+                            compress: common_infra::repository::compress,
+                        },
                         &files,
                     )
                 })

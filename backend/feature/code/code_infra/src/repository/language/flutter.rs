@@ -1,5 +1,8 @@
 use std::path::{Path, PathBuf};
 
+use common_domain::error::Error;
+use common_domain::error::ErrorDetails;
+use common_domain::error::ErrorType;
 use common_domain::error::Result;
 
 // Implementation is same as dart
@@ -21,6 +24,18 @@ pub async fn get_version() -> Result<String> {
 
 pub async fn create_project(path: &Path) -> Result<PathBuf> {
     crate::repository::create_project::create_project(path, BASE_PROJECT_NAME, "lib").await
+}
+
+pub async fn read_js(_path: &Path) -> Result<String> {
+    Err(Error::builder()
+        .set_error_type(ErrorType::InvalidInput)
+        .set_debug_message("`read_js` is not supported for flutter".to_owned())
+        .set_details(ErrorDetails {
+            message: "Compilation to js is not supported".to_owned(),
+            code: "js_compilation_not_supported".to_owned(),
+            args: None,
+        })
+        .build())
 }
 
 pub async fn create_base_project() -> Result<()> {

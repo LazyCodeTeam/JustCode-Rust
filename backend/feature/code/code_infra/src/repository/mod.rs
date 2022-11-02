@@ -4,6 +4,7 @@ pub(crate) mod create_project;
 pub(crate) mod format;
 pub(crate) mod language;
 pub(crate) mod raw_analyze;
+pub(crate) mod read_js;
 pub(crate) mod version;
 
 mod read_files;

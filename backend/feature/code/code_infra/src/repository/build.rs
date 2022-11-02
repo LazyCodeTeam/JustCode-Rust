@@ -16,11 +16,11 @@ pub(crate) async fn build(path: &Path, command: &str, args: &[&str]) -> Result<(
     } else {
         let message = String::from_utf8_lossy(&out.stdout).to_string();
         Err(Error::builder()
-            .set_error_type(ErrorType::InvalidData)
+            .set_error_type(ErrorType::InvalidInput)
             .set_debug_message(format!("Failed to build {command}: {message}"))
             .set_details(ErrorDetails {
                 message: "Build failed".to_owned(),
-                code: "error.build_failed".to_owned(),
+                code: "build_failed".to_owned(),
                 args: Some(HashMap::from([("output".to_owned(), message)])),
             })
             .build())

@@ -29,7 +29,7 @@ impl IntoResponse for ErrorResponseDto {
 impl From<Error> for ErrorResponseDto {
     fn from(error: Error) -> Self {
         let status_code = match error.error_type {
-            ErrorType::InvalidData => StatusCode::BAD_REQUEST,
+            ErrorType::InvalidInput => StatusCode::BAD_REQUEST,
             ErrorType::Unknown => StatusCode::INTERNAL_SERVER_ERROR,
         };
         Self {

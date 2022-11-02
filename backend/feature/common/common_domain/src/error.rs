@@ -7,7 +7,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]
 pub enum ErrorType {
-    InvalidData,
+    InvalidInput,
     Unknown,
 }
 
@@ -51,7 +51,7 @@ impl Error {
 impl From<ErrorType> for Level {
     fn from(ty: ErrorType) -> Self {
         match ty {
-            ErrorType::InvalidData => Level::Warn,
+            ErrorType::InvalidInput => Level::Warn,
             ErrorType::Unknown => Level::Error,
         }
     }
@@ -87,7 +87,7 @@ impl ErrorBuilder {
         let details = self.details.unwrap_or_else(|| {
             ErrorDetails {
                 message: "Unknown server error".to_owned(),
-                code: "error.unknown".to_owned(),
+                code: "unknown".to_owned(),
                 args: None,
             }
             .boxed()
@@ -118,7 +118,7 @@ pub mod test {
                 error_type: ErrorType::Unknown,
                 details: ErrorDetails {
                     message: "Unknown server error".to_owned(),
-                    code: "error.unknown".to_owned(),
+                    code: "unknown".to_owned(),
                     args: None,
                 }
                 .boxed()
@@ -137,7 +137,7 @@ pub mod test {
                 error_type: ErrorType::Unknown,
                 details: ErrorDetails {
                     message: "Unknown server error".to_owned(),
-                    code: "error.unknown".to_owned(),
+                    code: "unknown".to_owned(),
                     args: None,
                 }
                 .boxed()
@@ -148,7 +148,7 @@ pub mod test {
     #[test]
     fn builder() {
         let debug_message = "Debug message".to_owned();
-        let error_type = ErrorType::InvalidData;
+        let error_type = ErrorType::InvalidInput;
         let details = ErrorDetails {
             message: "Error details message".to_owned(),
             code: "error.test_code".to_owned(),

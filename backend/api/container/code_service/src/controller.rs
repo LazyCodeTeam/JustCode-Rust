@@ -65,9 +65,11 @@ macro_rules! new_lang {
                 .and_then(|tmp_dir| {
                     use_case::raw_code_analyze::raw_code_analyze(
                         tmp_dir,
-                        repo::create_project,
-                        code_infra::repository::save_files,
-                        repo::raw_analyze,
+                        use_case::raw_code_analyze::RawAnalyzeCodeRepository {
+                            create_project: repo::create_project,
+                            save_files: code_infra::repository::save_files,
+                            raw_analyze: repo::raw_analyze,
+                        },
                         &files,
                     )
                 })

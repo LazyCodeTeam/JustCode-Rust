@@ -30,10 +30,12 @@ macro_rules! new_lang {
                 .and_then(|tmp_dir| {
                     use_case::format_code::format_code(
                         tmp_dir,
-                        repo::create_project,
-                        code_infra::repository::save_files,
-                        repo::format,
-                        code_infra::repository::read_files,
+                        use_case::format_code::FormatCodeRepository {
+                            create_project: repo::create_project,
+                            save_files: code_infra::repository::save_files,
+                            format_files: repo::format,
+                            read_files: code_infra::repository::read_files,
+                        },
                         &files,
                     )
                 })

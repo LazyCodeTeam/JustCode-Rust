@@ -4,11 +4,15 @@ use code_domain::{
 };
 use common_domain::{error::Result, tmp::TmpDirProvider};
 
+pub struct AnalyzeCodeRepository<B, C, D> {
+    pub create_project: B,
+    pub save_files: C,
+    pub analyze: D,
+}
+
 pub async fn analyze_code<A, B, C, D>(
     tmp_dir: A,
-    create_project: B,
-    save_files: C,
-    analyze: D,
+    repo: AnalyzeCodeRepository<B, C, D>,
     files: &[CodeFile],
 ) -> Result<Vec<DocumentDiagnostics>>
 where
@@ -18,10 +22,10 @@ where
     for<'a> D: Analyze<'a>,
 {
     let path = tmp_dir.path();
-    let files_path = create_project(&path).await?;
-    save_files(&files_path, files).await?;
+    let files_path = (repo.create_project)(&path).await?;
+    (repo.save_files)(&files_path, files).await?;
 
-    analyze(&path).await
+    (repo.analyze)(&path).await
 }
 
 #[cfg(test)]
@@ -77,9 +81,11 @@ mod test {
 
         let result = analyze_code(
             mock_tmp,
-            code_domain::port::mock_create_project::call,
-            code_domain::port::mock_save_files::call,
-            code_domain::port::mock_analyze::call,
+            AnalyzeCodeRepository {
+                create_project: code_domain::port::mock_create_project::call,
+                save_files: code_domain::port::mock_save_files::call,
+                analyze: code_domain::port::mock_analyze::call,
+            },
             &files,
         )
         .await;

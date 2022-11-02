@@ -90,9 +90,11 @@ macro_rules! new_lang {
                 .and_then(|tmp_dir| {
                     use_case::analyze_code::analyze_code(
                         tmp_dir,
-                        repo::create_project,
-                        code_infra::repository::save_files,
-                        repo::analyze,
+                        use_case::analyze_code::AnalyzeCodeRepository {
+                            create_project: repo::create_project,
+                            save_files: code_infra::repository::save_files,
+                            analyze: repo::analyze,
+                        },
                         &files,
                     )
                 })

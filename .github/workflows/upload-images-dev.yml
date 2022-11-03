@@ -31,6 +31,6 @@ jobs:
           REPOSITORY: code_service
           IMAGE_TAG: ${{ github.run_number }}
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f Dockerfile.full_service .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 

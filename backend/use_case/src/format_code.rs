@@ -4,12 +4,16 @@ use code_domain::{
 };
 use common_domain::{error::Result, tmp::TmpDirProvider};
 
+pub struct FormatCodeRepository<B, C, D, E> {
+    pub create_project: B,
+    pub save_files: C,
+    pub format_files: D,
+    pub read_files: E,
+}
+
 pub async fn format_code<A, B, C, D, E>(
     tmp_dir: A,
-    create_project: B,
-    save_files: C,
-    format_files: D,
-    read_files: E,
+    repo: FormatCodeRepository<B, C, D, E>,
     files: &[CodeFile],
 ) -> Result<Vec<CodeFile>>
 where
@@ -20,12 +24,12 @@ where
     for<'a> E: ReadFiles<'a>,
 {
     let path = tmp_dir.path();
-    let files_path = create_project(&path).await?;
-    save_files(&files_path, files).await?;
+    let files_path = (repo.create_project)(&path).await?;
+    (repo.save_files)(&files_path, files).await?;
 
-    format_files(&path).await?;
+    (repo.format_files)(&path).await?;
 
-    read_files(&files_path).await
+    (repo.read_files)(&files_path).await
 }
 
 #[cfg(test)]
@@ -76,10 +80,12 @@ mod test {
 
         let result = format_code(
             mock_tmp,
-            code_domain::port::mock_create_project::call,
-            code_domain::port::mock_save_files::call,
-            code_domain::port::mock_format_files::call,
-            code_domain::port::mock_read_files::call,
+            FormatCodeRepository {
+                create_project: code_domain::port::mock_create_project::call,
+                save_files: code_domain::port::mock_save_files::call,
+                format_files: code_domain::port::mock_format_files::call,
+                read_files: code_domain::port::mock_read_files::call,
+            },
             &files,
         )
         .await;

@@ -30,10 +30,12 @@ macro_rules! new_lang {
                 .and_then(|tmp_dir| {
                     use_case::format_code::format_code(
                         tmp_dir,
-                        repo::create_project,
-                        code_infra::repository::save_files,
-                        repo::format,
-                        code_infra::repository::read_files,
+                        use_case::format_code::FormatCodeRepository {
+                            create_project: repo::create_project,
+                            save_files: code_infra::repository::save_files,
+                            format_files: repo::format,
+                            read_files: code_infra::repository::read_files,
+                        },
                         &files,
                     )
                 })
@@ -65,9 +67,11 @@ macro_rules! new_lang {
                 .and_then(|tmp_dir| {
                     use_case::raw_code_analyze::raw_code_analyze(
                         tmp_dir,
-                        repo::create_project,
-                        code_infra::repository::save_files,
-                        repo::raw_analyze,
+                        use_case::raw_code_analyze::RawAnalyzeCodeRepository {
+                            create_project: repo::create_project,
+                            save_files: code_infra::repository::save_files,
+                            raw_analyze: repo::raw_analyze,
+                        },
                         &files,
                     )
                 })
@@ -90,9 +94,11 @@ macro_rules! new_lang {
                 .and_then(|tmp_dir| {
                     use_case::analyze_code::analyze_code(
                         tmp_dir,
-                        repo::create_project,
-                        code_infra::repository::save_files,
-                        repo::analyze,
+                        use_case::analyze_code::AnalyzeCodeRepository {
+                            create_project: repo::create_project,
+                            save_files: code_infra::repository::save_files,
+                            analyze: repo::analyze,
+                        },
                         &files,
                     )
                 })
@@ -130,10 +136,12 @@ macro_rules! new_lang {
                 .and_then(|tmp_dir| {
                     use_case::build_code::build_code(
                         tmp_dir,
-                        repo::create_project,
-                        code_infra::repository::save_files,
-                        repo::build,
-                        common_infra::repository::compress,
+                        use_case::build_code::BuildCodeRepository {
+                            create_project: repo::create_project,
+                            save_files: code_infra::repository::save_files,
+                            build: repo::build,
+                            compress: common_infra::repository::compress,
+                        },
                         &files,
                     )
                 })
@@ -168,10 +176,12 @@ macro_rules! new_lang {
                 .and_then(|tmp_dir| {
                     use_case::build_code_2js::build_code_2js(
                         tmp_dir,
-                        repo::create_project,
-                        code_infra::repository::save_files,
-                        repo::build,
-                        repo::read_js,
+                        use_case::build_code_2js::BuildCode2jsRepository {
+                            create_project: repo::create_project,
+                            save_files: code_infra::repository::save_files,
+                            build: repo::build,
+                            read_js: repo::read_js,
+                        },
                         &files,
                     )
                 })

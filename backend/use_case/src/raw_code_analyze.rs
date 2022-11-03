@@ -4,11 +4,15 @@ use code_domain::{
 };
 use common_domain::{error::Result, tmp::TmpDirProvider};
 
+pub struct RawAnalyzeCodeRepository<B, C, D> {
+    pub create_project: B,
+    pub save_files: C,
+    pub raw_analyze: D,
+}
+
 pub async fn raw_code_analyze<A, B, C, D>(
     tmp_dir: A,
-    create_project: B,
-    save_files: C,
-    raw_analyze: D,
+    repo: RawAnalyzeCodeRepository<B, C, D>,
     files: &[CodeFile],
 ) -> Result<RawMessage>
 where
@@ -18,10 +22,10 @@ where
     for<'a> D: RawAnalyze<'a>,
 {
     let path = tmp_dir.path();
-    let files_path = create_project(&path).await?;
-    save_files(&files_path, files).await?;
+    let files_path = (repo.create_project)(&path).await?;
+    (repo.save_files)(&files_path, files).await?;
 
-    raw_analyze(&path).await
+    (repo.raw_analyze)(&path).await
 }
 
 #[cfg(test)]
@@ -68,9 +72,11 @@ mod test {
 
         let result = raw_code_analyze(
             mock_tmp,
-            code_domain::port::mock_create_project::call,
-            code_domain::port::mock_save_files::call,
-            code_domain::port::mock_raw_analyze::call,
+            RawAnalyzeCodeRepository {
+                create_project: code_domain::port::mock_create_project::call,
+                save_files: code_domain::port::mock_save_files::call,
+                raw_analyze: code_domain::port::mock_raw_analyze::call,
+            },
             &files,
         )
         .await;

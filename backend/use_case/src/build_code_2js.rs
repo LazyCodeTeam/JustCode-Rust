@@ -4,12 +4,16 @@ use code_domain::{
 };
 use common_domain::{error::Result, tmp::TmpDirProvider};
 
+pub struct BuildCode2jsRepository<B, C, D, E> {
+    pub create_project: B,
+    pub save_files: C,
+    pub build: D,
+    pub read_js: E,
+}
+
 pub async fn build_code_2js<A, B, C, D, E>(
     tmp_dir: A,
-    create_project: B,
-    save_files: C,
-    build: D,
-    read_js: E,
+    repo: BuildCode2jsRepository<B, C, D, E>,
     files: &[CodeFile],
 ) -> Result<String>
 where
@@ -20,12 +24,12 @@ where
     for<'a> E: ReadJs<'a>,
 {
     let path = tmp_dir.path();
-    let files_path = create_project(&path).await?;
-    save_files(&files_path, files).await?;
+    let files_path = (repo.create_project)(&path).await?;
+    (repo.save_files)(&files_path, files).await?;
 
-    let output_path = build(&path).await?;
+    let output_path = (repo.build)(&path).await?;
 
-    read_js(&output_path).await
+    (repo.read_js)(&output_path).await
 }
 
 #[cfg(test)]
@@ -75,10 +79,12 @@ mod test {
 
         let result = build_code_2js(
             mock_tmp,
-            code_domain::port::mock_create_project::call,
-            code_domain::port::mock_save_files::call,
-            code_domain::port::mock_build::call,
-            code_domain::port::mock_read_js::call,
+            BuildCode2jsRepository {
+                create_project: code_domain::port::mock_create_project::call,
+                save_files: code_domain::port::mock_save_files::call,
+                build: code_domain::port::mock_build::call,
+                read_js: code_domain::port::mock_read_js::call,
+            },
             &files,
         )
         .await;

@@ -24,7 +24,7 @@ jobs:
           path: |
             ~/.cargo/
             ./target/
-          key: ${{ env.cache_id }}
+          key: ${{ env.cache_id }}-${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ env.RUSTC_HASH }}
 
       - name: Install latest rust
         uses: actions-rs/toolchain@v1
@@ -33,7 +33,10 @@ jobs:
             override: true
             components: clippy
 
-      - name: Test
+      - name: Run clippy
         run: |
           cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Test
+        run: |
           cargo test -- --nocapture --test-threads 1

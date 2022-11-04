@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
-import { JustCodeStack } from '../lib/just-code-stack';
+import { JustCodeStackDev } from '../lib/just-code-stack-dev';
 
 const app = new cdk.App();
-new JustCodeStack(app, 'JustCodeStackDev', {});
+new JustCodeStackDev(app, 'JustCodeStackDev');

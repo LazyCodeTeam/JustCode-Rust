@@ -8,8 +8,6 @@ jobs:
   upload-docker-dev:
     runs-on: ubuntu-latest
     name: Upload docker dev images
-    env:
-      cache_id: upload-docker-dev
     steps: 
       - name: Check out code
         uses: actions/checkout@v2

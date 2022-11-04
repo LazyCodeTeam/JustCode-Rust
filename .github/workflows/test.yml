@@ -24,7 +24,7 @@ jobs:
           path: |
             ~/.cargo/
             ./target/
-          key: ${{ env.cache_id }}
+          key: ${{ env.cache_id }}-${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ env.RUSTC_HASH }}
 
       - name: Install latest rust
         uses: actions-rs/toolchain@v1

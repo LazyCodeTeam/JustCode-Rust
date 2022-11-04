@@ -14,7 +14,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      cache_id: hello-lambda
+      cache_id: deploy-dev
       flutter_version: 3.3.2
     steps:
       - uses: actions/checkout@v3
@@ -26,8 +26,7 @@ jobs:
           path: |
             ~/.cargo/
             ./target/
-          key: ${{ env.cache_id }}
-
+          key: ${{ env.cache_id }}-${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ env.RUSTC_HASH }}
       - name: Install latest rust
         uses: actions-rs/toolchain@v1
         with:

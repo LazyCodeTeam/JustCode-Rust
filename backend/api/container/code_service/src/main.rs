@@ -1,3 +1,4 @@
+mod config;
 mod controller;
 pub mod dto;
 
@@ -29,11 +30,12 @@ macro_rules! new_lang {
 
 #[tokio::main]
 async fn main() {
+    let config = config::Config::new();
     tracing_subscriber::registry()
         .with(tracing_subscriber::fmt::layer())
         .init();
 
-    let addr = SocketAddr::from(([0, 0, 0, 0], 80));
+    let addr = SocketAddr::from(([0, 0, 0, 0], config.port));
     let router = Router::new().layer(TraceLayer::new_for_http());
 
     #[cfg(feature = "dart")]

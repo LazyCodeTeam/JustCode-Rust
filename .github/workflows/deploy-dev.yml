@@ -11,6 +11,10 @@ jobs:
   upload-docker-dev:
     runs-on: ubuntu-latest
     name: Upload docker dev images
+    env:
+      IMAGE_TAG: ${{ github.run_number }}
+    outputs:
+      image_tag: ${{ env.IMAGE_TAG }}
     steps: 
       - name: Check out code
         uses: actions/checkout@v2
@@ -35,7 +39,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           file: Dockerfile.dart_service
-          tags: ${{ steps.login-ecr.outputs.registry }}/code_service:${{ github.run_number }}
+          tags: ${{ steps.login-ecr.outputs.registry }}/code_service:${{ env.IMAGE_TAG }}
           push: true
 
   deploy:
@@ -82,7 +86,11 @@ jobs:
         run: yarn
 
       - name: Synth stack
+        env:
+          CODE_SERVICE_TAG: ${{ needs.upload-docker-dev.outputs.image_tag}}
         run: yarn cdk synth
 
       - name: Deploy stack
+        env:
+          CODE_SERVICE_TAG: ${{ needs.upload-docker-dev.outputs.image_tag}}
         run: yarn cdk deploy --all --require-approval never

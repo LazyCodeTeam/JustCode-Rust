@@ -26,9 +26,9 @@ export class JustCodeStackDev extends cdk.Stack {
     });
 
     container.addPortMappings({
-      containerPort: 80,
+      containerPort: 8080,
       hostPort: 8080,
-      protocol: ecs.Protocol.TCP
+      protocol: ecs.Protocol.TCP,
     });
 
     const service = new ecs.Ec2Service(this, "CodeService", {

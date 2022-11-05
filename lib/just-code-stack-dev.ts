@@ -26,7 +26,7 @@ export class JustCodeStackDev extends cdk.Stack {
     });
 
     container.addPortMappings({
-      containerPort: 8080,
+      containerPort: 80,
       hostPort: 8080,
       protocol: ecs.Protocol.TCP,
     });
@@ -42,10 +42,10 @@ export class JustCodeStackDev extends cdk.Stack {
     });
     const listener = lb.addListener('PublicListener', { port: 80, open: true });
     listener.addTargets('ECS', {
-      port: 80,
+      port: 8080,
       targets: [service.loadBalancerTarget({
         containerName: 'CodeService-Container',
-        containerPort: 8080
+        containerPort: 80
       })],
     });
 

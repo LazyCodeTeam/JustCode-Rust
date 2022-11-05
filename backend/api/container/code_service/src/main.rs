@@ -33,7 +33,7 @@ async fn main() {
         .with(tracing_subscriber::fmt::layer())
         .init();
 
-    let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
+    let addr = SocketAddr::from(([0, 0, 0, 0], 80));
     let router = Router::new().layer(TraceLayer::new_for_http());
 
     #[cfg(feature = "dart")]

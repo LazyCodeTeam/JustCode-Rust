@@ -42,10 +42,10 @@ export class JustCodeStackDev extends cdk.Stack {
     });
     const listener = lb.addListener('PublicListener', { port: 80, open: true });
     listener.addTargets('ECS', {
-      port: 8080,
+      port: 80,
       targets: [service.loadBalancerTarget({
         containerName: 'CodeService-Container',
-        containerPort: 80
+        containerPort: 8080
       })],
     });
 

@@ -3,8 +3,6 @@ name: 'Build and deploy - dev'
 
 on:
   workflow_dispatch:
-  # pull_request:
-  #   branches: [master]
 
 env:
   CARGO_TERM_COLOR: always
@@ -36,7 +34,7 @@ jobs:
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          file: Dockerfile.full_service
+          file: Dockerfile.dart_service
           tags: ${{ steps.login-ecr.outputs.registry }}/code_service:${{ github.run_number }}
           push: true
 

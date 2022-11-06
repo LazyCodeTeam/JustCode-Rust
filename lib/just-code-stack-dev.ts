@@ -2,10 +2,8 @@ import * as cdk from 'aws-cdk-lib';
 import * as cognito from 'aws-cdk-lib/aws-cognito'
 import { Construct } from 'constructs';
 import { Duration, RemovalPolicy } from 'aws-cdk-lib';
-import * as ecs from 'aws-cdk-lib/aws-ecs';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
-import * as ecr from 'aws-cdk-lib/aws-ecr';
-import * as elbv2 from 'aws-cdk-lib/aws-elasticloadbalancingv2';
+import { CodeServiceDev } from './code-service-dev';
 
 
 export class JustCodeStackDev extends cdk.Stack {
@@ -14,43 +12,7 @@ export class JustCodeStackDev extends cdk.Stack {
 
     const vpc = new ec2.Vpc(this, 'JustCodeDevVpc');
 
-    const cluster = new ecs.Cluster(this, 'JustCode-CodeService-Dev', { vpc });
-    cluster.addCapacity('CodeServiceASG-Dev', {
-      instanceType: ec2.InstanceType.of(ec2.InstanceClass.T2, ec2.InstanceSize.MICRO)
-    });
-    const taskDefinition = new ecs.Ec2TaskDefinition(this, 'CodeService-TaskDefinision');
-    const repo = ecr.Repository.fromRepositoryName(this, 'CodeSeriviceRepository', 'code_service');
-    const container = taskDefinition.addContainer('CodeService-Container', {
-      image: ecs.ContainerImage.fromEcrRepository(repo),
-      memoryLimitMiB: 256,
-    });
-
-    container.addPortMappings({
-      containerPort: 80,
-      hostPort: 8080,
-      protocol: ecs.Protocol.TCP
-    });
-
-    const service = new ecs.Ec2Service(this, "CodeService", {
-      cluster,
-      taskDefinition,
-    });
-
-    const lb = new elbv2.ApplicationLoadBalancer(this, 'LB', {
-      vpc,
-      internetFacing: true
-    });
-    const listener = lb.addListener('PublicListener', { port: 80, open: true });
-    listener.addTargets('ECS', {
-      port: 8080,
-      targets: [service.loadBalancerTarget({
-        containerName: 'CodeService-Container',
-        containerPort: 80
-      })],
-    });
-
-    new cdk.CfnOutput(this, 'LoadBalancerDNS', { value: lb.loadBalancerDnsName, });
-
+    new CodeServiceDev(this, vpc);
 
     const pool = new cognito.UserPool(this, 'Pool', {
       accountRecovery: cognito.AccountRecovery.EMAIL_ONLY,

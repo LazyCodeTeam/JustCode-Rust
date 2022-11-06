@@ -3,8 +3,6 @@ name: 'Build and deploy - dev'
 
 on:
   workflow_dispatch:
-  # pull_request:
-  #   branches: [master]
 
 env:
   CARGO_TERM_COLOR: always
@@ -13,6 +11,10 @@ jobs:
   upload-docker-dev:
     runs-on: ubuntu-latest
     name: Upload docker dev images
+    env:
+      IMAGE_TAG: ${{ github.run_number }}
+    outputs:
+      image_tag: ${{ env.IMAGE_TAG }}
     steps: 
       - name: Check out code
         uses: actions/checkout@v2
@@ -36,8 +38,8 @@ jobs:
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          file: Dockerfile.full_service
-          tags: ${{ steps.login-ecr.outputs.registry }}/code_service:${{ github.run_number }}
+          file: Dockerfile.dart_service
+          tags: ${{ steps.login-ecr.outputs.registry }}/code_service:${{ env.IMAGE_TAG }}
           push: true
 
   deploy:
@@ -84,7 +86,11 @@ jobs:
         run: yarn
 
       - name: Synth stack
+        env:
+          CODE_SERVICE_TAG: ${{ needs.upload-docker-dev.outputs.image_tag}}
         run: yarn cdk synth
 
       - name: Deploy stack
+        env:
+          CODE_SERVICE_TAG: ${{ needs.upload-docker-dev.outputs.image_tag}}
         run: yarn cdk deploy --all --require-approval never

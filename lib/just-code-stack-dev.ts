@@ -16,14 +16,21 @@ export class JustCodeStackDev extends cdk.Stack {
     const cluster = new ecs.Cluster(this, 'CodeServiceClusterDev', { vpc });
 
     cluster.addCapacity('CodeServiceAutoScalingGroup', {
-      instanceType: ec2.InstanceType.of(ec2.InstanceClass.T2, ec2.InstanceSize.MICRO)
+      instanceType: ec2.InstanceType.of(ec2.InstanceClass.T4G, ec2.InstanceSize.SMALL),
+      machineImage: ecs.EcsOptimizedImage.amazonLinux2(ecs.AmiHardwareType.ARM),
+      machineImageType: ecs.MachineImageType.BOTTLEROCKET,
     });
+
 
     const repo = ecr.Repository.fromRepositoryName(this, 'CodeSeriviceRepository', 'code_service');
     const taskDefinition = new ecs.Ec2TaskDefinition(this, 'CodeServiceTaskDef');
     const container = taskDefinition.addContainer('code_service', {
-      image: ecs.ContainerImage.fromEcrRepository(repo, process.env.CODE_SERVICE_TAG),
-      memoryLimitMiB: 256,
+      // image: ecs.ContainerImage.fromEcrRepository(repo, process.env.CODE_SERVICE_TAG),
+      image: ecs.ContainerImage.fromRegistry("amazon/amazon-ecs-sample"),
+      memoryLimitMiB: 2048,
+      environment: {
+        PORT: '80'
+      }
     });
 
     container.addPortMappings({

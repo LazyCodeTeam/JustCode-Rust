@@ -19,7 +19,7 @@ export class JustCodeStackDev extends cdk.Stack {
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.T2, ec2.InstanceSize.MICRO)
     });
 
-    const repo = ecr.Repository.fromRepositoryName(scope, 'CodeSeriviceRepository', 'code_service');
+    const repo = ecr.Repository.fromRepositoryName(this, 'CodeSeriviceRepository', 'code_service');
     const taskDefinition = new ecs.Ec2TaskDefinition(this, 'CodeServiceTaskDef');
     const container = taskDefinition.addContainer('code_service', {
       image: ecs.ContainerImage.fromEcrRepository(repo, process.env.CODE_SERVICE_TAG),

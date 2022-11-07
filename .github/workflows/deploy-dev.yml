@@ -38,7 +38,7 @@ jobs:
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          # file: Dockerfile.dart_service
+          file: Dockerfile.dart_service
           tags: ${{ steps.login-ecr.outputs.registry }}/code_service:${{ env.IMAGE_TAG }}
           push: true
 
@@ -88,9 +88,13 @@ jobs:
       - name: Synth stack
         env:
           CODE_SERVICE_TAG: ${{ needs.upload-docker-dev.outputs.image_tag}}
+          AWS_REGION : ${{ secrets.AWS_REGION }}
+          AWS_ACCOUNT : ${{ secrets.AWS_ACCOUNT }}
         run: yarn cdk synth
 
       - name: Deploy stack
         env:
           CODE_SERVICE_TAG: ${{ needs.upload-docker-dev.outputs.image_tag}}
+          AWS_REGION : ${{ secrets.AWS_REGION }}
+          AWS_ACCOUNT : ${{ secrets.AWS_ACCOUNT }}
         run: yarn cdk deploy --all --require-approval never

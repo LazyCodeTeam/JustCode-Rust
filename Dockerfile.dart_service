@@ -1,9 +1,9 @@
-FROM rust:1.64 as builder
+FROM rust:1.65 as builder
 
-ARG LANG=full
 WORKDIR /app
+RUN rustup update nightly
 COPY . .
-RUN cargo build --release -p code_service --no-default-features -F dart
+RUN cargo +nightly build -Z sparse-registry --release -p code_service --no-default-features -F dart
 
 
 FROM dart:latest

@@ -1,17 +1,8 @@
 .DS_Store
 .gitignore
-.npmignore
-cdk.json
-jest.config.json
-package*.json
 README.md
-tsconfig.json
 
 .git
 .github
-bin
-cdk.out
-lib
-node_modules
 tmp
 

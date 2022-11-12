@@ -89,19 +89,3 @@ jobs:
       #     command: xtask
       #     args: build-lambda --use-cross --target aarch64-unknown-linux-gnu
 
-      - name: Install dependencies
-        run: yarn
-
-      - name: Synth stack
-        env:
-          CODE_SERVICE_TAG: ${{ needs.upload-docker-dev.outputs.image_tag}}
-          AWS_REGION : ${{ secrets.AWS_REGION }}
-          AWS_ACCOUNT : ${{ secrets.AWS_ACCOUNT }}
-        run: yarn cdk synth
-
-      - name: Deploy stack
-        env:
-          CODE_SERVICE_TAG: ${{ needs.upload-docker-dev.outputs.image_tag}}
-          AWS_REGION : ${{ secrets.AWS_REGION }}
-          AWS_ACCOUNT : ${{ secrets.AWS_ACCOUNT }}
-        run: yarn cdk deploy --all --require-approval never

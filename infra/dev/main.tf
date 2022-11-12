@@ -10,7 +10,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "~> 4.0"
     }
   }
 }
@@ -25,4 +25,11 @@ module "backend_module" {
   table_name  = "just-code-dev-state-lock"
   bucket_name = "just-code-dev-state"
   region      = "eu-central-1"
+}
+
+module "app_module" {
+  source = "../common/app-module"
+
+  region = "eu-central-1"
+  env    = "dev"
 }

@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket         = "just-code-state"
-    key            = "dev/terraform.tfstate"
+    key            = "base/terraform.tfstate"
     region         = "eu-central-1"
     dynamodb_table = "just-code-state-lock"
     encrypt        = true
@@ -19,9 +19,10 @@ provider "aws" {
   region = var.region
 }
 
-module "just_code_module" {
-  source = "../module/just-code-module"
+module "backend_module" {
+  source = "../module/backend-module"
 
-  region = "eu-central-1"
-  env    = "dev"
+  table_name  = "just-code-state-lock"
+  bucket_name = "just-code-state"
+  region      = "eu-central-1"
 }

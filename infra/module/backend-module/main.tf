@@ -15,12 +15,21 @@ provider "aws" {
 resource "aws_s3_bucket" "terraform_state" {
   bucket        = var.bucket_name
   force_destroy = true
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_s3_bucket_versioning" "terraform_bucket_versioning" {
   bucket = aws_s3_bucket.terraform_state.id
+
   versioning_configuration {
     status = "Enabled"
+  }
+
+  lifecycle {
+    prevent_destroy = true
   }
 }
 
@@ -32,7 +41,12 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state_c
       sse_algorithm = "AES256"
     }
   }
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
+
 resource "aws_dynamodb_table" "terraform_locks" {
   name         = var.table_name
   billing_mode = "PAY_PER_REQUEST"
@@ -40,5 +54,9 @@ resource "aws_dynamodb_table" "terraform_locks" {
   attribute {
     name = "LockID"
     type = "S"
+  }
+
+  lifecycle {
+    prevent_destroy = true
   }
 }

@@ -1,4 +1,4 @@
-use common_domain::error::ErrorDetails;
+use common_domain::error::ErrorOutput;
 use std::collections::HashMap;
 
 use serde::Serialize;
@@ -7,11 +7,11 @@ use serde::Serialize;
 pub struct ErrorDto {
     pub message: String,
     pub code: String,
-    pub args: Option<HashMap<String, String>>,
+    pub args: HashMap<String, String>,
 }
 
-impl From<ErrorDetails> for ErrorDto {
-    fn from(error: ErrorDetails) -> Self {
+impl From<ErrorOutput> for ErrorDto {
+    fn from(error: ErrorOutput) -> Self {
         Self {
             message: error.message,
             code: error.code,
@@ -28,8 +28,8 @@ mod test {
     fn from_error_details() {
         let message = "Test message".to_owned();
         let code = "error.test_code".to_owned();
-        let args = Some(HashMap::from([("key".to_owned(), "value".to_owned())]));
-        let error_details = ErrorDetails {
+        let args = HashMap::from([("key".to_owned(), "value".to_owned())]);
+        let error_details = ErrorOutput {
             message: message.clone(),
             code: code.clone(),
             args: args.clone(),

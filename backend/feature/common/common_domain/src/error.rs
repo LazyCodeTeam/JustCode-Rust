@@ -1,13 +1,17 @@
 use log::Level;
 
-use crate::boxed::Boxed;
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt::Display};
 
 pub type Result<T> = std::result::Result<T, Error>;
+
+const UNKNOWN_ERROR_MESSAGE: &str = "Unknown server error";
+const UNKNOWN_ERROR_CODE: &str = "unknown";
 
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]
 pub enum ErrorType {
     InvalidInput,
+    Conflict,
+    NotFound,
     Unknown,
 }
 
@@ -15,90 +19,66 @@ pub enum ErrorType {
 pub struct Error {
     pub debug_message: String,
     pub error_type: ErrorType,
-    pub details: Box<ErrorDetails>,
+    pub output: Box<ErrorOutput>,
 }
 
 #[derive(Clone, PartialEq, Eq, Debug)]
-pub struct ErrorDetails {
+pub struct ErrorOutput {
     pub message: String,
     pub code: String,
-    pub args: Option<HashMap<String, String>>,
+    pub args: HashMap<String, String>,
 }
 
-#[derive(Debug)]
-pub struct ErrorBuilder {
-    debug_message: Option<String>,
-    error_type: Option<ErrorType>,
-    details: Option<Box<ErrorDetails>>,
+impl Default for ErrorType {
+    fn default() -> Self {
+        ErrorType::Unknown
+    }
 }
 
 impl Default for Error {
     fn default() -> Self {
-        ErrorBuilder::new().build()
+        Self {
+            debug_message: "".to_owned(),
+            error_type: ErrorType::Unknown,
+            output: Default::default(),
+        }
+    }
+}
+
+impl Default for ErrorOutput {
+    fn default() -> Self {
+        Self {
+            message: UNKNOWN_ERROR_MESSAGE.to_owned(),
+            code: UNKNOWN_ERROR_CODE.to_owned(),
+            args: HashMap::new(),
+        }
     }
 }
 
 impl Error {
-    pub fn unknown(message: String) -> Error {
-        Error::builder().set_debug_message(message).build()
-    }
-
-    pub fn builder() -> ErrorBuilder {
-        ErrorBuilder::new()
+    pub fn unknown(message: String) -> Self {
+        Self {
+            debug_message: message,
+            ..Default::default()
+        }
     }
 }
+
+impl Display for Error {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+impl std::error::Error for Error {}
 
 impl From<ErrorType> for Level {
     fn from(ty: ErrorType) -> Self {
         match ty {
-            ErrorType::InvalidInput => Level::Warn,
+            ErrorType::InvalidInput => Level::Info,
             ErrorType::Unknown => Level::Error,
-        }
-    }
-}
-
-impl ErrorBuilder {
-    fn new() -> Self {
-        Self {
-            debug_message: None,
-            error_type: None,
-            details: None,
-        }
-    }
-
-    pub fn set_debug_message(mut self, message: String) -> Self {
-        self.debug_message = Some(message);
-        self
-    }
-
-    pub fn set_error_type(mut self, error_type: ErrorType) -> Self {
-        self.error_type = Some(error_type);
-        self
-    }
-
-    pub fn set_details(mut self, details: ErrorDetails) -> Self {
-        self.details = Some(details.boxed());
-        self
-    }
-
-    pub fn build(self) -> Error {
-        let debug_message = self.debug_message.unwrap_or_else(|| "".to_owned());
-        let error_type = self.error_type.unwrap_or(ErrorType::Unknown);
-        let details = self.details.unwrap_or_else(|| {
-            ErrorDetails {
-                message: "Unknown server error".to_owned(),
-                code: "unknown".to_owned(),
-                args: None,
-            }
-            .boxed()
-        });
-
-        log::log!(Level::from(error_type), "{debug_message:?} - {details:?}");
-
-        Error {
-            debug_message,
-            error_type,
-            details,
+            ErrorType::Conflict => Level::Info,
+            ErrorType::NotFound => Level::Info,
         }
     }
 }
@@ -116,12 +96,11 @@ pub mod test {
             Error {
                 debug_message: "".to_owned(),
                 error_type: ErrorType::Unknown,
-                details: ErrorDetails {
-                    message: "Unknown server error".to_owned(),
-                    code: "unknown".to_owned(),
-                    args: None,
-                }
-                .boxed()
+                output: Box::new(ErrorOutput {
+                    message: UNKNOWN_ERROR_MESSAGE.to_owned(),
+                    code: UNKNOWN_ERROR_CODE.to_owned(),
+                    args: HashMap::new(),
+                })
             }
         )
     }
@@ -135,37 +114,25 @@ pub mod test {
             Error {
                 debug_message: "Custom message".to_owned(),
                 error_type: ErrorType::Unknown,
-                details: ErrorDetails {
-                    message: "Unknown server error".to_owned(),
-                    code: "unknown".to_owned(),
-                    args: None,
-                }
-                .boxed()
+                output: Box::new(ErrorOutput {
+                    message: UNKNOWN_ERROR_MESSAGE.to_owned(),
+                    code: UNKNOWN_ERROR_CODE.to_owned(),
+                    args: HashMap::new(),
+                })
             }
         )
     }
 
     #[test]
-    fn builder() {
-        let debug_message = "Debug message".to_owned();
-        let error_type = ErrorType::InvalidInput;
-        let details = ErrorDetails {
-            message: "Error details message".to_owned(),
-            code: "error.test_code".to_owned(),
-            args: Some(HashMap::from([("test".to_owned(), "arg".to_owned())])),
-        };
-        let value = Error::builder()
-            .set_debug_message(debug_message.to_owned())
-            .set_error_type(error_type)
-            .set_details(details.clone())
-            .build();
+    fn default_output() {
+        let out = ErrorOutput::default();
 
         assert_eq!(
-            value,
-            Error {
-                debug_message,
-                error_type,
-                details: details.boxed(),
+            out,
+            ErrorOutput {
+                message: UNKNOWN_ERROR_MESSAGE.to_owned(),
+                code: UNKNOWN_ERROR_CODE.to_owned(),
+                args: HashMap::new(),
             }
         )
     }

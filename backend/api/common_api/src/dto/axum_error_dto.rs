@@ -31,10 +31,12 @@ impl From<Error> for ErrorResponseDto {
         let status_code = match error.error_type {
             ErrorType::InvalidInput => StatusCode::BAD_REQUEST,
             ErrorType::Unknown => StatusCode::INTERNAL_SERVER_ERROR,
+            ErrorType::Conflict => StatusCode::CONFLICT,
+            ErrorType::NotFound => StatusCode::NOT_FOUND,
         };
         Self {
             status_code,
-            error_dto: ErrorDto::from(*error.details),
+            error_dto: ErrorDto::from(*error.output),
         }
     }
 }
@@ -50,6 +52,6 @@ mod test {
         let result = ErrorResponseDto::from(error.clone());
 
         assert_eq!(result.status_code, StatusCode::INTERNAL_SERVER_ERROR);
-        assert_eq!(result.error_dto, ErrorDto::from(*error.details));
+        assert_eq!(result.error_dto, ErrorDto::from(*error.output));
     }
 }

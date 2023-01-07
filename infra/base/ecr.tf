@@ -7,5 +7,6 @@ resource "aws_ecr_repository" "code_service" {
 
   tags = {
     Environment = "dev"
+    AppName     = "just-code"
   }
 }

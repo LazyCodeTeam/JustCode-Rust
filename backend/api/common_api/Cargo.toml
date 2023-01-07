@@ -5,7 +5,6 @@ edition = "2021"
 
 [dependencies]
 axum = { workspace = true }
-code_domain = { path = "../../feature/code/code_domain" }
 common_domain = { path = "../../feature/common/common_domain" }
 serde = { workspace = true, features = ["derive"] }
 

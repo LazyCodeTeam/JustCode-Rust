@@ -1,7 +1,7 @@
 use std::path::{Path, PathBuf};
 
 use common_domain::error::Error;
-use common_domain::error::ErrorDetails;
+use common_domain::error::ErrorOutput;
 use common_domain::error::ErrorType;
 use common_domain::error::Result;
 
@@ -27,15 +27,15 @@ pub async fn create_project(path: &Path) -> Result<PathBuf> {
 }
 
 pub async fn read_js(_path: &Path) -> Result<String> {
-    Err(Error::builder()
-        .set_error_type(ErrorType::InvalidInput)
-        .set_debug_message("`read_js` is not supported for flutter".to_owned())
-        .set_details(ErrorDetails {
+    Err(Error {
+        debug_message: "`read_js` is not supported for flutter".to_owned(),
+        error_type: ErrorType::InvalidInput,
+        output: Box::new(ErrorOutput {
             message: "Compilation to js is not supported".to_owned(),
             code: "js_compilation_not_supported".to_owned(),
-            args: None,
-        })
-        .build())
+            ..Default::default()
+        }),
+    })
 }
 
 pub async fn create_base_project() -> Result<()> {

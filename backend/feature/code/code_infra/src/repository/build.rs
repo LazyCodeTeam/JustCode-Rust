@@ -1,6 +1,6 @@
 use std::{collections::HashMap, path::Path};
 
-use common_domain::error::{Error, ErrorDetails, ErrorType, Result};
+use common_domain::error::{Error, ErrorOutput, ErrorType, Result};
 use tokio::process::Command;
 
 pub(crate) async fn build(path: &Path, command: &str, args: &[&str]) -> Result<()> {
@@ -15,14 +15,14 @@ pub(crate) async fn build(path: &Path, command: &str, args: &[&str]) -> Result<(
         Ok(())
     } else {
         let message = String::from_utf8_lossy(&out.stdout).to_string();
-        Err(Error::builder()
-            .set_error_type(ErrorType::InvalidInput)
-            .set_debug_message(format!("Failed to build {command}: {message}"))
-            .set_details(ErrorDetails {
+        Err(Error {
+            debug_message: format!("Failed to build {command}: {message}"),
+            error_type: ErrorType::InvalidInput,
+            output: Box::new(ErrorOutput {
                 message: "Build failed".to_owned(),
                 code: "build_failed".to_owned(),
-                args: Some(HashMap::from([("output".to_owned(), message)])),
-            })
-            .build())
+                args: HashMap::from([("output".to_owned(), message)]),
+            }),
+        })
     }
 }

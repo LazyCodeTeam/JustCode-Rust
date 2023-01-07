@@ -9,11 +9,10 @@ common_domain = { path = "../../common/common_domain" }
 itertools = { workspace = true }
 lazy_static = { workspace = true }
 log = { workspace = true }
+regex = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 serde_json = { workspace = true }
-regex = { workspace = true }
 tokio = { workspace = true }
-paste = { workspace = true }
 
 [features]
 dart = []

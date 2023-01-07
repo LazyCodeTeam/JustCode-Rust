@@ -7,5 +7,5 @@ edition = "2021"
 lazy_static = { workspace = true }
 log = { workspace = true }
 mockall = { workspace = true }
-tokio = { workspace = true }
 paste = { workspace = true }
+tokio = { workspace = true }

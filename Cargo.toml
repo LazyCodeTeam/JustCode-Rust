@@ -1,10 +1,10 @@
 [workspace]
 members = [
-  "backend/api/container/*",
   "backend/api/common_api",
+  "backend/api/container/*",
   "backend/api/lambda/*",
-  "backend/feature/common/*",
   "backend/feature/code/*",
+  "backend/feature/common/*",
   "backend/use_case",
   "xtask",
 ]
@@ -19,6 +19,7 @@ lambda_runtime = { version = "0.6" }
 lazy_static = { version = "1.4" }
 log = { version = "0.4" }
 mockall = { version = "0.11" }
+sha3 = { version = "0.10" }
 nanoid = { version = "0.4" }
 serde = { version = "1.0" }
 serde_json = { version = "1.0" }

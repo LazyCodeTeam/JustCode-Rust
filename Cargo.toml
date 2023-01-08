@@ -2,7 +2,6 @@
 members = [
   "backend/api/common_api",
   "backend/api/container/*",
-  "backend/api/lambda/*",
   "backend/feature/code/*",
   "backend/feature/common/*",
   "backend/use_case",

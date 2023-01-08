@@ -47,16 +47,11 @@ jobs:
         with:
             toolchain: stable
             override: true
-      - name: Install cargo-nextest
-        uses: actions-rs/cargo@v1
-        with:
-          command: install
-          args: cargo-nextest
       - name: Run tests
         uses: actions-rs/cargo@v1
         with:
-          command: nextest
-          args: run --test-threads 1
+          command: test
+          args: -- --nocapture --test-threads 1
 
   analyze-dependencies:
     name: Analyze

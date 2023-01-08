@@ -4,8 +4,17 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+aws-config = { workspace = true, optional = true }
+aws-sdk-dynamodb = { workspace = true, optional = true }
+aws-sdk-s3 = { workspace = true, optional = true }
 common_domain = { path = "../common_domain" }
+lazy_static = { workspace = true }
+log = { workspace = true }
 nanoid = { workspace = true }
 tokio = { workspace = true }
 walkdir = { workspace = true }
 zip = { workspace = true }
+
+[features]
+dynamodb = ["aws-sdk-dynamodb", "aws-config"]
+s3 = ["aws-sdk-s3", "aws-config"]

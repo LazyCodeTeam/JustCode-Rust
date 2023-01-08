@@ -10,3 +10,5 @@ pub mod format_code;
 pub mod get_lang_version;
 #[cfg(feature = "raw_code_analyze")]
 pub mod raw_code_analyze;
+
+pub mod profile;

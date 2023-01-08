@@ -4,9 +4,19 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-axum = { workspace = true }
+axum = { workspace = true, optional = true }
 common_domain = { path = "../../feature/common/common_domain" }
+http = { workspace = true }
+lambda_http = { workspace = true, features = ["apigw_rest"], optional = true }
+log = { workspace = true }
+mime = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+tower-http = { workspace = true, features = ["trace"], optional = true }
+tracing = { workspace = true, optional = true }
+tracing-subscriber = { workspace = true, optional = true }
+validator = { workspace = true }
 
 [features]
-default = []
+lambda = ["lambda_http", "tracing-subscriber", "tracing", "tower-http"]
+axum_api = ["axum"]

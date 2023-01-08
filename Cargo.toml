@@ -2,25 +2,34 @@
 members = [
   "backend/api/common_api",
   "backend/api/container/*",
+  "backend/api/lambda/profile/*",
+  "backend/feature/bucket/*",
   "backend/feature/code/*",
   "backend/feature/common/*",
+  "backend/feature/profile/*",
   "backend/use_case",
   "xtask",
 ]
 
 [workspace.dependencies]
+aws_lambda_events = { version = "0.7", default-features = false }
+lambda_runtime = { version = "0.7" }
+aws-sdk-s3 = { version = "0.21" }
+aws-config = { version = "0.51" }
+aws-sdk-dynamodb = { version = "0.21" }
 axum = { version = "0.5" }
 clap = { version = "3.2" }
+chrono = { version = "0.4" }
 futures = { version = "0.3" }
 itertools = { version = "0.10" }
 lambda_http = { version = "0.6", default-features = false }
-lambda_runtime = { version = "0.6" }
 lazy_static = { version = "1.4" }
 log = { version = "0.4" }
 mockall = { version = "0.11" }
 sha3 = { version = "0.10" }
 nanoid = { version = "0.4" }
 serde = { version = "1.0" }
+serde_dynamo = { version = "4.0" }
 serde_json = { version = "1.0" }
 tokio = { version = "1.21" }
 tokio-util = { version = "0.7" }
@@ -32,3 +41,10 @@ regex = { version = "1.6" }
 paste = { version = "1.0" }
 walkdir = { version = "2.3" }
 zip = { version = "0.6", default-features = false }
+proc-macro2 = { version = "1.0" }
+darling = { version = "0.14" }
+syn = { version = "1.0" }
+quote = { version = "1.0" }
+http = { version = "0.2" }
+validator = { version = "0.16" }
+mime = { version = "0.3" }

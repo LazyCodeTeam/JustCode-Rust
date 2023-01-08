@@ -6,6 +6,8 @@ edition = "2021"
 [dependencies]
 code_domain = { path = "../feature/code/code_domain", optional = true }
 common_domain = { path = "../feature/common/common_domain" }
+mockall = { workspace = true }
+profile_domain = { path = "../feature/profile/profile_domain", optional = true }
 tokio = { workspace = true }
 
 [features]
@@ -16,3 +18,4 @@ raw_code_analyze = ["code_domain"]
 get_lang_version = ["code_domain"]
 build_code = ["code_domain"]
 build_code_2js = ["code_domain"]
+create_profile = ["profile_domain"]

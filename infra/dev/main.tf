@@ -19,7 +19,7 @@ provider "aws" {
   region = var.region
 }
 
-module "just_code_module" {
+module "app" {
   source = "../module/just-code-module"
 
   region = "eu-central-1"

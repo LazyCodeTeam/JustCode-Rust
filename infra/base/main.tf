@@ -19,10 +19,7 @@ provider "aws" {
   region = var.region
 }
 
-module "backend_module" {
-  source = "../module/backend-module"
-
-  table_name  = "just-code-state-lock"
+locals {
   bucket_name = "just-code-state"
-  region      = "eu-central-1"
+  table_name  = "just-code-state-lock"
 }

@@ -687,6 +687,7 @@ dependencies = [
  "common_domain",
  "http",
  "lambda_http",
+ "lambda_runtime",
  "log",
  "mime",
  "serde",
@@ -1626,6 +1627,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "on_avatar_created"
+version = "0.1.0"
+dependencies = [
+ "aws_lambda_events",
+ "bucket_infra",
+ "common_api",
+ "lambda_runtime",
+ "profile_infra",
+ "tokio",
+ "use_case",
+]
+
+[[package]]
 name = "once_cell"
 version = "1.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1887,6 +1901,22 @@ name = "regex-syntax"
 version = "0.6.28"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "456c603be3e8d448b072f410900c09faf164fbce2d480456f50eea6e25f9c848"
+
+[[package]]
+name = "request_avatar_upload_v1"
+version = "0.1.0"
+dependencies = [
+ "bucket_domain",
+ "bucket_infra",
+ "common_api",
+ "common_domain",
+ "futures",
+ "lambda_http",
+ "profile_infra",
+ "serde",
+ "tokio",
+ "use_case",
+]
 
 [[package]]
 name = "ring"
@@ -2532,8 +2562,11 @@ checksum = "e8db7427f936968176eaa7cdf81b7f98b980b18495ec28f1b5791ac3bfe3eea9"
 name = "use_case"
 version = "0.1.0"
 dependencies = [
+ "bucket_domain",
+ "chrono",
  "code_domain",
  "common_domain",
+ "log",
  "mockall",
  "profile_domain",
  "tokio",

@@ -17,14 +17,14 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "images" {
   }
 }
 
-# resource "aws_s3_bucket_notification" "avatar" {
-#   bucket = aws_s3_bucket.images.id
-#
-#   lambda_function {
-#     lambda_function_arn = module.on_avatar_created.arn
-#     events              = ["s3:ObjectCreated:*"]
-#     filter_prefix       = "profile/avatar/"
-#   }
-#
-#   depends_on = [module.on_avatar_created.permission_id]
-# }
+resource "aws_s3_bucket_notification" "avatar" {
+  bucket = aws_s3_bucket.images.id
+
+  lambda_function {
+    lambda_function_arn = module.on_avatar_created.arn
+    events              = ["s3:ObjectCreated:Put"]
+    filter_prefix       = "profile/avatar/"
+  }
+
+  depends_on = [module.on_avatar_created.permission_id]
+}

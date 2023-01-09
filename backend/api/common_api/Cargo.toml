@@ -8,6 +8,7 @@ axum = { workspace = true, optional = true }
 common_domain = { path = "../../feature/common/common_domain" }
 http = { workspace = true }
 lambda_http = { workspace = true, features = ["apigw_rest"], optional = true }
+lambda_runtime = { workspace = true, optional = true }
 log = { workspace = true }
 mime = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
@@ -18,5 +19,11 @@ tracing-subscriber = { workspace = true, optional = true }
 validator = { workspace = true }
 
 [features]
-lambda = ["lambda_http", "tracing-subscriber", "tracing", "tower-http"]
+lambda = [
+  "lambda_http",
+  "tracing-subscriber",
+  "tracing",
+  "tower-http",
+  "lambda_runtime",
+]
 axum_api = ["axum"]

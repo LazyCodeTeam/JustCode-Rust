@@ -687,6 +687,7 @@ dependencies = [
  "common_domain",
  "http",
  "lambda_http",
+ "lambda_runtime",
  "log",
  "mime",
  "serde",
@@ -1626,6 +1627,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "on_avatar_created"
+version = "0.1.0"
+dependencies = [
+ "aws_lambda_events",
+ "bucket_infra",
+ "common_api",
+ "lambda_runtime",
+ "profile_infra",
+ "tokio",
+ "use_case",
+]
+
+[[package]]
 name = "once_cell"
 version = "1.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2552,6 +2566,7 @@ dependencies = [
  "chrono",
  "code_domain",
  "common_domain",
+ "log",
  "mockall",
  "profile_domain",
  "tokio",

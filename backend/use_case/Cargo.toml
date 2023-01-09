@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+bucket_domain = { path = "../feature/bucket/bucket_domain", optional = true }
+chrono = { workspace = true }
 code_domain = { path = "../feature/code/code_domain", optional = true }
 common_domain = { path = "../feature/common/common_domain" }
 mockall = { workspace = true }
@@ -20,3 +22,4 @@ build_code = ["code_domain"]
 build_code_2js = ["code_domain"]
 create_profile = ["profile_domain"]
 get_profile_by_id = ["profile_domain"]
+request_avatar_upload = ["profile_domain", "bucket_domain"]

@@ -18,11 +18,11 @@ module "gateway" {
       method            = "GET"
       protected         = true
     },
-    # {
-    #   lambda_invoke_arn = module.request_avatar_upload_v1_lambda.invoke_arn
-    #   route             = "/v1/profile/current/avatar"
-    #   method            = "POST"
-    #   protected         = true
-    # },
+    {
+      lambda_invoke_arn = module.request_avatar_upload_v1_lambda.invoke_arn
+      route             = "/v1/profile/current/avatar"
+      method            = "POST"
+      protected         = true
+    },
   ]
 }

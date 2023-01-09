@@ -4,13 +4,13 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bucket_domain = { path = "../feature/bucket/bucket_domain", optional = true }
+bucket_domain = { path = "../feature/bucket/domain", optional = true }
 chrono = { workspace = true }
-code_domain = { path = "../feature/code/code_domain", optional = true }
-common_domain = { path = "../feature/common/common_domain" }
+code_domain = { path = "../feature/code/domain", optional = true }
+common_domain = { path = "../feature/common/domain" }
 log = { workspace = true }
 mockall = { workspace = true }
-profile_domain = { path = "../feature/profile/profile_domain", optional = true }
+profile_domain = { path = "../feature/profile/domain", optional = true }
 tokio = { workspace = true }
 
 [features]

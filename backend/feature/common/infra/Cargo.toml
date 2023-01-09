@@ -7,7 +7,7 @@ edition = "2021"
 aws-config = { workspace = true, optional = true }
 aws-sdk-dynamodb = { workspace = true, optional = true }
 aws-sdk-s3 = { workspace = true, optional = true }
-common_domain = { path = "../common_domain" }
+common_domain = { path = "../domain" }
 lazy_static = { workspace = true }
 log = { workspace = true }
 nanoid = { workspace = true }

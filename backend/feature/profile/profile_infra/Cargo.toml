@@ -10,4 +10,4 @@ common_domain = { path = "../../common/common_domain" }
 common_infra = { path = "../../common/common_infra", features = ["dynamodb"] }
 profile_domain = { path = "../profile_domain" }
 serde = { workspace = true }
-serde_dynamo = { workspace = true, features = ["aws-sdk-dynamodb+0_21"] }
+serde_dynamo = { workspace = true }

@@ -12,39 +12,39 @@ members = [
 ]
 
 [workspace.dependencies]
+aws-config = { version = "0.52" }
+aws-sdk-dynamodb = { version = "0.22" }
+aws-sdk-s3 = { version = "0.22" }
 aws_lambda_events = { version = "0.7", default-features = false }
-lambda_runtime = { version = "0.7" }
-aws-sdk-s3 = { version = "0.21" }
-aws-config = { version = "0.51" }
-aws-sdk-dynamodb = { version = "0.21" }
 axum = { version = "0.5" }
-clap = { version = "3.2" }
 chrono = { version = "0.4" }
+clap = { version = "4.0" }
+darling = { version = "0.14" }
 futures = { version = "0.3" }
+http = { version = "0.2" }
 itertools = { version = "0.10" }
-lambda_http = { version = "0.6", default-features = false }
+lambda_http = { version = "0.7", default-features = false }
+lambda_runtime = { version = "0.7" }
 lazy_static = { version = "1.4" }
 log = { version = "0.4" }
+mime = { version = "0.3" }
 mockall = { version = "0.11" }
-sha3 = { version = "0.10" }
 nanoid = { version = "0.4" }
+paste = { version = "1.0" }
+proc-macro2 = { version = "1.0" }
+quote = { version = "1.0" }
+regex = { version = "1.7" }
 serde = { version = "1.0" }
-serde_dynamo = { version = "4.0" }
+serde_dynamo = { version = "4.0", features = ["aws-sdk-dynamodb+0_22"] }
 serde_json = { version = "1.0" }
-tokio = { version = "1.21" }
+sha3 = { version = "0.10" }
+syn = { version = "1.0" }
+tokio = { version = "1.24" }
 tokio-util = { version = "0.7" }
 toml = { version = "0.5" }
 tower-http = { version = "0.3" }
 tracing = { version = "0.1" }
 tracing-subscriber = { version = "0.3" }
-regex = { version = "1.6" }
-paste = { version = "1.0" }
+validator = { version = "0.16" }
 walkdir = { version = "2.3" }
 zip = { version = "0.6", default-features = false }
-proc-macro2 = { version = "1.0" }
-darling = { version = "0.14" }
-syn = { version = "1.0" }
-quote = { version = "1.0" }
-http = { version = "0.2" }
-validator = { version = "0.16" }
-mime = { version = "0.3" }

@@ -6,8 +6,8 @@ edition = "2021"
 [dependencies]
 aws-sdk-dynamodb = { workspace = true }
 chrono = { workspace = true, features = ["serde"] }
-common_domain = { path = "../../common/common_domain" }
-common_infra = { path = "../../common/common_infra", features = ["dynamodb"] }
-profile_domain = { path = "../profile_domain" }
+common_domain = { path = "../../common/domain" }
+common_infra = { path = "../../common/infra", features = ["dynamodb"] }
+profile_domain = { path = "../domain" }
 serde = { workspace = true }
 serde_dynamo = { workspace = true }

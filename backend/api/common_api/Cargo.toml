@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 axum = { workspace = true, optional = true }
-common_domain = { path = "../../feature/common/common_domain" }
+common_domain = { path = "../../feature/common/domain" }
 http = { workspace = true }
 lambda_http = { workspace = true, features = ["apigw_rest"], optional = true }
 lambda_runtime = { workspace = true, optional = true }

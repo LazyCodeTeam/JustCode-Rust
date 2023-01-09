@@ -28,9 +28,9 @@ macro_rules! new_lang {
             let files: Vec<CodeFile> = files.into_iter().map(CodeFile::from).collect();
             future::ready(TmpDir::new())
                 .and_then(|tmp_dir| {
-                    use_case::format_code::format_code(
+                    use_case::code::format_code::format_code(
                         tmp_dir,
-                        use_case::format_code::FormatCodeRepository {
+                        use_case::code::format_code::FormatCodeRepository {
                             create_project: repo::create_project,
                             save_files: code_infra::repository::save_files,
                             format_files: repo::format,
@@ -65,9 +65,9 @@ macro_rules! new_lang {
 
             future::ready(TmpDir::new())
                 .and_then(|tmp_dir| {
-                    use_case::raw_code_analyze::raw_code_analyze(
+                    use_case::code::raw_code_analyze::raw_code_analyze(
                         tmp_dir,
-                        use_case::raw_code_analyze::RawAnalyzeCodeRepository {
+                        use_case::code::raw_code_analyze::RawAnalyzeCodeRepository {
                             create_project: repo::create_project,
                             save_files: code_infra::repository::save_files,
                             raw_analyze: repo::raw_analyze,
@@ -92,9 +92,9 @@ macro_rules! new_lang {
 
             future::ready(TmpDir::new())
                 .and_then(|tmp_dir| {
-                    use_case::analyze_code::analyze_code(
+                    use_case::code::analyze_code::analyze_code(
                         tmp_dir,
-                        use_case::analyze_code::AnalyzeCodeRepository {
+                        use_case::code::analyze_code::AnalyzeCodeRepository {
                             create_project: repo::create_project,
                             save_files: code_infra::repository::save_files,
                             analyze: repo::analyze,
@@ -119,7 +119,7 @@ macro_rules! new_lang {
 
             use $repo as repo;
 
-            use_case::get_lang_version::get_lang_version(repo::get_version)
+            use_case::code::get_lang_version::get_lang_version(repo::get_version)
                 .await
                 .map_err(ErrorResponseDto::from)
                 .map(VersionResponseDto::from)
@@ -134,9 +134,9 @@ macro_rules! new_lang {
 
             future::ready(TmpDir::new())
                 .and_then(|tmp_dir| {
-                    use_case::build_code::build_code(
+                    use_case::code::build_code::build_code(
                         tmp_dir,
-                        use_case::build_code::BuildCodeRepository {
+                        use_case::code::build_code::BuildCodeRepository {
                             create_project: repo::create_project,
                             save_files: code_infra::repository::save_files,
                             build: repo::build,
@@ -174,9 +174,9 @@ macro_rules! new_lang {
 
             future::ready(TmpDir::new())
                 .and_then(|tmp_dir| {
-                    use_case::build_code_2js::build_code_2js(
+                    use_case::code::build_code_2js::build_code_2js(
                         tmp_dir,
-                        use_case::build_code_2js::BuildCode2jsRepository {
+                        use_case::code::build_code_2js::BuildCode2jsRepository {
                             create_project: repo::create_project,
                             save_files: code_infra::repository::save_files,
                             build: repo::build,

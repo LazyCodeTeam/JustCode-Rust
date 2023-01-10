@@ -18,10 +18,6 @@ variable "public_subnet_ids" {
   type = list(string)
 }
 
-variable "private_subnet_ids" {
-  type = list(string)
-}
-
 variable "repository_url" {
   type = string
 }
@@ -41,4 +37,3 @@ variable "memory" {
 variable "desired_count" {
   type = number
 }
-

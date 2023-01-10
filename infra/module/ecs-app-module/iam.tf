@@ -1,16 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 4.0"
-    }
-  }
-}
-
-provider "aws" {
-  region = var.region
-}
-
 resource "aws_iam_role" "ecs_task_execution_role" {
   name               = "${var.service_name}-${var.env}-ecs-task-execution-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json

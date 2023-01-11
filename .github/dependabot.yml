@@ -8,3 +8,11 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+  - package-ecosystem: "terraform"
+    directory: "/infra/base"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "terraform"
+    directory: "/infra/dev"
+    schedule:
+      interval: "weekly"

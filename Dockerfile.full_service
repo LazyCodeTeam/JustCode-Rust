@@ -6,12 +6,9 @@ COPY . .
 RUN cargo build --release -p code_service --no-default-features -F full
 
 
-FROM dart:latest
+FROM cirrusci/flutter:latest
 
 WORKDIR /app
-RUN apt-get update && apt-get install -y curl git unzip xz-utils zip libglu1-mesa wget
-RUN git clone https://github.com/flutter/flutter.git
-ENV PATH "$PATH:/app/flutter/bin"
 RUN flutter doctor
 COPY --from=builder /app/target/release/code_service .
 EXPOSE 8080

@@ -6,10 +6,21 @@ COPY . .
 RUN cargo build --release -p code_service --no-default-features -F full
 
 
-FROM cirrusci/flutter:latest
+FROM ubuntu:latest
 
-RUN mkdir /app
-COPY --from=builder /app/target/release/code_service /app
+RUN apt-get update && \
+    apt-get install -y bash curl file git unzip xz-utils zip libglu1-mesa cmake && \
+    rm -rf /var/lib/apt/lists/*
+RUN groupadd -r -g 1441 flutter && useradd --no-log-init -r -u 1441 -g flutter -m flutter
+USER flutter:flutter
+WORKDIR /app
+ADD https://api.github.com/repos/flutter/flutter/compare/stable...stable /dev/null
+RUN git clone https://github.com/flutter/flutter.git -b stable flutter-sdk
+RUN flutter-sdk/bin/flutter precache
+RUN flutter-sdk/bin/flutter config --no-analytics
+ENV PATH="$PATH:/app/flutter-sdk/bin"
+ENV PATH="$PATH:/app/flutter-sdk/bin/cache/dart-sdk/bin"
 RUN flutter doctor
+COPY --from=builder /app/target/release/code_service .
 CMD [ "/app/code_service" ]
 

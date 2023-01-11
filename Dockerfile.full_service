@@ -8,9 +8,8 @@ RUN cargo build --release -p code_service --no-default-features -F full
 
 FROM cirrusci/flutter:latest
 
-WORKDIR /app
+RUN mkdir /app
+COPY --from=builder /app/target/release/code_service /app
 RUN flutter doctor
-COPY --from=builder /app/target/release/code_service .
-EXPOSE 8080
-CMD [ "./code_service" ]
+CMD [ "/app/code_service" ]
 

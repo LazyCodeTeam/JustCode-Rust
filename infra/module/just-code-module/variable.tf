@@ -14,8 +14,8 @@ variable "code_service" {
     desired_count = number
   })
   default = {
-    cpu           = 4096
-    memory        = 8192
+    cpu           = 2048
+    memory        = 4096
     tag           = "latest"
     desired_count = 1
   }

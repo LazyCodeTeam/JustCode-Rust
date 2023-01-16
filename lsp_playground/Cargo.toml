@@ -1,0 +1,9 @@
+[package]
+name = "lsp_playground"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { workspace = true, features = ["full"] }
+serde_json = { workspwce = true }
+which = { workspace = true }

@@ -8,8 +8,8 @@ members = [
   "backend/feature/common/*",
   "backend/feature/profile/*",
   "backend/use_case",
-  "xtask",
   "lsp_playground",
+  "xtask",
 ]
 
 [workspace.dependencies]

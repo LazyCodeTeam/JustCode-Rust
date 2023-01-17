@@ -18,7 +18,7 @@ aws-sdk-s3 = { version = "0.22" }
 aws_lambda_events = { version = "0.7", default-features = false }
 axum = { version = "0.5" }
 chrono = { version = "0.4" }
-clap = { version = "4.0" }
+clap = { version = "4.1" }
 darling = { version = "0.14" }
 futures = { version = "0.3" }
 http = { version = "0.2" }

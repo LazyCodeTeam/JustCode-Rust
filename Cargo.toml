@@ -8,6 +8,7 @@ members = [
   "backend/feature/common/*",
   "backend/feature/profile/*",
   "backend/use_case",
+  "lsp_playground",
   "xtask",
 ]
 
@@ -47,4 +48,5 @@ tracing = { version = "0.1" }
 tracing-subscriber = { version = "0.3" }
 validator = { version = "0.16" }
 walkdir = { version = "2.3" }
+which = { version = "4.3.0" }
 zip = { version = "0.6", default-features = false }

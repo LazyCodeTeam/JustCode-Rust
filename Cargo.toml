@@ -8,7 +8,6 @@ members = [
   "backend/feature/common/*",
   "backend/feature/profile/*",
   "backend/use_case",
-  "lsp_playground",
   "xtask",
 ]
 

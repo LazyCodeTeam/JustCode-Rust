@@ -7,7 +7,10 @@ edition = "2021"
 aws_lambda_events = { workspace = true, features = ["s3"] }
 bucket_infra = { path = "../../../../feature/bucket/infra" }
 common_api = { path = "../../../common_api", features = ["lambda"] }
+common_domain = { path = "../../../../feature/common/domain" }
+futures-util = { workspace = true }
 lambda_runtime = { workspace = true }
+log = { workspace = true }
 profile_infra = { path = "../../../../feature/profile/infra" }
 tokio = { workspace = true }
 use_case = { path = "../../../../use_case", features = ["on_avatar_created"] }

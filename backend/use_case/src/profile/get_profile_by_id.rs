@@ -66,6 +66,9 @@ mod test {
                     name: "name".to_owned(),
                     email: "email".to_owned(),
                     avatar_url: Some("avatar_url".to_owned()),
+                    first_name: Some("first_name".to_owned()),
+                    last_name: Some("last_name".to_owned()),
+                    ..Default::default()
                 }))
             });
 
@@ -80,6 +83,14 @@ mod test {
         assert!(result.is_ok());
         assert_eq!(result.as_ref().unwrap().name, "name");
         assert_eq!(result.as_ref().unwrap().email, "email");
+        assert_eq!(
+            result.as_ref().unwrap().avatar_url,
+            Some("avatar_url".to_owned())
+        );
+        assert_eq!(
+            result.as_ref().unwrap().first_name,
+            Some("first_name".to_owned())
+        );
         assert_eq!(
             result.as_ref().unwrap().avatar_url,
             Some("avatar_url".to_owned())

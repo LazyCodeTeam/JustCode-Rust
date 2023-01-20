@@ -6,3 +6,5 @@ pub mod get_profile_by_id;
 pub mod on_avatar_created;
 #[cfg(feature = "request_avatar_upload")]
 pub mod request_avatar_upload;
+#[cfg(feature = "update_profile")]
+pub mod update_profile;

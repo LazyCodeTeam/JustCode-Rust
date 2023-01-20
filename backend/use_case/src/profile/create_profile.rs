@@ -79,7 +79,7 @@ mod test {
                     id: "id".to_string(),
                     name: "other_name".to_string(),
                     email: "other_email".to_string(),
-                    avatar_url: None,
+                    ..Default::default()
                 }))
             });
 

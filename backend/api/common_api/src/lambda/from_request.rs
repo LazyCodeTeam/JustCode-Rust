@@ -2,13 +2,13 @@ use common_domain::error::{Error, ErrorOutput, ErrorType};
 use lambda_http::Request;
 use serde::de::DeserializeOwned;
 
-pub trait FromRequest {
+pub trait FromRequest<T> {
     fn from_request(request: &Request) -> Result<Self, Error>
     where
         Self: Sized;
 }
 
-impl<T> FromRequest for T
+impl<T> FromRequest<T> for T
 where
     T: DeserializeOwned,
 {

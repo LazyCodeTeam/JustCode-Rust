@@ -33,6 +33,11 @@ variable "s3_arn" {
   default = null
 }
 
+variable "user_pool_arn" {
+  type    = string
+  default = null
+}
+
 variable "arch" {
   type    = string
   default = "arm64"

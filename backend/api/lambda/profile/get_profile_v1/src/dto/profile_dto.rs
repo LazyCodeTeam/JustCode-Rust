@@ -5,6 +5,7 @@ use serde::Serialize;
 pub struct ProfileDto {
     pub id: String,
     pub name: String,
+    pub email: String,
     pub avatar_url: Option<String>,
 }
 
@@ -13,6 +14,7 @@ impl From<Profile> for ProfileDto {
         Self {
             id: profile.id,
             name: profile.name,
+            email: profile.email,
             avatar_url: profile.avatar_url,
         }
     }
@@ -27,6 +29,7 @@ mod tests {
         let profile = Profile {
             id: "id".to_string(),
             name: "John Doe".to_owned(),
+            email: "test@email.com".to_owned(),
             avatar_url: Some("https://example.com/avatar.png".to_owned()),
         };
         let profile_dto = ProfileDto::from(profile);
@@ -35,6 +38,7 @@ mod tests {
             ProfileDto {
                 id: "id".to_string(),
                 name: "John Doe".to_owned(),
+                email: "test@email.com".to_owned(),
                 avatar_url: Some("https://example.com/avatar.png".to_owned()),
             }
         );

@@ -1,16 +1,16 @@
 [package]
-name = "create_profile_v1"
+name = "create_profile"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+aws_lambda_events = { workspace = true, features = ["cognito"] }
 common_api = { path = "../../../common_api", features = ["lambda"] }
 common_domain = { path = "../../../../feature/common/domain" }
 futures = { workspace = true }
-lambda_http = { workspace = true, features = ["apigw_rest"] }
+lambda_runtime = { workspace = true }
+# lambda_http = { workspace = true, features = ["apigw_rest"] }
 profile_domain = { path = "../../../../feature/profile/domain" }
 profile_infra = { path = "../../../../feature/profile/infra" }
-serde = { workspace = true, features = ["derive"] }
 tokio = { workspace = true }
 use_case = { path = "../../../../use_case", features = ["create_profile"] }
-with_id = { path = "../../../../macro/with_id" }

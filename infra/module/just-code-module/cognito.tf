@@ -11,6 +11,10 @@ resource "aws_cognito_user_pool" "pool" {
     }
   }
 
+  lambda_config {
+    post_confirmation = module.create_profile_lambda.arn
+  }
+
   password_policy {
     minimum_length = 8
   }

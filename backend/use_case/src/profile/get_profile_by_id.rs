@@ -64,6 +64,7 @@ mod test {
                 Ok(Some(Profile {
                     id: "id".to_owned(),
                     name: "name".to_owned(),
+                    email: "email".to_owned(),
                     avatar_url: Some("avatar_url".to_owned()),
                 }))
             });
@@ -78,6 +79,7 @@ mod test {
 
         assert!(result.is_ok());
         assert_eq!(result.as_ref().unwrap().name, "name");
+        assert_eq!(result.as_ref().unwrap().email, "email");
         assert_eq!(
             result.as_ref().unwrap().avatar_url,
             Some("avatar_url".to_owned())

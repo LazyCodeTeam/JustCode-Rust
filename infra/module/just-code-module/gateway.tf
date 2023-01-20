@@ -7,12 +7,6 @@ module "gateway" {
   app_name       = local.app_name
   lambda_integrations = [
     {
-      lambda_invoke_arn = module.create_profile_v1_lambda.invoke_arn
-      route             = "/v1/profile/current"
-      method            = "POST"
-      protected         = true
-    },
-    {
       lambda_invoke_arn = module.get_profile_v1_lambda.invoke_arn
       route             = "/v1/profile/current"
       method            = "GET"

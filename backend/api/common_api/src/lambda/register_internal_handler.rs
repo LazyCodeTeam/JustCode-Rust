@@ -1,11 +1,12 @@
 use lambda_runtime::{run, service_fn, Error, LambdaEvent};
 use std::future::Future;
 
-pub async fn register_internal_handler<'a, F, FUT, T>(handler: F) -> Result<(), Error>
+pub async fn register_internal_handler<'a, F, FUT, T, R>(handler: F) -> Result<(), Error>
 where
-    FUT: Future<Output = Result<(), Error>> + Send,
+    FUT: Future<Output = Result<R, Error>> + Send,
     F: FnMut(LambdaEvent<T>) -> FUT + Send + 'a,
     for<'b> T: serde::Deserialize<'b>,
+    R: serde::Serialize,
 {
     tracing_subscriber::fmt()
         .with_max_level(tracing::Level::DEBUG)

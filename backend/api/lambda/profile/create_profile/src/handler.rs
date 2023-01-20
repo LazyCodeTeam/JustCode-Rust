@@ -1,16 +1,16 @@
-use crate::dto::create_profile_dto::{CreateProfileDto, CreateProfileDtoWithId};
-use common_api::lambda::{
-    from_request::FromRequest, into_response::IntoResponse, user_context::UserContext,
-};
+use aws_lambda_events::cognito::CognitoEventUserPoolsPostConfirmation;
 use common_domain::into_future::IntoFuture;
 use futures::TryFutureExt;
-use lambda_http::{http::StatusCode, Body, Error, Request, Response};
+use lambda_runtime::{Error, LambdaEvent};
 use profile_domain::model::create_profile_params::CreateProfileParams;
 use use_case::profile::create_profile::{create_profile, CreateProfileRepository};
 
-pub async fn handle_request(event: Request) -> Result<Response<Body>, Error> {
-    CreateProfileDto::from_request(&event)
-        .and_then(|dto| Ok(CreateProfileDtoWithId::new(event.get_user_id()?, dto)))
+use crate::dto::create_profile_dto::CreateProfileDto;
+
+pub async fn handle_request(
+    event: LambdaEvent<CognitoEventUserPoolsPostConfirmation>,
+) -> Result<CognitoEventUserPoolsPostConfirmation, Error> {
+    CreateProfileDto::try_from(event.payload.clone())
         .map(CreateProfileParams::from)
         .into_future()
         .and_then(|params| {
@@ -23,5 +23,7 @@ pub async fn handle_request(event: Request) -> Result<Response<Body>, Error> {
             )
         })
         .await
-        .into_empty_response(StatusCode::CREATED)
+        .map_err(Box::new)?;
+
+    Ok(event.payload)
 }

@@ -56,7 +56,6 @@ resource "aws_lambda_function" "lambda" {
 resource "aws_lambda_permission" "gateway" {
   count = var.gateway_execution_arn == null ? 0 : 1
 
-  statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda.function_name
   principal     = "apigateway.amazonaws.com"
@@ -66,10 +65,19 @@ resource "aws_lambda_permission" "gateway" {
 resource "aws_lambda_permission" "s3" {
   count = var.s3_arn == null ? 0 : 1
 
-  statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda.function_name
   principal     = "s3.amazonaws.com"
+  source_arn    = var.s3_arn
+}
+
+
+resource "aws_lambda_permission" "user_pool" {
+  count = var.user_pool_arn == null ? 0 : 1
+
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda.function_name
+  principal     = "cognito-idp.amazonaws.com"
   source_arn    = var.s3_arn
 }
 

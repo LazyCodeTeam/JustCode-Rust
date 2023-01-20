@@ -7,6 +7,7 @@ use crate::PROFILE_ID_PREFIX;
 pub struct ProfileDto {
     #[serde(rename = "PK")]
     pub id: String,
+    pub email: String,
     pub name: String,
     pub avatar_url: Option<String>,
 }
@@ -16,6 +17,7 @@ impl From<ProfileDto> for Profile {
         Profile {
             id: dto.id.replace(PROFILE_ID_PREFIX, ""),
             name: dto.name,
+            email: dto.email,
             avatar_url: dto.avatar_url,
         }
     }
@@ -30,6 +32,7 @@ mod tests {
         let dto = ProfileDto {
             id: format!("{}id", PROFILE_ID_PREFIX),
             name: "name".to_string(),
+            email: "email".to_string(),
             avatar_url: Some("avatar_url".to_string()),
         };
 
@@ -38,6 +41,7 @@ mod tests {
             Profile {
                 id: "id".to_string(),
                 name: "name".to_string(),
+                email: "email".to_string(),
                 avatar_url: Some("avatar_url".to_string()),
             },
         );

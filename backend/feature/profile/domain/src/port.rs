@@ -7,4 +7,6 @@ define_port!(GetProfileById = Fn<'a>(id: &'a str) -> Result<Option<Profile>>);
 
 define_port!(SaveProfile = Fn(params: CreateProfileParams) -> Result<()>);
 
+define_port!(UpdateProfile = Fn(params: Profile) -> Result<()>);
+
 define_port!(UpdateProfileAvatar = Fn<'a>(id: &'a str, url: Option<&'a str>) -> Result<()>);

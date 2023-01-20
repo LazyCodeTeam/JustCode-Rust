@@ -6,9 +6,14 @@ use serde_dynamo::to_item;
 use crate::dto::put_profile_dto::PutProfileDto;
 
 pub async fn save_profile(params: CreateProfileParams) -> Result<()> {
+    let dto = PutProfileDto::from(params);
+
+    save_serialized_profile(dto).await
+}
+
+pub(crate) async fn save_serialized_profile(dto: PutProfileDto) -> Result<()> {
     let client = get_dynamodb_client().await;
 
-    let dto = PutProfileDto::from(params);
     let item = to_item(&dto)
         .map_err(|e| Error::unknown(format!("Failed to serialize profile ({e:?}): {dto:?}")))?;
 

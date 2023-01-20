@@ -1770,6 +1770,7 @@ dependencies = [
 name = "profile_domain"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "common_domain",
  "mockall",
 ]
@@ -2501,6 +2502,21 @@ name = "untrusted"
 version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a156c684c91ea7d62626509bce3cb4e1d9ed5c4d978f7b4352658f96a4c26b4a"
+
+[[package]]
+name = "update_profile_v1"
+version = "0.1.0"
+dependencies = [
+ "common_api",
+ "common_domain",
+ "futures",
+ "lambda_http",
+ "profile_domain",
+ "profile_infra",
+ "serde",
+ "tokio",
+ "use_case",
+]
 
 [[package]]
 name = "url"

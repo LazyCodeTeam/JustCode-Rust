@@ -7,6 +7,8 @@ pub struct ProfileDto {
     pub name: String,
     pub email: String,
     pub avatar_url: Option<String>,
+    pub first_name: Option<String>,
+    pub last_name: Option<String>,
 }
 
 impl From<Profile> for ProfileDto {
@@ -16,6 +18,8 @@ impl From<Profile> for ProfileDto {
             name: profile.name,
             email: profile.email,
             avatar_url: profile.avatar_url,
+            first_name: profile.first_name,
+            last_name: profile.last_name,
         }
     }
 }
@@ -31,6 +35,9 @@ mod tests {
             name: "John Doe".to_owned(),
             email: "test@email.com".to_owned(),
             avatar_url: Some("https://example.com/avatar.png".to_owned()),
+            first_name: Some("John".to_owned()),
+            last_name: Some("Doe".to_owned()),
+            ..Default::default()
         };
         let profile_dto = ProfileDto::from(profile);
         assert_eq!(
@@ -40,6 +47,8 @@ mod tests {
                 name: "John Doe".to_owned(),
                 email: "test@email.com".to_owned(),
                 avatar_url: Some("https://example.com/avatar.png".to_owned()),
+                first_name: Some("John".to_owned()),
+                last_name: Some("Doe".to_owned()),
             }
         );
     }

@@ -2,7 +2,7 @@ resource "aws_cognito_user_pool" "pool" {
   name = "${local.app_name}-${var.env}-pool"
 
   auto_verified_attributes = ["email"]
-  username_attributes      = ["email"]
+  alias_attributes         = ["email"]
 
   account_recovery_setting {
     recovery_mechanism {
@@ -12,7 +12,11 @@ resource "aws_cognito_user_pool" "pool" {
   }
 
   password_policy {
-    minimum_length = 12
+    minimum_length = 8
+  }
+
+  username_configuration {
+    case_sensitive = false
   }
 
   schema {

@@ -83,6 +83,7 @@ mod tests {
             avatar_url: Some("https://example.com/avatar.png".to_owned()),
             first_name: Some("John".to_owned()),
             last_name: Some("Doe".to_owned()),
+            role: Default::default(),
             updated_at: now,
             created_at: now,
         };

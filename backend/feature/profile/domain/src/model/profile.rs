@@ -1,12 +1,13 @@
 use chrono::{DateTime, Utc};
 
-use super::update_profile_params::UpdateProfileParams;
+use super::{update_profile_params::UpdateProfileParams, user_role::UserRole};
 
 #[derive(Clone, Default, PartialEq, Eq, Debug)]
 pub struct Profile {
     pub id: String,
     pub name: String,
     pub email: String,
+    pub role: UserRole,
     pub avatar_url: Option<String>,
     pub first_name: Option<String>,
     pub last_name: Option<String>,
@@ -21,6 +22,7 @@ impl Profile {
             name: self.name,
             email: self.email,
             avatar_url: self.avatar_url,
+            role: self.role,
             first_name: params.first_name,
             last_name: params.last_name,
             updated_at: Utc::now(),
@@ -43,6 +45,7 @@ mod test {
             avatar_url: Some("avatar_url".to_string()),
             first_name: Some("first_name".to_string()),
             last_name: Some("last_name".to_string()),
+            role: UserRole::Admin,
             updated_at: now,
             created_at: now,
         };
@@ -59,6 +62,7 @@ mod test {
         assert_eq!(updated_profile.avatar_url, Some("avatar_url".to_string()));
         assert_eq!(updated_profile.first_name, Some("first_name2".to_string()));
         assert_eq!(updated_profile.last_name, Some("last_name2".to_string()));
+        assert_eq!(updated_profile.role, UserRole::Admin);
         assert_ne!(updated_profile.updated_at, now);
         assert_eq!(updated_profile.created_at, now);
     }

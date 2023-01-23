@@ -84,7 +84,6 @@ mod test {
             id: "id".to_string(),
             name: "name".to_string(),
             email: "email".to_string(),
-            updated_at: now,
             created_at: now,
             ..Default::default()
         };
@@ -105,7 +104,6 @@ mod test {
                     && profile.email == "email"
                     && profile.first_name == Some("first_name".to_owned())
                     && profile.last_name == Some("last_name".to_owned())
-                    && profile.updated_at > now
                     && profile.created_at == now
             })
             .times(1)

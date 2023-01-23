@@ -12,6 +12,8 @@ pub enum ErrorType {
     InvalidInput,
     Conflict,
     NotFound,
+    Forbidden,
+    Unauthorized,
     Unknown,
 }
 
@@ -78,6 +80,8 @@ impl From<ErrorType> for Level {
             ErrorType::InvalidInput => Level::Info,
             ErrorType::Unknown => Level::Error,
             ErrorType::Conflict => Level::Info,
+            ErrorType::Forbidden => Level::Info,
+            ErrorType::Unauthorized => Level::Info,
             ErrorType::NotFound => Level::Info,
         }
     }
@@ -135,5 +139,22 @@ pub mod test {
                 args: HashMap::new(),
             }
         )
+    }
+
+    #[test]
+    fn default_error_type() {
+        let ty = ErrorType::default();
+
+        assert_eq!(ty, ErrorType::Unknown)
+    }
+
+    #[test]
+    fn error_type_from_level() {
+        assert_eq!(Level::from(ErrorType::InvalidInput), Level::Info);
+        assert_eq!(Level::from(ErrorType::Unknown), Level::Error);
+        assert_eq!(Level::from(ErrorType::Conflict), Level::Info);
+        assert_eq!(Level::from(ErrorType::Forbidden), Level::Info);
+        assert_eq!(Level::from(ErrorType::Unauthorized), Level::Info);
+        assert_eq!(Level::from(ErrorType::NotFound), Level::Info);
     }
 }

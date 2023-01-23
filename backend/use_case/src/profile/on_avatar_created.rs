@@ -52,7 +52,7 @@ mod test {
     async fn avatar_mime_not_allowed() {
         let key = "profile/avatar/1".to_string();
 
-        let _ = bucket_domain::port::get_bucket_object_info_lock();
+        let _get_bucket_object_info_lock = bucket_domain::port::get_bucket_object_info_lock().await;
         let ctx = bucket_domain::port::mock_get_bucket_object_info::call_context();
         let object_head = BucketObjectHead {
             mime: "image/gif".to_string(),
@@ -63,25 +63,21 @@ mod test {
             .times(1)
             .return_once(move |_| Ok(object_head));
 
-        let _ = profile_domain::port::update_profile_avatar_lock();
+        let _update_profile_avatar_lock = profile_domain::port::update_profile_avatar_lock().await;
         let ctx = profile_domain::port::mock_update_profile_avatar::call_context();
         ctx.expect()
             .withf(move |id, avatar_url| id == "1" && avatar_url.is_none())
             .times(1)
             .return_once(move |_, _| Ok(()));
 
-        let _ = bucket_domain::port::delete_bucket_object_lock();
+        let _delete_bucket_object_lock = bucket_domain::port::delete_bucket_object_lock().await;
         let ctx = bucket_domain::port::mock_delete_bucket_object::call_context();
         ctx.expect()
             .withf(move |id| id == "profile/avatar/1")
             .times(1)
             .returning(|_| Ok(()));
 
-        let _ = profile_domain::port::update_profile_avatar_lock();
-        let ctx = profile_domain::port::mock_update_profile_avatar::call_context();
-        ctx.expect().times(0);
-
-        let _ = bucket_domain::port::get_bucket_object_url_lock();
+        let _get_bucket_object_url_lock = bucket_domain::port::get_bucket_object_url_lock().await;
         let ctx = bucket_domain::port::mock_get_bucket_object_url::call_context();
         ctx.expect().times(0);
 
@@ -101,7 +97,7 @@ mod test {
     async fn avatar_too_big() {
         let key = "profile/avatar/1".to_string();
 
-        let _ = bucket_domain::port::get_bucket_object_info_lock();
+        let _get_bucket_object_info_lock = bucket_domain::port::get_bucket_object_info_lock().await;
         let ctx = bucket_domain::port::mock_get_bucket_object_info::call_context();
         let object_head = BucketObjectHead {
             mime: "image/png".to_string(),
@@ -113,25 +109,21 @@ mod test {
             .times(1)
             .return_once(move |_| Ok(object_head));
 
-        let _ = profile_domain::port::update_profile_avatar_lock();
+        let _update_profile_avatar_lock = profile_domain::port::update_profile_avatar_lock().await;
         let ctx = profile_domain::port::mock_update_profile_avatar::call_context();
         ctx.expect()
             .withf(move |id, avatar_url| id == "1" && avatar_url.is_none())
             .times(1)
             .return_once(move |_, _| Ok(()));
 
-        let _ = bucket_domain::port::delete_bucket_object_lock();
+        let _delete_bucket_object_lock = bucket_domain::port::delete_bucket_object_lock().await;
         let ctx = bucket_domain::port::mock_delete_bucket_object::call_context();
         ctx.expect()
             .withf(move |id| id == "profile/avatar/1")
             .times(1)
             .returning(|_| Ok(()));
 
-        let _ = profile_domain::port::update_profile_avatar_lock();
-        let ctx = profile_domain::port::mock_update_profile_avatar::call_context();
-        ctx.expect().times(0);
-
-        let _ = bucket_domain::port::get_bucket_object_url_lock();
+        let _get_bucket_object_url_lock = bucket_domain::port::get_bucket_object_url_lock().await;
         let ctx = bucket_domain::port::mock_get_bucket_object_url::call_context();
         ctx.expect().times(0);
 
@@ -151,7 +143,7 @@ mod test {
     async fn success() {
         let key = "profile/avatar/1".to_string();
 
-        let _ = bucket_domain::port::get_bucket_object_info_lock();
+        let _get_bucket_object_info_lock = bucket_domain::port::get_bucket_object_info_lock().await;
         let ctx = bucket_domain::port::mock_get_bucket_object_info::call_context();
         let object_head = BucketObjectHead {
             mime: "image/png".to_string(),
@@ -162,21 +154,18 @@ mod test {
             .times(1)
             .return_once(move |_| Ok(object_head));
 
-        let _ = bucket_domain::port::delete_bucket_object_lock();
+        let _delete_bucket_object_lock = bucket_domain::port::delete_bucket_object_lock().await;
         let ctx = bucket_domain::port::mock_delete_bucket_object::call_context();
         ctx.expect().times(0);
 
-        let _ = profile_domain::port::update_profile_avatar_lock();
+        let _update_profile_avatar_lock = profile_domain::port::update_profile_avatar_lock().await;
         let ctx = profile_domain::port::mock_update_profile_avatar::call_context();
         ctx.expect()
             .withf(|id, url| id == "1" && url.unwrap() == "https://example.com")
             .times(1)
             .returning(|_, _| Ok(()));
-        ctx.expect()
-            .withf(|id, url| id == "1" && url.is_none())
-            .times(0);
 
-        let _ = bucket_domain::port::get_bucket_object_url_lock();
+        let _get_bucket_object_url_lock = bucket_domain::port::get_bucket_object_url_lock().await;
         let ctx = bucket_domain::port::mock_get_bucket_object_url::call_context();
         ctx.expect()
             .withf(move |id| id == "profile/avatar/1")

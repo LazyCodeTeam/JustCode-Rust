@@ -41,17 +41,39 @@ jobs:
             ~/.rustup/toolchains
             ~/.rustup/update-hashes
             ~/.rustup/settings.toml
-          key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-test
       - name: Install latest rust
         uses: actions-rs/toolchain@v1
         with:
             toolchain: stable
             override: true
-      - name: Run tests
+
+      - name: Install llvm-cov
         uses: actions-rs/cargo@v1
         with:
-          command: test
-          args: -- --nocapture --test-threads 1
+          command: install
+          args: cargo-llvm-cov
+
+      - name: Run tests
+        run: |
+          OUT=$(cargo llvm-cov test -- --nocapture --test-threads 1 | grep TOTAL | xargs)
+          TOTAL=$(echo $OUT | cut -d " " -f 8)
+          MISSED=$(echo $OUT | cut -d " " -f 9)
+          COV=$(echo $OUT | cut -d " " -f 10)
+          echo "TOTAL=$TOTAL" >> $GITHUB_ENV
+          echo "MISSED=$MISSED" >> $GITHUB_ENV
+          echo "COV=$COV" >> $GITHUB_ENV
+
+      - name: Publish report
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            ## Coverage report
+
+            Total lines: **${{ env.TOTAL }}**
+            Missed lines: **${{ env.MISSED }}**
+            Coverage: **${{ env.COV }}**
+
 
   analyze-dependencies:
     name: Analyze
@@ -69,7 +91,7 @@ jobs:
             ~/.rustup/toolchains
             ~/.rustup/update-hashes
             ~/.rustup/settings.toml
-          key: ${{ runner.os }}-cargo-pre-test-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-pre-test
       - name: Install latest rust
         uses: actions-rs/toolchain@v1
         with:
@@ -124,7 +146,7 @@ jobs:
             ~/.rustup/toolchains
             ~/.rustup/update-hashes
             ~/.rustup/settings.toml
-          key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-build
       - name: Install latest rust
         uses: actions-rs/toolchain@v1
         with:

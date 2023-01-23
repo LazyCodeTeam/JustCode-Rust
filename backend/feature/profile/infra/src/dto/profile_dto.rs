@@ -14,7 +14,6 @@ pub struct ProfileDto {
     pub avatar_url: Option<String>,
     pub first_name: Option<String>,
     pub last_name: Option<String>,
-    pub updated_at: DateTime<Utc>,
     pub created_at: DateTime<Utc>,
 }
 
@@ -31,7 +30,6 @@ impl From<ProfileDto> for Profile {
                 .role
                 .map(|role| map_role(role.as_str()))
                 .unwrap_or_default(),
-            updated_at: dto.updated_at,
             created_at: dto.created_at,
         }
     }
@@ -61,7 +59,6 @@ mod tests {
             first_name: Some("first_name".to_string()),
             last_name: Some("last_name".to_string()),
             role: Some("ADMIN".to_string()),
-            updated_at: now,
             created_at: now,
         };
 
@@ -75,7 +72,6 @@ mod tests {
                 first_name: Some("first_name".to_string()),
                 last_name: Some("last_name".to_string()),
                 role: UserRole::Admin,
-                updated_at: now,
                 created_at: now,
             },
         );

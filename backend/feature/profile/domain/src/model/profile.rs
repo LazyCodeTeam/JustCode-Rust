@@ -11,7 +11,6 @@ pub struct Profile {
     pub avatar_url: Option<String>,
     pub first_name: Option<String>,
     pub last_name: Option<String>,
-    pub updated_at: DateTime<Utc>,
     pub created_at: DateTime<Utc>,
 }
 
@@ -25,7 +24,6 @@ impl Profile {
             role: self.role,
             first_name: params.first_name,
             last_name: params.last_name,
-            updated_at: Utc::now(),
             created_at: self.created_at,
         }
     }
@@ -46,7 +44,6 @@ mod test {
             first_name: Some("first_name".to_string()),
             last_name: Some("last_name".to_string()),
             role: UserRole::Admin,
-            updated_at: now,
             created_at: now,
         };
         let params = UpdateProfileParams {
@@ -63,7 +60,6 @@ mod test {
         assert_eq!(updated_profile.first_name, Some("first_name2".to_string()));
         assert_eq!(updated_profile.last_name, Some("last_name2".to_string()));
         assert_eq!(updated_profile.role, UserRole::Admin);
-        assert_ne!(updated_profile.updated_at, now);
         assert_eq!(updated_profile.created_at, now);
     }
 }

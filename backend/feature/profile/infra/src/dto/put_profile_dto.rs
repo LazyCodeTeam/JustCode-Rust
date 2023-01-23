@@ -14,7 +14,6 @@ pub struct PutProfileDto {
     pub email: String,
     pub first_name: Option<String>,
     pub last_name: Option<String>,
-    pub updated_at: DateTime<Utc>,
     pub created_at: DateTime<Utc>,
 }
 
@@ -25,7 +24,6 @@ impl From<CreateProfileParams> for PutProfileDto {
             sk: PROFILE_SORT_KEY.to_owned(),
             name: params.name,
             email: params.email,
-            updated_at: Utc::now(),
             created_at: Utc::now(),
             ..Default::default()
         }
@@ -41,7 +39,6 @@ impl From<Profile> for PutProfileDto {
             email: profile.email,
             first_name: profile.first_name,
             last_name: profile.last_name,
-            updated_at: profile.updated_at,
             created_at: profile.created_at,
         }
     }
@@ -66,7 +63,6 @@ mod tests {
                 sk: PROFILE_SORT_KEY.to_owned(),
                 name: "name".to_owned(),
                 email: "email".to_owned(),
-                updated_at: dto.updated_at,
                 created_at: dto.created_at,
                 ..Default::default()
             }
@@ -84,7 +80,6 @@ mod tests {
             first_name: Some("John".to_owned()),
             last_name: Some("Doe".to_owned()),
             role: Default::default(),
-            updated_at: now,
             created_at: now,
         };
 
@@ -99,7 +94,6 @@ mod tests {
                 email: "email".to_owned(),
                 first_name: Some("John".to_owned()),
                 last_name: Some("Doe".to_owned()),
-                updated_at: now,
                 created_at: now,
             }
         );

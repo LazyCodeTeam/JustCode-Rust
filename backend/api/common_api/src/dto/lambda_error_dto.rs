@@ -71,7 +71,7 @@ mod test {
     fn try_from() {
         let error = Error::unknown("".to_owned());
 
-        let result = LambdaErrorDto::from(error.clone());
+        let result = LambdaErrorDto::from(error);
 
         let response = Response::builder()
             .status(result.status_code)

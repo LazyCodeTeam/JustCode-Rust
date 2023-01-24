@@ -47,13 +47,11 @@ jobs:
         with:
             toolchain: stable
             override: true
-
       - name: Install llvm-cov
         uses: actions-rs/cargo@v1
         with:
           command: install
           args: cargo-llvm-cov
-
       - name: Run tests
         run: |
           OUT=$(cargo llvm-cov test -- --nocapture --test-threads 1 | grep TOTAL | xargs)
@@ -63,9 +61,9 @@ jobs:
           echo "TOTAL=$TOTAL" >> $GITHUB_ENV
           echo "MISSED=$MISSED" >> $GITHUB_ENV
           echo "COV=$COV" >> $GITHUB_ENV
-
       - name: Publish report
         uses: mshick/add-pr-comment@v2
+        if: ${{ github.actor != 'dependabot[bot]' }}
         with:
           message: |
             ## Coverage report

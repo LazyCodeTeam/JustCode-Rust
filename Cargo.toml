@@ -8,6 +8,7 @@ members = [
   "backend/feature/common/*",
   "backend/feature/profile/*",
   "backend/use_case",
+  "integration_tests",
   "xtask",
 ]
 

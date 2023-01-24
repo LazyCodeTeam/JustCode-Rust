@@ -1,0 +1,11 @@
+[package]
+name = "integration-tests"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+aws-sdk-dynamodb = { workspace = true }
+common_infra = { path = "../backend/feature/common/infra", features = [
+  "dynamodb",
+] }
+tokio = { workspace = true }

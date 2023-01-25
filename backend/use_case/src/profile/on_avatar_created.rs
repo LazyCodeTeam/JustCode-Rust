@@ -23,10 +23,9 @@ where
     for<'a> D: GetBucketObjectUrl<'a>,
 {
     let bucket_object_head = (repo.get_bucket_object_info)(&key).await?;
-    let id = key
-        .split('/')
-        .last()
-        .ok_or_else(|| Error::unknown("should never happend".to_owned()))?;
+    let id = key.split('/').last().ok_or_else(|| {
+        Error::unknown("Failed to split object key (should never happend)".to_owned())
+    })?;
 
     if !ALLOWED_CONTENT_TYPES.contains(&bucket_object_head.mime.as_str())
         || bucket_object_head.size > MAX_SIZE

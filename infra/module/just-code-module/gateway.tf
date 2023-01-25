@@ -13,6 +13,12 @@ module "gateway" {
       protected         = true
     },
     {
+      lambda_invoke_arn = module.update_push_data_v1_lambda.invoke_arn
+      route             = "/v1/profile/current/push"
+      method            = "PUT"
+      protected         = true
+    },
+    {
       lambda_invoke_arn = module.get_profile_v1_lambda.invoke_arn
       route             = "/v1/profile/current"
       method            = "GET"

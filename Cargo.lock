@@ -1347,7 +1347,15 @@ name = "integration-tests"
 version = "0.1.0"
 dependencies = [
  "aws-sdk-dynamodb",
+ "aws_lambda_events",
  "common_infra",
+ "create_profile",
+ "futures",
+ "get_profile_v1",
+ "lambda_http",
+ "lambda_runtime",
+ "lazy_static",
+ "serde_json",
  "tokio",
 ]
 

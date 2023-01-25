@@ -1,5 +1,5 @@
 mod profile {
-    mod get_profile_test;
+    mod create_profile_test;
 }
 
-pub mod util;
+pub mod common;

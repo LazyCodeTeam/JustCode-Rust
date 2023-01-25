@@ -30,5 +30,11 @@ module "gateway" {
       method            = "POST"
       protected         = true
     },
+    {
+      lambda_invoke_arn = module.remove_push_data_v1_lambda.invoke_arn
+      route             = "/v1/profile/current/push"
+      method            = "DELETE"
+      protected         = true
+    },
   ]
 }

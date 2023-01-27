@@ -1927,6 +1927,24 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "456c603be3e8d448b072f410900c09faf164fbce2d480456f50eea6e25f9c848"
 
 [[package]]
+name = "remove_push_data_v1"
+version = "0.1.0"
+dependencies = [
+ "common_api",
+ "common_domain",
+ "futures",
+ "lambda_http",
+ "lazy_static",
+ "profile_domain",
+ "profile_infra",
+ "regex",
+ "serde",
+ "tokio",
+ "use_case",
+ "validator",
+]
+
+[[package]]
 name = "request_avatar_upload_v1"
 version = "0.1.0"
 dependencies = [

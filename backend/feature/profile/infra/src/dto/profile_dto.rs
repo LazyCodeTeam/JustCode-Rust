@@ -2,8 +2,6 @@ use chrono::{DateTime, Utc};
 use profile_domain::model::{profile::Profile, user_role::UserRole};
 use serde::Deserialize;
 
-use crate::PROFILE_ID_PREFIX;
-
 #[derive(Deserialize, PartialEq, Eq, Debug)]
 pub struct ProfileDto {
     #[serde(rename = "PK")]
@@ -20,7 +18,7 @@ pub struct ProfileDto {
 impl From<ProfileDto> for Profile {
     fn from(dto: ProfileDto) -> Self {
         Profile {
-            id: dto.id.replace(PROFILE_ID_PREFIX, ""),
+            id: dto.id,
             name: dto.name,
             email: dto.email,
             avatar_url: dto.avatar_url,
@@ -52,7 +50,7 @@ mod tests {
     fn from_profile_dto() {
         let now = Utc::now();
         let dto = ProfileDto {
-            id: format!("{PROFILE_ID_PREFIX}id"),
+            id: "id".to_string(),
             name: "name".to_string(),
             email: "email".to_string(),
             avatar_url: Some("avatar_url".to_string()),

@@ -52,7 +52,7 @@ mod tests {
     fn from_profile_dto() {
         let now = Utc::now();
         let dto = ProfileDto {
-            id: format!("{}id", PROFILE_ID_PREFIX),
+            id: format!("{PROFILE_ID_PREFIX}id"),
             name: "name".to_string(),
             email: "email".to_string(),
             avatar_url: Some("avatar_url".to_string()),

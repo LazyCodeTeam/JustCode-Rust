@@ -24,7 +24,7 @@ pub fn build_lambda(args: &BuildLambdaArgs) -> Result<(), DynError> {
         let lambda_executable_path = release_path.join(&lambda);
         let lambda_target_path = lambdas_dir.join(&lambda);
 
-        let zip_name = format!("{}.zip", lambda);
+        let zip_name = format!("{lambda}.zip");
         let zip_path = lambdas_dir.join(zip_name);
 
         if are_files_the_same(&lambda_executable_path, &lambda_target_path) {

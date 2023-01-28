@@ -16,10 +16,7 @@ pub async fn update_push_data(id: &str, data: &PushData) -> Result<()> {
         .await
         .update_item()
         .table_name(&CONFIG.dynamodb_table)
-        .key(
-            "PK",
-            AttributeValue::S(format!("{}{}", PROFILE_ID_PREFIX, id)),
-        )
+        .key("PK", AttributeValue::S(format!("{PROFILE_ID_PREFIX}{id}")))
         .key("SK", AttributeValue::S(PROFILE_SORT_KEY.to_owned()))
         .update_expression("set push_token = :push_token, platform = :platform")
         .expression_attribute_values(":push_token", AttributeValue::S(data.token.clone()))
@@ -27,5 +24,5 @@ pub async fn update_push_data(id: &str, data: &PushData) -> Result<()> {
         .send()
         .await
         .map(|_| ())
-        .map_err(|e| Error::unknown(format!("Failed to set push data: {:?}", e)))
+        .map_err(|e| Error::unknown(format!("Failed to set push data: {e:?}")))
 }

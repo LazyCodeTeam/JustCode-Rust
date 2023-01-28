@@ -13,7 +13,7 @@ where
 {
     (repo.get_profile_by_id)(&id).await.and_then(|result| {
         result.ok_or_else(|| Error {
-            debug_message: format!("Profile with id {} not found", id),
+            debug_message: format!("Profile with id {id} not found"),
             error_type: ErrorType::NotFound,
             output: Box::new(ErrorOutput {
                 message: "Profile not found".to_string(),

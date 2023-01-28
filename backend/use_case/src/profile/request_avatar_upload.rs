@@ -21,12 +21,12 @@ where
         return Err(profile_not_created(&profile_id));
     }
 
-    (repo.get_avatar_upload_url)(&format!("{}{}", AVATAR_IMAGE_PREFIX, profile_id)).await
+    (repo.get_avatar_upload_url)(&format!("{AVATAR_IMAGE_PREFIX}{profile_id}")).await
 }
 
 fn profile_not_created(profile_id: &str) -> Error {
     Error {
-        debug_message: format!("Profile {} not created, cannot upload avatar", profile_id),
+        debug_message: format!("Profile {profile_id} not created, cannot upload avatar"),
         error_type: ErrorType::Conflict,
         output: Box::new(ErrorOutput {
             message: "Profile not created, cannot upload avatar".to_owned(),

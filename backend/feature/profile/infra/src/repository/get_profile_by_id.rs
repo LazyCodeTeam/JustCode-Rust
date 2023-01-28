@@ -11,10 +11,7 @@ pub async fn get_profile_by_id(id: &str) -> Result<Option<Profile>> {
     client
         .get_item()
         .table_name(&CONFIG.dynamodb_table)
-        .key(
-            "PK",
-            AttributeValue::S(format!("{}{}", PROFILE_ID_PREFIX, id)),
-        )
+        .key("PK", AttributeValue::S(format!("{PROFILE_ID_PREFIX}{id}")))
         .key("SK", AttributeValue::S(PROFILE_SORT_KEY.to_owned()))
         .send()
         .await

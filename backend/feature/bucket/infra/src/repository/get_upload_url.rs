@@ -16,12 +16,7 @@ pub async fn get_upload_url(key: &str) -> Result<PresignedUrl> {
         .acl(ObjectCannedAcl::PublicRead)
         .presigned(presigned_config()?)
         .await
-        .map_err(|err| {
-            Error::unknown(format!(
-                "Failed to presign avatar image  {}: {:?}",
-                key, err
-            ))
-        })
+        .map_err(|err| Error::unknown(format!("Failed to presign avatar image  {key}: {err:?}")))
         .map(|presigned| PresignedUrl {
             url: presigned.uri().to_string(),
             valid_until: Utc::now() + url_chrono_duration(),

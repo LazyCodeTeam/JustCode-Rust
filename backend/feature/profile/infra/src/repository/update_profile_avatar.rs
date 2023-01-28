@@ -9,10 +9,7 @@ pub async fn update_profile_avatar(id: &str, url: Option<&str>) -> Result<()> {
         .await
         .update_item()
         .table_name(&CONFIG.dynamodb_table)
-        .key(
-            "PK",
-            AttributeValue::S(format!("{}{}", PROFILE_ID_PREFIX, id)),
-        )
+        .key("PK", AttributeValue::S(format!("{PROFILE_ID_PREFIX}{id}")))
         .key("SK", AttributeValue::S(PROFILE_SORT_KEY.to_owned()));
 
     let query = match url {
@@ -26,5 +23,5 @@ pub async fn update_profile_avatar(id: &str, url: Option<&str>) -> Result<()> {
         .send()
         .await
         .map(|_| ())
-        .map_err(|e| Error::unknown(format!("{:?}", e)))
+        .map_err(|e| Error::unknown(format!("{e:?}")))
 }

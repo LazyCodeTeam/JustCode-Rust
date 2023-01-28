@@ -26,7 +26,7 @@ pub async fn clone_base_project(repo_name: &str) -> Result<PathBuf> {
     tokio::fs::create_dir_all(&base_path).await.ok();
     let result = tokio::process::Command::new("git")
         .current_dir(&base_path)
-        .args(["clone", &format!("{}/{}.git", REPO, repo_name)])
+        .args(["clone", &format!("{REPO}/{repo_name}.git")])
         .status()
         .await
         .map_err(|e| Error::unknown(e.to_string()))?;
@@ -34,7 +34,7 @@ pub async fn clone_base_project(repo_name: &str) -> Result<PathBuf> {
     if result.success() {
         Ok(repo_path)
     } else {
-        Err(Error::unknown(format!("Failed to clone {}", repo_name)))
+        Err(Error::unknown(format!("Failed to clone {repo_name}")))
     }
 }
 

@@ -17,7 +17,7 @@ pub struct ErrorResponseDto {
 
 impl Display for ErrorResponseDto {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:?}", self)
+        write!(f, "{self:?}")
     }
 }
 impl IntoResponse for ErrorResponseDto {

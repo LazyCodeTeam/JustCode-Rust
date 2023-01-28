@@ -26,7 +26,7 @@ where
 
 fn not_found_error(id: &str) -> common_domain::error::Error {
     common_domain::error::Error {
-        debug_message: format!("profile {} not found", id),
+        debug_message: format!("profile {id} not found"),
         error_type: ErrorType::NotFound,
         output: Box::new(ErrorOutput {
             message: "profile not found".to_string(),

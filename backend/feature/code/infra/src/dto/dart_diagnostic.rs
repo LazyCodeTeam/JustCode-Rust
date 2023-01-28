@@ -69,10 +69,10 @@ impl From<DiagnosticDto> for Diagnostic {
                 "{}{}{}",
                 dto.problem_message,
                 dto.correction_message
-                    .map(|s| format!(" - {}", s))
+                    .map(|s| format!(" - {s}"))
                     .unwrap_or_else(|| "".to_owned()),
                 dto.documentation
-                    .map(|s| format!(" - {}", s))
+                    .map(|s| format!(" - {s}"))
                     .unwrap_or_else(|| "".to_owned()),
             ),
             range: dto.location.range.into(),

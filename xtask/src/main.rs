@@ -8,7 +8,7 @@ mod util;
 
 fn main() {
     if let Err(e) = try_main() {
-        eprintln!("{}", e);
+        eprintln!("{e}");
         std::process::exit(-1);
     }
 }

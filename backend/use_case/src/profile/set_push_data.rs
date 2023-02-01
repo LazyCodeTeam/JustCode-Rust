@@ -1,6 +1,6 @@
-use common_domain::error::{Error, Result};
+use common_domain::error::Result;
 use profile_domain::{
-    model::{platform::Platform, push_data::PushData},
+    model::push_data::PushData,
     port::{RemovePushData, UpdatePushData},
 };
 
@@ -17,23 +17,10 @@ where
     for<'a> A: UpdatePushData<'a>,
     for<'a> B: RemovePushData<'a>,
 {
-    if let Some(PushData {
-        platform: Platform::Unknown,
-        ..
-    }) = data
-    {
-        // Should not happen, but just in case
-        return Err(unknown_platform_error());
-    }
-
     match data {
         Some(data) => (repo.update_push_data)(&id, &data).await,
         None => (repo.remove_push_data)(&id).await,
     }
-}
-
-fn unknown_platform_error() -> Error {
-    Error::unknown("Unknown platform".to_owned())
 }
 
 #[cfg(test)]
@@ -93,32 +80,5 @@ mod test {
         let result = set_push_data((id.to_owned(), None), repo).await;
 
         assert!(result.is_ok());
-    }
-
-    #[tokio::test]
-    async fn unknown_platform() {
-        let id = "123";
-        let data = PushData {
-            token: "token".to_owned(),
-            platform: Platform::Unknown,
-        };
-
-        let _update_push_data_lock = profile_domain::port::update_push_data_lock();
-        let ctx = profile_domain::port::mock_update_push_data::call_context();
-        ctx.expect().times(0);
-
-        let _remove_push_data_lock = profile_domain::port::remove_push_data_lock();
-        let ctx = profile_domain::port::mock_remove_push_data::call_context();
-        ctx.expect().times(0);
-
-        let repo = SetPushDataRepository {
-            update_push_data: profile_domain::port::mock_update_push_data::call,
-            remove_push_data: profile_domain::port::mock_remove_push_data::call,
-        };
-
-        let result = set_push_data((id.to_owned(), Some(data)), repo).await;
-
-        assert!(result.is_err());
-        assert_eq!(result.unwrap_err(), unknown_platform_error());
     }
 }

@@ -8,10 +8,8 @@ common_api = { path = "../../../common_api", features = ["lambda"] }
 common_domain = { path = "../../../../feature/common/domain" }
 futures = { workspace = true }
 lambda_http = { workspace = true, features = ["apigw_rest"] }
-lazy_static = { workspace = true }
 profile_domain = { path = "../../../../feature/profile/domain" }
 profile_infra = { path = "../../../../feature/profile/infra" }
-regex = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 tokio = { workspace = true }
 use_case = { path = "../../../../use_case", features = ["set_push_data"] }

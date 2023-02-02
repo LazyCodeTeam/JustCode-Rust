@@ -3,6 +3,7 @@ members = [
   "backend/api/common_api",
   "backend/api/container/*",
   "backend/api/lambda/profile/*",
+  "backend/api/lambda/task/*",
   "backend/feature/bucket/*",
   "backend/feature/code/*",
   "backend/feature/common/*",

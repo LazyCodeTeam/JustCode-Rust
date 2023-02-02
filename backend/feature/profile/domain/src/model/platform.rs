@@ -2,5 +2,4 @@
 pub enum Platform {
     Android,
     Ios,
-    Unknown,
 }

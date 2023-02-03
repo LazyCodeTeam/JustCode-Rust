@@ -1502,6 +1502,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f051f77a7c8e6957c0696eac88f26b0117e54f52d3fc682ab19397a8812846a4"
 
 [[package]]
+name = "load_tasks_v1"
+version = "0.1.0"
+dependencies = [
+ "tokio",
+]
+
+[[package]]
 name = "lock_api"
 version = "0.4.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2623,10 +2630,8 @@ dependencies = [
  "common_domain",
  "futures",
  "lambda_http",
- "lazy_static",
  "profile_domain",
  "profile_infra",
- "regex",
  "serde",
  "tokio",
  "use_case",

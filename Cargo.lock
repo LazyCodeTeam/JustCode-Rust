@@ -1110,6 +1110,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "git_domain"
+version = "0.1.0"
+
+[[package]]
+name = "git_infra"
+version = "0.1.0"
+
+[[package]]
 name = "h2"
 version = "0.3.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1505,7 +1513,16 @@ checksum = "f051f77a7c8e6957c0696eac88f26b0117e54f52d3fc682ab19397a8812846a4"
 name = "load_tasks_v1"
 version = "0.1.0"
 dependencies = [
+ "common_api",
+ "common_domain",
+ "futures",
+ "git_domain",
+ "lambda_http",
+ "log",
+ "serde",
+ "task_domain",
  "tokio",
+ "use_case",
 ]
 
 [[package]]
@@ -2663,6 +2680,7 @@ dependencies = [
  "chrono",
  "code_domain",
  "common_domain",
+ "git_domain",
  "log",
  "mockall",
  "profile_domain",

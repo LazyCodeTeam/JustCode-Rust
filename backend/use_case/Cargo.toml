@@ -8,6 +8,7 @@ bucket_domain = { path = "../feature/bucket/domain", optional = true }
 chrono = { workspace = true }
 code_domain = { path = "../feature/code/domain", optional = true }
 common_domain = { path = "../feature/common/domain" }
+git_domain = { path = "../feature/git/domain", optional = true }
 log = { workspace = true }
 mockall = { workspace = true }
 profile_domain = { path = "../feature/profile/domain", optional = true }
@@ -27,3 +28,4 @@ get_profile_by_id = ["profile_domain"]
 request_avatar_upload = ["profile_domain", "bucket_domain"]
 on_avatar_created = ["profile_domain", "bucket_domain"]
 set_push_data = ["profile_domain"]
+load_tasks = ["git_domain"]

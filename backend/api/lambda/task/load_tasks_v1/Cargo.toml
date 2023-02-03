@@ -4,4 +4,19 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+common_api = { path = "../../../common_api", features = ["lambda"] }
+common_domain = { path = "../../../../feature/common/domain" }
+futures = { workspace = true }
+git_domain = { path = "../../../../feature/git/domain" }
+lambda_http = { workspace = true, features = ["apigw_rest"] }
+serde = { workspace = true, features = ["derive"] }
 tokio = { workspace = true }
+use_case = { path = "../../../../use_case", features = ["load_tasks"] }
+
+[lib]
+name = "load_tasks_v1"
+path = "src/lib.rs"
+
+[[bin]]
+name = "load_tasks_v1"
+path = "src/main.rs"

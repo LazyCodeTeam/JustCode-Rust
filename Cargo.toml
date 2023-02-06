@@ -7,7 +7,6 @@ members = [
   "backend/feature/bucket/*",
   "backend/feature/code/*",
   "backend/feature/common/*",
-  "backend/feature/git/*",
   "backend/feature/profile/*",
   "backend/feature/task/*",
   "backend/use_case",
@@ -26,6 +25,7 @@ clap = { version = "4.0" }
 darling = { version = "0.14" }
 futures = { version = "0.3" }
 futures-util = { version = "0.3" }
+git2 = { version = "0.16.1", default-features = false }
 http = { version = "0.2" }
 itertools = { version = "0.10" }
 lambda_http = { version = "0.7", default-features = false }
@@ -50,6 +50,7 @@ toml = { version = "0.5" }
 tower-http = { version = "0.3" }
 tracing = { version = "0.1" }
 tracing-subscriber = { version = "0.3" }
+uuid = { version = "1.3" }
 validator = { version = "0.16" }
 walkdir = { version = "2.3" }
 zip = { version = "0.6", default-features = false }

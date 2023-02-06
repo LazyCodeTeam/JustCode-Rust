@@ -7,10 +7,6 @@ terraform {
   }
 }
 
-locals {
-  env_variables = var.env_variables == null ? [] : [var.env_variables]
-}
-
 resource "aws_iam_role" "lambda_exec" {
   name = "${var.name}-${var.env}-role"
   assume_role_policy = jsonencode({
@@ -38,14 +34,13 @@ resource "aws_lambda_function" "lambda" {
   role             = aws_iam_role.lambda_exec.arn
   architectures    = [var.arch]
   publish          = true
-
-  dynamic "environment" {
-    for_each = local.env_variables
-
-    content {
-      variables = each.value
-    }
+  layers           = var.layers
+  environment {
+    variables = merge(var.env_variables, {
+      ENV = var.env
+    })
   }
+
 
   tags = {
     Environment = var.env

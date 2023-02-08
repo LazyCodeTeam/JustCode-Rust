@@ -12,7 +12,7 @@ variable "name" {
 
 variable "env_variables" {
   type    = map(string)
-  default = null
+  default = {}
 }
 
 variable "memory_size" {
@@ -45,4 +45,9 @@ variable "arch" {
 
 variable "policies" {
   type = list(string)
+}
+
+variable "layers" {
+  type    = list(string)
+  default = []
 }

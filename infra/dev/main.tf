@@ -22,6 +22,8 @@ provider "aws" {
 module "app" {
   source = "../module/just-code-module"
 
-  region = "eu-central-1"
-  env    = "dev"
+  region                    = "eu-central-1"
+  env                       = "dev"
+  git_username              = var.git_username
+  git_personal_access_token = var.git_personal_access_token
 }

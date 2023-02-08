@@ -71,6 +71,10 @@ module "load_tasks_v1_lambda" {
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
   ]
+  env_variables = {
+    "GIT_PERSONAL_ACCESS_TOEKN" = var.git_personal_access_token
+    "GIT_USERNAME"              = var.git_username
+  }
 }
 
 module "update_profile_v1_lambda" {

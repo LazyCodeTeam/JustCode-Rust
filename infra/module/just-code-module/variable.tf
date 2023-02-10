@@ -45,13 +45,3 @@ variable "dynamodb_gsk_write_capacity" {
   type    = number
   default = 1
 }
-
-variable "git_personal_access_token" {
-  description = "Personal access token"
-  type        = string
-}
-
-variable "git_username" {
-  description = "Git username"
-  type        = string
-}

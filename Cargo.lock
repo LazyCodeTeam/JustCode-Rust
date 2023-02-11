@@ -1506,9 +1506,13 @@ name = "load_tasks_v1"
 version = "0.1.0"
 dependencies = [
  "common_api",
+ "common_domain",
+ "futures",
  "lambda_http",
+ "serde",
  "tokio",
  "use_case",
+ "validator",
 ]
 
 [[package]]

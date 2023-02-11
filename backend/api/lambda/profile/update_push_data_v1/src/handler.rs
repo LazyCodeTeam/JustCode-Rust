@@ -1,5 +1,5 @@
 use common_api::lambda::into_response::IntoResponse;
-use common_api::lambda::validate_dto::ValidateDto;
+use common_api::lambda::validate::Validate;
 use common_api::lambda::{from_request::FromRequest, user_context::UserContext};
 use common_domain::into_future::IntoFuture;
 use futures::TryFutureExt;
@@ -12,10 +12,7 @@ use crate::dto::push_data_dto::PushDataDto;
 
 pub async fn handle_request(event: Request) -> Result<Response<Body>, Error> {
     PushDataDto::from_request(&event)
-        .and_then(|dto| {
-            dto.validate_dto()?;
-            Ok(dto)
-        })
+        .and_then(Validate::validate)
         .and_then(|dto| Ok((event.get_user_id()?, PushData::from(dto))))
         .into_future()
         .and_then(|(id, data)| {

@@ -21,6 +21,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "api_key_validator"
+version = "0.1.0"
+dependencies = [
+ "lambda_runtime",
+ "tokio",
+]
+
+[[package]]
 name = "async-stream"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"

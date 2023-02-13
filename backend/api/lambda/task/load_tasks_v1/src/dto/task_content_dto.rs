@@ -22,25 +22,25 @@ pub enum TaskContentDto {
     SingleSelection {
         content: String,
         options: Vec<OptionDto>,
-        correct_option: String,
+        correct_option: u16,
         hints: Vec<HintDto>,
     },
     MultipleSelection {
         content: String,
         options: Vec<OptionDto>,
-        correct_options: Vec<String>,
+        correct_options: Vec<u16>,
         hints: Vec<HintDto>,
     },
     KeywordsArrangement {
         content: String,
         keywords: Vec<KeywordDto>,
-        correct_order: Vec<String>,
+        correct_order: Vec<u16>,
         hints: Vec<HintDto>,
     },
     LinesArrangement {
         content: String,
         lines: Vec<OptionDto>,
-        correct_order: Vec<String>,
+        correct_order: Vec<u16>,
         hints: Vec<HintDto>,
     },
     MissingCode {

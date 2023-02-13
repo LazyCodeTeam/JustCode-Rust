@@ -119,3 +119,20 @@ module "on_avatar_created" {
     "arn:aws:iam::aws:policy/AmazonS3FullAccess",
   ]
 }
+
+module "moderator_api_key_validator" {
+  source = "../lambda-module"
+
+  env                   = var.env
+  name                  = "moderator-api-key-validator"
+  app_name              = local.app_name
+  memory_size           = 128
+  zip_path              = "${path.module}/../../../target/lambdas/api_key_validator.zip"
+  gateway_execution_arn = module.gateway.execution_arn
+  env_variables = {
+    API_KEY = var.moderator_api_key
+  }
+  policies = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+  ]
+}

@@ -4,5 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+aws_lambda_events = { workspace = true, features = ["apigw"] }
+common_api = { path = "../../../common_api", features = ["lambda"] }
 lambda_runtime = { workspace = true }
+log = { workspace = true }
 tokio = { workspace = true }

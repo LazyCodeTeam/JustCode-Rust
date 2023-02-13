@@ -7,6 +7,19 @@ terraform {
   }
 }
 
+locals {
+  authorizer_type = {
+    NONE              = null,
+    COGNITO           = "JWT",
+    MODERATOR_API_KEY = "CUSTOM"
+  }
+  authorizer_id = {
+    NONE              = null,
+    COGNITO           = aws_apigatewayv2_authorizer.auth.id,
+    MODERATOR_API_KEY = aws_apigatewayv2_authorizer.moderator.id
+  }
+}
+
 resource "aws_apigatewayv2_api" "default" {
   name          = "${var.app_name}-${var.env}"
   protocol_type = "HTTP"
@@ -68,8 +81,8 @@ resource "aws_apigatewayv2_route" "lambdas" {
 
   api_id             = aws_apigatewayv2_api.default.id
   route_key          = "${var.lambda_integrations[count.index].method} ${var.lambda_integrations[count.index].route}"
-  authorizer_id      = var.lambda_integrations[count.index].protected ? aws_apigatewayv2_authorizer.auth.id : null
-  authorization_type = var.lambda_integrations[count.index].protected ? "JWT" : null
+  authorizer_id      = local.authorizer_id[var.lambda_integrations[count.index].auth_type]
+  authorization_type = local.authorizer_type[var.lambda_integrations[count.index].auth_type]
 
   target = "integrations/${aws_apigatewayv2_integration.lambdas[count.index].id}"
 }
@@ -78,4 +91,14 @@ resource "aws_cloudwatch_log_group" "api_gw" {
   name = "/aws/api_gw/${aws_apigatewayv2_api.default.name}"
 
   retention_in_days = 30
+}
+
+resource "aws_apigatewayv2_authorizer" "moderator" {
+  api_id                            = aws_apigatewayv2_api.default.id
+  authorizer_type                   = "REQUEST"
+  authorizer_uri                    = var.moderator_authorizer_lambda_invoke_arn
+  identity_sources                  = ["$request.header.X-Api-Key"]
+  name                              = "${var.app_name}-${var.env}-moderator-authorizer"
+  authorizer_payload_format_version = "2.0"
+  enable_simple_responses           = true
 }

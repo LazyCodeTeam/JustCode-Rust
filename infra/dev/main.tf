@@ -22,6 +22,7 @@ provider "aws" {
 module "app" {
   source = "../module/just-code-module"
 
-  region = "eu-central-1"
-  env    = "dev"
+  region            = "eu-central-1"
+  env               = "dev"
+  moderator_api_key = var.moderator_api_key
 }

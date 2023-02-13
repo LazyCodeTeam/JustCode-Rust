@@ -24,7 +24,10 @@ dependencies = [
 name = "api_key_validator"
 version = "0.1.0"
 dependencies = [
+ "aws_lambda_events",
+ "common_api",
  "lambda_runtime",
+ "log",
  "tokio",
 ]
 

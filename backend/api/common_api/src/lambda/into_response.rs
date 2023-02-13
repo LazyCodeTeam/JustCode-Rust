@@ -28,7 +28,7 @@ impl<T> IntoResponse<T> for Result<T, common_domain::error::Error> {
                 )
                 .map_err(Box::new)?),
             Err(err) => {
-                log::log!(err.error_type.into(), "{err:?}");
+                err.log();
 
                 LambdaErrorDto::from(err).try_into()
             }

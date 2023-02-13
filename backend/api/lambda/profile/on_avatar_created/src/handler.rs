@@ -39,7 +39,7 @@ pub async fn handle_event(event: LambdaEvent<s3::S3Event>) -> Result<(), Error> 
             .collect::<Vec<_>>()
             .join(", ");
 
-        log::error!("{}", error_message);
+        log::error!("{error_message}");
 
         return Err(Box::new(common_domain::error::Error::unknown(
             error_message,

@@ -64,6 +64,10 @@ impl Error {
             ..Default::default()
         }
     }
+
+    pub fn log(&self) {
+        log::log!(self.error_type.into(), "{self}");
+    }
 }
 
 impl Display for Error {

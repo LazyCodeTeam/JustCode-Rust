@@ -39,7 +39,7 @@ module "gateway" {
     {
       lambda_invoke_arn = module.load_tasks_v1_lambda.invoke_arn
       route             = "/v1/task/load"
-      method            = "POST"
+      method            = "PUT"
       protected         = false
     },
   ]

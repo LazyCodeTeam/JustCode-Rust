@@ -1,0 +1,8 @@
+[package]
+name = "api_key_validator"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+lambda_runtime = { workspace = true }
+tokio = { workspace = true }

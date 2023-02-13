@@ -8,4 +8,6 @@ pub struct TaskDto {
     pub id: String,
     pub title: String,
     pub content: TaskContentDto,
+    pub difficulty: u8,
+    pub dynamic: bool,
 }

@@ -15,43 +15,38 @@ pub enum TaskContentDto {
         content: String,
     },
     Playground {
-        description: String,
-        variations: HashMap<String, PlaygroundVariationDto>,
+        content: String,
+        variations: HashMap<String, Vec<PlaygroundVariationDto>>,
         dynamic_description: HashMap<String, String>,
     },
-    SingleSlection {
+    SingleSelection {
         content: String,
         options: Vec<OptionDto>,
         correct_option: String,
         hints: Vec<HintDto>,
-        difficulty: u8,
     },
     MultipleSelection {
         content: String,
         options: Vec<OptionDto>,
         correct_options: Vec<String>,
         hints: Vec<HintDto>,
-        difficulty: u8,
     },
     KeywordsArrangement {
         content: String,
         keywords: Vec<KeywordDto>,
         correct_order: Vec<String>,
         hints: Vec<HintDto>,
-        difficulty: u8,
     },
     LinesArrangement {
         content: String,
         lines: Vec<OptionDto>,
         correct_order: Vec<String>,
         hints: Vec<HintDto>,
-        difficulty: u8,
     },
     MissingCode {
         content: String,
         correct_code: HashMap<String, String>,
         hints: Vec<HintDto>,
-        difficulty: u8,
     },
 }
 

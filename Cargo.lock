@@ -27,8 +27,8 @@ dependencies = [
  "aws_lambda_events",
  "common_api",
  "lambda_runtime",
- "log",
  "tokio",
+ "use_case",
 ]
 
 [[package]]

@@ -45,3 +45,7 @@ variable "dynamodb_gsk_write_capacity" {
   type    = number
   default = 1
 }
+
+variable "moderator_api_key" {
+  type = string
+}

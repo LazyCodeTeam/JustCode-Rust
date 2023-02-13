@@ -1,46 +1,47 @@
 module "gateway" {
   source = "../gateway-module"
 
-  auth_endpoint  = aws_cognito_user_pool.pool.endpoint
-  auth_client_id = aws_cognito_user_pool_client.client.id
-  env            = var.env
-  app_name       = local.app_name
+  auth_endpoint                          = aws_cognito_user_pool.pool.endpoint
+  auth_client_id                         = aws_cognito_user_pool_client.client.id
+  env                                    = var.env
+  app_name                               = local.app_name
+  moderator_authorizer_lambda_invoke_arn = module.moderator_api_key_validator.invoke_arn
   lambda_integrations = [
     {
       lambda_invoke_arn = module.update_profile_v1_lambda.invoke_arn
       route             = "/v1/profile/current"
       method            = "PUT"
-      protected         = true
+      auth_type         = "COGNITO"
     },
     {
       lambda_invoke_arn = module.update_push_data_v1_lambda.invoke_arn
       route             = "/v1/profile/current/push"
       method            = "PUT"
-      protected         = true
+      auth_type         = "COGNITO"
     },
     {
       lambda_invoke_arn = module.get_profile_v1_lambda.invoke_arn
       route             = "/v1/profile/current"
       method            = "GET"
-      protected         = true
+      auth_type         = "COGNITO"
     },
     {
       lambda_invoke_arn = module.request_avatar_upload_v1_lambda.invoke_arn
       route             = "/v1/profile/current/avatar"
       method            = "POST"
-      protected         = true
+      auth_type         = "COGNITO"
     },
     {
       lambda_invoke_arn = module.remove_push_data_v1_lambda.invoke_arn
       route             = "/v1/profile/current/push"
       method            = "DELETE"
-      protected         = true
+      auth_type         = "COGNITO"
     },
     {
       lambda_invoke_arn = module.load_tasks_v1_lambda.invoke_arn
       route             = "/v1/task/load"
       method            = "PUT"
-      protected         = false
+      auth_type         = "MODERATOR_API_KEY"
     },
   ]
 }

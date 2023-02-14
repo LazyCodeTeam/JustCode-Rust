@@ -3,7 +3,6 @@ use serde::Deserialize;
 #[derive(Debug, PartialEq, Eq, Clone, Deserialize)]
 
 pub struct KeywordDto {
-    pub id: String,
     pub content: String,
     pub modifiers: Vec<ModifierDto>,
 }

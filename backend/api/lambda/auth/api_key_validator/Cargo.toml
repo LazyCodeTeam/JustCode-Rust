@@ -9,3 +9,4 @@ common_api = { path = "../../../common_api", features = ["lambda"] }
 lambda_runtime = { workspace = true }
 tokio = { workspace = true }
 use_case = { path = "../../../../use_case", features = ["validate_secret_key"] }
+serde_json = { workspace = true }

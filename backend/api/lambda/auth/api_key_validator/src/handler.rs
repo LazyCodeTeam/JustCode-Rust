@@ -1,8 +1,7 @@
 use std::env;
 
-use aws_lambda_events::{
-    apigw::{ApiGatewayV2CustomAuthorizerSimpleResponse, ApiGatewayV2CustomAuthorizerV2Request},
-    serde_json::Map,
+use aws_lambda_events::apigw::{
+    ApiGatewayV2CustomAuthorizerSimpleResponse, ApiGatewayV2CustomAuthorizerV2Request,
 };
 use lambda_runtime::LambdaEvent;
 use use_case::auth::validate_secret_key::validate_secret_key;
@@ -21,6 +20,6 @@ pub async fn handle_request(
 
     Ok(ApiGatewayV2CustomAuthorizerSimpleResponse {
         is_authorized: result.is_ok(),
-        context: aws_lambda_events::serde_json::Value::Object(Map::new()),
+        context: serde_json::Value::Object(serde_json::Map::new()),
     })
 }

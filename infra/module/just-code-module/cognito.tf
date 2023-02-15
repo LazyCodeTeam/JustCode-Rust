@@ -16,7 +16,8 @@ resource "aws_cognito_user_pool" "pool" {
   }
 
   password_policy {
-    minimum_length = 8
+    minimum_length                   = 8
+    temporary_password_validity_days = 7
   }
 
   username_configuration {

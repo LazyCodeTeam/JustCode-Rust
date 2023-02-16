@@ -1521,6 +1521,8 @@ dependencies = [
  "common_domain",
  "futures",
  "lambda_http",
+ "lazy_static",
+ "regex",
  "serde",
  "tokio",
  "use_case",

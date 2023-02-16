@@ -1,15 +1,20 @@
 use std::collections::HashMap;
 
-use common_domain::error::{Error, ErrorOutput, ErrorType, Result};
-use profile_domain::{model::profile::Profile, port::GetProfileById};
+use common_domain::{
+    define_repo,
+    error::{Error, ErrorOutput, ErrorType, Result},
+};
+use profile_domain::model::profile::Profile;
 
-pub struct GetProfileByIdRepository<T> {
-    pub get_profile_by_id: T,
+define_repo! {
+    pub struct GetProfileByIdRepository<T> {
+        pub get_profile_by_id: Fn<'a>(id: &'a str) -> Result<Option<Profile>> as T,
+    }
 }
 
 pub async fn get_profile_by_id<T>(id: String, repo: GetProfileByIdRepository<T>) -> Result<Profile>
 where
-    for<'a> T: GetProfileById<'a>,
+    T: GetProfileByIdType,
 {
     (repo.get_profile_by_id)(&id).await.and_then(|result| {
         result.ok_or_else(|| Error {
@@ -33,8 +38,7 @@ mod test {
     #[tokio::test]
     async fn should_return_not_found() {
         let id = "id".to_owned();
-        let _get_profile_id_lock = profile_domain::port::get_profile_by_id_lock().await;
-        let ctx = profile_domain::port::mock_get_profile_by_id::call_context();
+        let (ctx, _get_profile_id_lock) = mock_get_profile_by_id::ctx().await;
         ctx.expect()
             .times(1)
             .withf(|arg| arg == "id")
@@ -43,7 +47,7 @@ mod test {
         let result = get_profile_by_id(
             id,
             GetProfileByIdRepository {
-                get_profile_by_id: profile_domain::port::mock_get_profile_by_id::call,
+                get_profile_by_id: mock_get_profile_by_id::call,
             },
         )
         .await;
@@ -55,8 +59,7 @@ mod test {
     #[tokio::test]
     async fn should_return_profile() {
         let id = "id".to_owned();
-        let _get_profile_id_lock = profile_domain::port::get_profile_by_id_lock().await;
-        let ctx = profile_domain::port::mock_get_profile_by_id::call_context();
+        let (ctx, _get_profile_id_lock) = mock_get_profile_by_id::ctx().await;
         ctx.expect()
             .times(1)
             .withf(|arg| arg == "id")
@@ -75,7 +78,7 @@ mod test {
         let result = get_profile_by_id(
             id,
             GetProfileByIdRepository {
-                get_profile_by_id: profile_domain::port::mock_get_profile_by_id::call,
+                get_profile_by_id: mock_get_profile_by_id::call,
             },
         )
         .await;

@@ -1,12 +1,11 @@
-use common_domain::error::Result;
-use profile_domain::{
-    model::create_profile_params::CreateProfileParams,
-    port::{GetProfileById, SaveProfile},
-};
+use common_domain::{define_repo, error::Result};
+use profile_domain::model::{create_profile_params::CreateProfileParams, profile::Profile};
 
-pub struct CreateProfileRepository<T, Y> {
-    pub get_profile_by_id: T,
-    pub save_profile: Y,
+define_repo! {
+    pub struct CreateProfileRepository<T, Y> {
+        pub get_profile_by_id: Fn<'a>(id: &'a str) -> Result<Option<Profile>> as T,
+        pub save_profile: Fn(params: CreateProfileParams) -> Result<()> as Y,
+    }
 }
 
 pub async fn create_profile<T, Y>(
@@ -14,8 +13,8 @@ pub async fn create_profile<T, Y>(
     repo: CreateProfileRepository<T, Y>,
 ) -> Result<()>
 where
-    for<'a> T: GetProfileById<'a>,
-    Y: SaveProfile,
+    T: GetProfileByIdType,
+    Y: SaveProfileType,
 {
     let profile = (repo.get_profile_by_id)(&params.id).await?;
     if profile.is_some() {
@@ -38,23 +37,21 @@ mod test {
             id: "id".to_owned(),
             ..Default::default()
         };
-        let _get_profile_id_lock = profile_domain::port::get_profile_by_id_lock().await;
-        let ctx = profile_domain::port::mock_get_profile_by_id::call_context();
+        let (ctx, _get_profile_id_lock) = mock_get_profile_by_id::ctx().await;
         ctx.expect()
             .withf(move |id| id == "id")
             .times(1)
             .returning(|_| Ok(None));
 
-        let _save_profile_lock = profile_domain::port::save_profile_lock().await;
-        let ctx = profile_domain::port::mock_save_profile::call_context();
+        let (ctx, _save_profile_lock) = mock_save_profile::ctx().await;
         ctx.expect()
             .with(predicate::eq(input.clone()))
             .times(1)
             .returning(|_| Ok(()));
 
         let repo = CreateProfileRepository {
-            get_profile_by_id: profile_domain::port::mock_get_profile_by_id::call,
-            save_profile: profile_domain::port::mock_save_profile::call,
+            get_profile_by_id: mock_get_profile_by_id::call,
+            save_profile: mock_save_profile::call,
         };
 
         let result = create_profile(input, repo).await;
@@ -69,8 +66,7 @@ mod test {
             name: "name".to_string(),
             email: "email".to_string(),
         };
-        let _get_profile_id_lock = profile_domain::port::get_profile_by_id_lock().await;
-        let ctx = profile_domain::port::mock_get_profile_by_id::call_context();
+        let (ctx, _get_profile_id_lock) = mock_get_profile_by_id::ctx().await;
         ctx.expect()
             .withf(move |id| id == "id")
             .times(1)
@@ -83,13 +79,12 @@ mod test {
                 }))
             });
 
-        let _save_profile_lock = profile_domain::port::save_profile_lock().await;
-        let ctx = profile_domain::port::mock_save_profile::call_context();
+        let (ctx, _save_profile_lock) = mock_save_profile::ctx().await;
         ctx.expect().never();
 
         let repo = CreateProfileRepository {
-            get_profile_by_id: profile_domain::port::mock_get_profile_by_id::call,
-            save_profile: profile_domain::port::mock_save_profile::call,
+            get_profile_by_id: mock_get_profile_by_id::call,
+            save_profile: mock_save_profile::call,
         };
 
         let result = create_profile(input, repo).await;

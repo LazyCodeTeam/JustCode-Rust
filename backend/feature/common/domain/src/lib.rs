@@ -1,4 +1,5 @@
 pub mod define_port;
+pub mod define_repo;
 pub mod error;
 pub mod into_future;
 pub mod port;

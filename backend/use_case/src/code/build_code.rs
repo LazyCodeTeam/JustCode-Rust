@@ -1,15 +1,16 @@
-use code_domain::{
-    model::code_file::CodeFile,
-    port::{Build, CreateProject, SaveFiles},
-};
-use common_domain::{error::Result, port::Compress, tmp::TmpDirProvider};
+use code_domain::model::code_file::CodeFile;
+use common_domain::{define_repo, error::Result, tmp::TmpDirProvider};
+use std::path::Path;
+use std::path::PathBuf;
 use tokio::fs::File;
 
-pub struct BuildCodeRepository<B, C, D, E> {
-    pub create_project: B,
-    pub save_files: C,
-    pub build: D,
-    pub compress: E,
+define_repo! {
+    pub struct BuildCodeRepository<B, C, D, E> {
+        pub create_project: Fn<'a>(path: &'a Path) -> Result<PathBuf> as B,
+        pub save_files: Fn<'a>(path: &'a Path, files: &'a[CodeFile]) -> Result<()> as C,
+        pub build: Fn<'a>(path: &'a Path) -> Result<PathBuf> as D,
+        pub compress: Fn<'a>(code: &'a Path, out: &'a Path) -> Result<tokio::fs::File> as E,
+    }
 }
 
 pub async fn build_code<A, B, C, D, E>(
@@ -19,10 +20,10 @@ pub async fn build_code<A, B, C, D, E>(
 ) -> Result<File>
 where
     A: TmpDirProvider,
-    for<'a> B: CreateProject<'a>,
-    for<'a> C: SaveFiles<'a>,
-    for<'a> D: Build<'a>,
-    for<'a> E: Compress<'a>,
+    B: CreateProjectType,
+    C: SaveFilesType,
+    D: BuildType,
+    E: CompressType,
 {
     let path = tmp_dir.path();
     let files_path = (repo.create_project)(&path).await?;
@@ -60,22 +61,18 @@ mod test {
             .times(1)
             .returning(move || out.clone());
 
-        let _create_project_lock = code_domain::port::create_project_lock().await;
-        let ctx = code_domain::port::mock_create_project::call_context();
+        let (ctx, _create_project_lock) = mock_create_project::ctx().await;
         let out = project_path.clone();
         ctx.expect().times(1).returning(move |_| Ok(out.clone()));
 
-        let _save_files_lock = code_domain::port::save_files_lock().await;
-        let ctx = code_domain::port::mock_save_files::call_context();
+        let (ctx, _save_files_lock) = mock_save_files::ctx().await;
         ctx.expect().times(1).returning(|_, _| Ok(()));
 
-        let _build_lock = code_domain::port::build_lock().await;
-        let ctx = code_domain::port::mock_build::call_context();
+        let (ctx, _build_lock) = mock_build::ctx().await;
         let out = out_dir.clone();
         ctx.expect().times(1).returning(move |_| Ok(out.clone()));
 
-        let _compress_lock = common_domain::port::compress_lock().await;
-        let ctx = common_domain::port::mock_compress::call_context();
+        let (ctx, _compress_lock) = mock_compress::ctx().await;
         let test_file_path = temp_dir().join("test_file");
         let test_file = tokio::fs::File::create(&test_file_path).await.unwrap();
         let out = test_file.try_clone().await.unwrap();
@@ -85,10 +82,10 @@ mod test {
         let result = build_code(
             mock_tmp,
             BuildCodeRepository {
-                create_project: code_domain::port::mock_create_project::call,
-                save_files: code_domain::port::mock_save_files::call,
-                build: code_domain::port::mock_build::call,
-                compress: common_domain::port::mock_compress::call,
+                create_project: mock_create_project::call,
+                save_files: mock_save_files::call,
+                build: mock_build::call,
+                compress: mock_compress::call,
             },
             &files,
         )

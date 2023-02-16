@@ -1,13 +1,14 @@
-use code_domain::{
-    model::{code_file::CodeFile, raw_message::RawMessage},
-    port::{CreateProject, RawAnalyze, SaveFiles},
-};
-use common_domain::{error::Result, tmp::TmpDirProvider};
+use code_domain::model::{code_file::CodeFile, raw_message::RawMessage};
+use common_domain::{define_repo, error::Result, tmp::TmpDirProvider};
+use std::path::Path;
+use std::path::PathBuf;
 
-pub struct RawAnalyzeCodeRepository<B, C, D> {
-    pub create_project: B,
-    pub save_files: C,
-    pub raw_analyze: D,
+define_repo! {
+    pub struct RawAnalyzeCodeRepository<B, C, D> {
+        pub create_project: Fn<'a>(path: &'a Path) -> Result<PathBuf> as B,
+        pub save_files: Fn<'a>(path: &'a Path, files: &'a[CodeFile]) -> Result<()> as C,
+        pub raw_analyze: FnOnce<'a>(path: &'a Path) -> Result<RawMessage> as D,
+    }
 }
 
 pub async fn raw_code_analyze<A, B, C, D>(
@@ -17,9 +18,9 @@ pub async fn raw_code_analyze<A, B, C, D>(
 ) -> Result<RawMessage>
 where
     A: TmpDirProvider,
-    for<'a> B: CreateProject<'a>,
-    for<'a> C: SaveFiles<'a>,
-    for<'a> D: RawAnalyze<'a>,
+    B: CreateProjectType,
+    C: SaveFilesType,
+    D: RawAnalyzeType,
 {
     let path = tmp_dir.path();
     let files_path = (repo.create_project)(&path).await?;
@@ -56,26 +57,23 @@ mod test {
             .times(1)
             .returning(move || out.clone());
 
-        let _create_project_lock = code_domain::port::create_project_lock().await;
-        let ctx = code_domain::port::mock_create_project::call_context();
+        let (ctx, _create_project_lock) = mock_create_project::ctx().await;
         let out = project_path.clone();
         ctx.expect().times(1).returning(move |_| Ok(out.clone()));
 
-        let _save_files_lock = code_domain::port::save_files_lock().await;
-        let ctx = code_domain::port::mock_save_files::call_context();
+        let (ctx, _save_files_lock) = mock_save_files::ctx().await;
         ctx.expect().times(1).returning(|_, _| Ok(()));
 
-        let _raw_analyze_lock = code_domain::port::raw_analyze_lock().await;
-        let ctx = code_domain::port::mock_raw_analyze::call_context();
+        let (ctx, _raw_analyze_lock) = mock_raw_analyze::ctx().await;
         let out = message.clone();
         ctx.expect().times(1).returning(move |_| Ok(out.clone()));
 
         let result = raw_code_analyze(
             mock_tmp,
             RawAnalyzeCodeRepository {
-                create_project: code_domain::port::mock_create_project::call,
-                save_files: code_domain::port::mock_save_files::call,
-                raw_analyze: code_domain::port::mock_raw_analyze::call,
+                create_project: mock_create_project::call,
+                save_files: mock_save_files::call,
+                raw_analyze: mock_raw_analyze::call,
             },
             &files,
         )

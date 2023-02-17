@@ -1,9 +1,14 @@
-use code_domain::port::GetVersion;
-use common_domain::error::Result;
+use common_domain::{define_repo, error::Result};
 
-pub async fn get_lang_version<A>(get_version: A) -> Result<String>
+define_repo! {
+    pub struct GetLangVersionRepository<A> {
+        pub get_version: Fn() -> Result<String> as A,
+    }
+}
+
+pub async fn get_lang_version<A>(repo: GetLangVersionRepository<A>) -> Result<String>
 where
-    A: GetVersion,
+    A: GetVersionType,
 {
-    get_version().await
+    (repo.get_version)().await
 }

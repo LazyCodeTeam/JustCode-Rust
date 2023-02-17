@@ -1,14 +1,15 @@
-use code_domain::{
-    model::code_file::CodeFile,
-    port::{CreateProject, FormatFiles, ReadFiles, SaveFiles},
-};
-use common_domain::{error::Result, tmp::TmpDirProvider};
+use code_domain::model::code_file::CodeFile;
+use common_domain::{define_repo, error::Result, tmp::TmpDirProvider};
+use std::path::Path;
+use std::path::PathBuf;
 
-pub struct FormatCodeRepository<B, C, D, E> {
-    pub create_project: B,
-    pub save_files: C,
-    pub format_files: D,
-    pub read_files: E,
+define_repo! {
+    pub struct FormatCodeRepository<B, C, D, E> {
+        pub create_project: Fn<'a>(path: &'a Path) -> Result<PathBuf> as B,
+        pub save_files: Fn<'a>(path: &'a Path, files: &'a[CodeFile]) -> Result<()> as C,
+        pub format_files: Fn<'a>(path: &'a Path) -> Result<()> as D,
+        pub read_files: Fn<'a>(path: &'a Path) -> Result<Vec<CodeFile>> as E,
+    }
 }
 
 pub async fn format_code<A, B, C, D, E>(
@@ -18,10 +19,10 @@ pub async fn format_code<A, B, C, D, E>(
 ) -> Result<Vec<CodeFile>>
 where
     A: TmpDirProvider,
-    for<'a> B: CreateProject<'a>,
-    for<'a> C: SaveFiles<'a>,
-    for<'a> D: FormatFiles<'a>,
-    for<'a> E: ReadFiles<'a>,
+    B: CreateProjectType,
+    C: SaveFilesType,
+    D: FormatFilesType,
+    E: ReadFilesType,
 {
     let path = tmp_dir.path();
     let files_path = (repo.create_project)(&path).await?;
@@ -60,31 +61,27 @@ mod test {
             .times(1)
             .returning(move || out.clone());
 
-        let _create_project_lock = code_domain::port::create_project_lock().await;
-        let ctx = code_domain::port::mock_create_project::call_context();
+        let (ctx, _create_project_lock) = mock_create_project::ctx().await;
         let out = project_path.clone();
         ctx.expect().times(1).returning(move |_| Ok(out.clone()));
 
-        let _save_files_lock = code_domain::port::save_files_lock().await;
-        let ctx = code_domain::port::mock_save_files::call_context();
+        let (ctx, _save_files_lock) = mock_save_files::ctx().await;
         ctx.expect().times(1).returning(|_, _| Ok(()));
 
-        let _format_files_lock = code_domain::port::format_files_lock().await;
-        let ctx = code_domain::port::mock_format_files::call_context();
+        let (ctx, _format_files_lock) = mock_format_files::ctx().await;
         ctx.expect().times(1).returning(|_| Ok(()));
 
-        let _read_files_lock = code_domain::port::read_files_lock().await;
-        let ctx = code_domain::port::mock_read_files::call_context();
+        let (ctx, _read_files_lock) = mock_read_files::ctx().await;
         let out = files_out.clone();
         ctx.expect().times(1).returning(move |_| Ok(out.clone()));
 
         let result = format_code(
             mock_tmp,
             FormatCodeRepository {
-                create_project: code_domain::port::mock_create_project::call,
-                save_files: code_domain::port::mock_save_files::call,
-                format_files: code_domain::port::mock_format_files::call,
-                read_files: code_domain::port::mock_read_files::call,
+                create_project: mock_create_project::call,
+                save_files: mock_save_files::call,
+                format_files: mock_format_files::call,
+                read_files: mock_read_files::call,
             },
             &files,
         )

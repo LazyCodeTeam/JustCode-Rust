@@ -1,13 +1,14 @@
-use code_domain::{
-    model::{code_file::CodeFile, diagnostic_result::DocumentDiagnostics},
-    port::{Analyze, CreateProject, SaveFiles},
-};
-use common_domain::{error::Result, tmp::TmpDirProvider};
+use code_domain::model::{code_file::CodeFile, diagnostic_result::DocumentDiagnostics};
+use common_domain::{define_repo, error::Result, tmp::TmpDirProvider};
+use std::path::Path;
+use std::path::PathBuf;
 
-pub struct AnalyzeCodeRepository<B, C, D> {
-    pub create_project: B,
-    pub save_files: C,
-    pub analyze: D,
+define_repo! {
+    pub struct AnalyzeCodeRepository<B, C, D> {
+        pub create_project: Fn<'a>(path: &'a Path) -> Result<PathBuf> as B,
+        pub save_files: Fn<'a>(path: &'a Path, files: &'a[CodeFile]) -> Result<()> as C,
+        pub analyze: Fn<'a>(path: &'a Path) -> Result<Vec<DocumentDiagnostics>> as D,
+    }
 }
 
 pub async fn analyze_code<A, B, C, D>(
@@ -17,9 +18,9 @@ pub async fn analyze_code<A, B, C, D>(
 ) -> Result<Vec<DocumentDiagnostics>>
 where
     A: TmpDirProvider,
-    for<'a> B: CreateProject<'a>,
-    for<'a> C: SaveFiles<'a>,
-    for<'a> D: Analyze<'a>,
+    B: CreateProjectType,
+    C: SaveFilesType,
+    D: AnalyzeType,
 {
     let path = tmp_dir.path();
     let files_path = (repo.create_project)(&path).await?;
@@ -65,26 +66,23 @@ mod test {
             .times(1)
             .returning(move || out.clone());
 
-        let _create_project_lock = code_domain::port::create_project_lock().await;
-        let ctx = code_domain::port::mock_create_project::call_context();
+        let (ctx, _create_project_lock) = mock_create_project::ctx().await;
         let out = project_path.clone();
         ctx.expect().times(1).returning(move |_| Ok(out.clone()));
 
-        let _save_files_lock = code_domain::port::save_files_lock().await;
-        let ctx = code_domain::port::mock_save_files::call_context();
+        let (ctx, _save_files_lock) = mock_save_files::ctx().await;
         ctx.expect().times(1).returning(|_, _| Ok(()));
 
-        let _analyze_lock = code_domain::port::analyze_lock().await;
-        let ctx = code_domain::port::mock_analyze::call_context();
+        let (ctx, _analyze_lock) = mock_analyze::ctx().await;
         let out = document_diagnostics.clone();
         ctx.expect().times(1).returning(move |_| Ok(out.clone()));
 
         let result = analyze_code(
             mock_tmp,
             AnalyzeCodeRepository {
-                create_project: code_domain::port::mock_create_project::call,
-                save_files: code_domain::port::mock_save_files::call,
-                analyze: code_domain::port::mock_analyze::call,
+                create_project: mock_create_project::call,
+                save_files: mock_save_files::call,
+                analyze: mock_analyze::call,
             },
             &files,
         )

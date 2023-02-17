@@ -4,8 +4,3 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-common_domain = { path = "../../common/domain" }
-mockall = { workspace = true }
-
-[package.metadata.cargo-machete]
-ignored = ["mockall"]

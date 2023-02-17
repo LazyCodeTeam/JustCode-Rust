@@ -1,15 +1,19 @@
-use bucket_domain::port::{DeleteBucketObject, GetBucketObjectInfo, GetBucketObjectUrl};
-use common_domain::error::{Error, Result};
-use profile_domain::port::UpdateProfileAvatar;
+use bucket_domain::model::bucket_object_head::BucketObjectHead;
+use common_domain::{
+    define_repo,
+    error::{Error, Result},
+};
 
 const ALLOWED_CONTENT_TYPES: [&str; 2] = ["image/png", "image/jpeg"];
 const MAX_SIZE: u64 = 1024 * 1024 * 3; // 3 MB
 
-pub struct OnAvatarCreatedRepository<A, B, C, D> {
-    pub get_bucket_object_info: A,
-    pub delete_bucket_object: B,
-    pub update_profile_avatar: C,
-    pub get_bucket_object_url: D,
+define_repo! {
+    pub struct OnAvatarCreatedRepository<A, B, C, D> {
+        pub get_bucket_object_info: Fn<'a>(key: &'a str) -> Result<BucketObjectHead> as A,
+        pub delete_bucket_object: Fn<'a>(key: &'a str) -> Result<()> as B,
+        pub update_profile_avatar: Fn<'a>(id: &'a str, url: Option<&'a str>) -> Result<()> as C,
+        pub get_bucket_object_url: Fn<'a>(key: &'a str) -> Result<String> as D,
+    }
 }
 
 pub async fn on_avatar_created<A, B, C, D>(
@@ -17,10 +21,10 @@ pub async fn on_avatar_created<A, B, C, D>(
     repo: OnAvatarCreatedRepository<A, B, C, D>,
 ) -> Result<()>
 where
-    for<'a> A: GetBucketObjectInfo<'a>,
-    for<'a> B: DeleteBucketObject<'a>,
-    for<'a> C: UpdateProfileAvatar<'a>,
-    for<'a> D: GetBucketObjectUrl<'a>,
+    A: GetBucketObjectInfoType,
+    B: DeleteBucketObjectType,
+    C: UpdateProfileAvatarType,
+    D: GetBucketObjectUrlType,
 {
     let bucket_object_head = (repo.get_bucket_object_info)(&key).await?;
     let id = key.split('/').last().ok_or_else(|| {
@@ -51,8 +55,7 @@ mod test {
     async fn avatar_mime_not_allowed() {
         let key = "profile/avatar/1".to_string();
 
-        let _get_bucket_object_info_lock = bucket_domain::port::get_bucket_object_info_lock().await;
-        let ctx = bucket_domain::port::mock_get_bucket_object_info::call_context();
+        let (ctx, _get_bucket_object_info_lock) = mock_get_bucket_object_info::ctx().await;
         let object_head = BucketObjectHead {
             mime: "image/gif".to_string(),
             ..Default::default()
@@ -62,29 +65,26 @@ mod test {
             .times(1)
             .return_once(move |_| Ok(object_head));
 
-        let _update_profile_avatar_lock = profile_domain::port::update_profile_avatar_lock().await;
-        let ctx = profile_domain::port::mock_update_profile_avatar::call_context();
+        let (ctx, _update_profile_avatar_lock) = mock_update_profile_avatar::ctx().await;
         ctx.expect()
             .withf(move |id, avatar_url| id == "1" && avatar_url.is_none())
             .times(1)
             .return_once(move |_, _| Ok(()));
 
-        let _delete_bucket_object_lock = bucket_domain::port::delete_bucket_object_lock().await;
-        let ctx = bucket_domain::port::mock_delete_bucket_object::call_context();
+        let (ctx, _delete_bucket_object_lock) = mock_delete_bucket_object::ctx().await;
         ctx.expect()
             .withf(move |id| id == "profile/avatar/1")
             .times(1)
             .returning(|_| Ok(()));
 
-        let _get_bucket_object_url_lock = bucket_domain::port::get_bucket_object_url_lock().await;
-        let ctx = bucket_domain::port::mock_get_bucket_object_url::call_context();
+        let (ctx, _get_bucket_object_url_lock) = mock_get_bucket_object_url::ctx().await;
         ctx.expect().times(0);
 
         let repo = OnAvatarCreatedRepository {
-            get_bucket_object_info: bucket_domain::port::mock_get_bucket_object_info::call,
-            delete_bucket_object: bucket_domain::port::mock_delete_bucket_object::call,
-            update_profile_avatar: profile_domain::port::mock_update_profile_avatar::call,
-            get_bucket_object_url: bucket_domain::port::mock_get_bucket_object_url::call,
+            get_bucket_object_info: mock_get_bucket_object_info::call,
+            delete_bucket_object: mock_delete_bucket_object::call,
+            update_profile_avatar: mock_update_profile_avatar::call,
+            get_bucket_object_url: mock_get_bucket_object_url::call,
         };
 
         let result = on_avatar_created(key, repo).await;
@@ -96,8 +96,7 @@ mod test {
     async fn avatar_too_big() {
         let key = "profile/avatar/1".to_string();
 
-        let _get_bucket_object_info_lock = bucket_domain::port::get_bucket_object_info_lock().await;
-        let ctx = bucket_domain::port::mock_get_bucket_object_info::call_context();
+        let (ctx, _get_bucket_object_info_lock) = mock_get_bucket_object_info::ctx().await;
         let object_head = BucketObjectHead {
             mime: "image/png".to_string(),
             size: 1024 * 1024 * 4,
@@ -108,29 +107,26 @@ mod test {
             .times(1)
             .return_once(move |_| Ok(object_head));
 
-        let _update_profile_avatar_lock = profile_domain::port::update_profile_avatar_lock().await;
-        let ctx = profile_domain::port::mock_update_profile_avatar::call_context();
+        let (ctx, _update_profile_avatar_lock) = mock_update_profile_avatar::ctx().await;
         ctx.expect()
             .withf(move |id, avatar_url| id == "1" && avatar_url.is_none())
             .times(1)
             .return_once(move |_, _| Ok(()));
 
-        let _delete_bucket_object_lock = bucket_domain::port::delete_bucket_object_lock().await;
-        let ctx = bucket_domain::port::mock_delete_bucket_object::call_context();
+        let (ctx, _delete_bucket_object_lock) = mock_delete_bucket_object::ctx().await;
         ctx.expect()
             .withf(move |id| id == "profile/avatar/1")
             .times(1)
             .returning(|_| Ok(()));
 
-        let _get_bucket_object_url_lock = bucket_domain::port::get_bucket_object_url_lock().await;
-        let ctx = bucket_domain::port::mock_get_bucket_object_url::call_context();
+        let (ctx, _get_bucket_object_url_lock) = mock_get_bucket_object_url::ctx().await;
         ctx.expect().times(0);
 
         let repo = OnAvatarCreatedRepository {
-            get_bucket_object_info: bucket_domain::port::mock_get_bucket_object_info::call,
-            delete_bucket_object: bucket_domain::port::mock_delete_bucket_object::call,
-            update_profile_avatar: profile_domain::port::mock_update_profile_avatar::call,
-            get_bucket_object_url: bucket_domain::port::mock_get_bucket_object_url::call,
+            get_bucket_object_info: mock_get_bucket_object_info::call,
+            delete_bucket_object: mock_delete_bucket_object::call,
+            update_profile_avatar: mock_update_profile_avatar::call,
+            get_bucket_object_url: mock_get_bucket_object_url::call,
         };
 
         let result = on_avatar_created(key, repo).await;
@@ -142,8 +138,7 @@ mod test {
     async fn success() {
         let key = "profile/avatar/1".to_string();
 
-        let _get_bucket_object_info_lock = bucket_domain::port::get_bucket_object_info_lock().await;
-        let ctx = bucket_domain::port::mock_get_bucket_object_info::call_context();
+        let (ctx, _get_bucket_object_info_lock) = mock_get_bucket_object_info::ctx().await;
         let object_head = BucketObjectHead {
             mime: "image/png".to_string(),
             ..Default::default()
@@ -153,29 +148,26 @@ mod test {
             .times(1)
             .return_once(move |_| Ok(object_head));
 
-        let _delete_bucket_object_lock = bucket_domain::port::delete_bucket_object_lock().await;
-        let ctx = bucket_domain::port::mock_delete_bucket_object::call_context();
+        let (ctx, _delete_bucket_object_lock) = mock_delete_bucket_object::ctx().await;
         ctx.expect().times(0);
 
-        let _update_profile_avatar_lock = profile_domain::port::update_profile_avatar_lock().await;
-        let ctx = profile_domain::port::mock_update_profile_avatar::call_context();
+        let (ctx, _update_profile_avatar_lock) = mock_update_profile_avatar::ctx().await;
         ctx.expect()
             .withf(|id, url| id == "1" && url.unwrap() == "https://example.com")
             .times(1)
             .returning(|_, _| Ok(()));
 
-        let _get_bucket_object_url_lock = bucket_domain::port::get_bucket_object_url_lock().await;
-        let ctx = bucket_domain::port::mock_get_bucket_object_url::call_context();
+        let (ctx, _get_bucket_object_url_lock) = mock_get_bucket_object_url::ctx().await;
         ctx.expect()
             .withf(move |id| id == "profile/avatar/1")
             .times(1)
             .return_once(move |_| Ok("https://example.com".to_string()));
 
         let repo = OnAvatarCreatedRepository {
-            get_bucket_object_info: bucket_domain::port::mock_get_bucket_object_info::call,
-            delete_bucket_object: bucket_domain::port::mock_delete_bucket_object::call,
-            update_profile_avatar: profile_domain::port::mock_update_profile_avatar::call,
-            get_bucket_object_url: bucket_domain::port::mock_get_bucket_object_url::call,
+            get_bucket_object_info: mock_get_bucket_object_info::call,
+            delete_bucket_object: mock_delete_bucket_object::call,
+            update_profile_avatar: mock_update_profile_avatar::call,
+            get_bucket_object_url: mock_get_bucket_object_url::call,
         };
 
         let result = on_avatar_created(key, repo).await;

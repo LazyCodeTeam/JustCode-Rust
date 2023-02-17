@@ -1,12 +1,15 @@
-use common_domain::error::{ErrorOutput, ErrorType, Result};
-use profile_domain::{
-    model::update_profile_params::UpdateProfileParams,
-    port::{GetProfileById, UpdateProfile},
+use common_domain::{
+    define_repo,
+    error::{ErrorOutput, ErrorType, Result},
 };
+use profile_domain::model::profile::Profile;
+use profile_domain::model::update_profile_params::UpdateProfileParams;
 
-pub struct UpdateProfileRepository<T, Y> {
-    pub get_profile_by_id: T,
-    pub update_profile: Y,
+define_repo! {
+    pub struct UpdateProfileRepository<T, Y> {
+        pub get_profile_by_id: Fn<'a>(id: &'a str) -> Result<Option<Profile>> as T,
+        pub update_profile: Fn(params: Profile) -> Result<()> as Y,
+    }
 }
 
 pub async fn update_profile<T, Y>(
@@ -14,8 +17,8 @@ pub async fn update_profile<T, Y>(
     repo: UpdateProfileRepository<T, Y>,
 ) -> Result<()>
 where
-    for<'a> T: GetProfileById<'a>,
-    Y: UpdateProfile,
+    T: GetProfileByIdType,
+    Y: UpdateProfileType,
 {
     let profile = (repo.get_profile_by_id)(&id).await?;
     match profile {
@@ -50,20 +53,18 @@ mod test {
             last_name: Some("last_name".to_string()),
         };
 
-        let _get_profile_id_lock = profile_domain::port::get_profile_by_id_lock().await;
-        let ctx = profile_domain::port::mock_get_profile_by_id::call_context();
+        let (ctx, _get_profile_id_lock) = mock_get_profile_by_id::ctx().await;
         ctx.expect()
             .withf(move |id| id == "id")
             .times(1)
             .returning(|_| Ok(None));
 
-        let _update_profile_lock = profile_domain::port::update_profile_lock().await;
-        let ctx = profile_domain::port::mock_update_profile::call_context();
+        let (ctx, _update_profile_lock) = mock_update_profile::ctx().await;
         ctx.expect().never();
 
         let repo = UpdateProfileRepository {
-            get_profile_by_id: profile_domain::port::mock_get_profile_by_id::call,
-            update_profile: profile_domain::port::mock_update_profile::call,
+            get_profile_by_id: mock_get_profile_by_id::call,
+            update_profile: mock_update_profile::call,
         };
 
         let result = update_profile((id, update_params), repo).await;
@@ -88,15 +89,13 @@ mod test {
             ..Default::default()
         };
 
-        let _get_profile_id_lock = profile_domain::port::get_profile_by_id_lock().await;
-        let ctx = profile_domain::port::mock_get_profile_by_id::call_context();
+        let (ctx, _get_profile_id_lock) = mock_get_profile_by_id::ctx().await;
         ctx.expect()
             .withf(move |id| id == "id")
             .times(1)
             .returning(move |_| Ok(Some(profile.clone())));
 
-        let _update_profile_lock = profile_domain::port::update_profile_lock().await;
-        let ctx = profile_domain::port::mock_update_profile::call_context();
+        let (ctx, _update_profile_lock) = mock_update_profile::ctx().await;
         ctx.expect()
             .withf(move |profile| {
                 profile.id == "id"
@@ -110,8 +109,8 @@ mod test {
             .returning(|_| Ok(()));
 
         let repo = UpdateProfileRepository {
-            get_profile_by_id: profile_domain::port::mock_get_profile_by_id::call,
-            update_profile: profile_domain::port::mock_update_profile::call,
+            get_profile_by_id: mock_get_profile_by_id::call,
+            update_profile: mock_update_profile::call,
         };
 
         let result = update_profile((id, update_params), repo).await;

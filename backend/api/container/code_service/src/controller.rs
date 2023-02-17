@@ -119,7 +119,11 @@ macro_rules! new_lang {
 
             use $repo as repo;
 
-            use_case::code::get_lang_version::get_lang_version(repo::get_version)
+            let repo = use_case::code::get_lang_version::GetLangVersionRepository {
+                get_version: repo::get_version,
+            };
+
+            use_case::code::get_lang_version::get_lang_version(repo)
                 .await
                 .map_err(ErrorResponseDto::from)
                 .map(VersionResponseDto::from)

@@ -21,29 +21,30 @@ variable "code_service" {
   }
 }
 
-variable "dynamodb_billing_mode" {
-  type    = string
-  default = "PROVISIONED"
+variable "profile_table_config" {
+  type = object({
+    billing_mode   = string
+    read_capacity  = number
+    write_capacity = number
+  })
+  default = {
+    billing_mode   = "PAY_PER_REQUEST"
+    read_capacity  = null
+    write_capacity = null
+  }
 }
 
-variable "dynamodb_read_capacity" {
-  type    = number
-  default = 1
-}
-
-variable "dynamodb_write_capacity" {
-  type    = number
-  default = 1
-}
-
-variable "dynamodb_gsk_read_capacity" {
-  type    = number
-  default = 1
-}
-
-variable "dynamodb_gsk_write_capacity" {
-  type    = number
-  default = 1
+variable "tasks_table_config" {
+  type = object({
+    billing_mode   = string
+    read_capacity  = number
+    write_capacity = number
+  })
+  default = {
+    billing_mode   = "PAY_PER_REQUEST"
+    read_capacity  = null
+    write_capacity = null
+  }
 }
 
 variable "moderator_api_key" {

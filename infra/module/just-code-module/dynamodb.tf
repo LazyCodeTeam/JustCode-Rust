@@ -1,8 +1,8 @@
-resource "aws_dynamodb_table" "basic-dynamodb-table" {
-  name           = "${local.app_name}-${var.env}"
-  billing_mode   = var.dynamodb_billing_mode
-  read_capacity  = var.dynamodb_read_capacity
-  write_capacity = var.dynamodb_write_capacity
+resource "aws_dynamodb_table" "profile" {
+  name           = "profile-${local.app_name}-${var.env}"
+  billing_mode   = var.profile_table_config.billing_mode
+  read_capacity  = var.profile_table_config.read_capacity
+  write_capacity = var.profile_table_config.write_capacity
   hash_key       = "PK"
   range_key      = "SK"
 
@@ -17,13 +17,58 @@ resource "aws_dynamodb_table" "basic-dynamodb-table" {
   }
 
   attribute {
-    name = "GSI_PK"
+    name = "LSI_1"
     type = "S"
   }
 
   attribute {
-    name = "GSI_SK"
+    name = "LSI_2"
+    type = "N"
+  }
+
+  attribute {
+    name = "LSI_3"
     type = "S"
+  }
+
+  attribute {
+    name = "LSI_4"
+    type = "N"
+  }
+
+  attribute {
+    name = "LSI_5"
+    type = "S"
+  }
+
+  local_secondary_index {
+    name            = "LSI_1"
+    range_key       = "LSI_1"
+    projection_type = "ALL"
+  }
+
+  local_secondary_index {
+    name            = "LSI_2"
+    range_key       = "LSI_2"
+    projection_type = "ALL"
+  }
+
+  local_secondary_index {
+    name            = "LSI_3"
+    range_key       = "LSI_3"
+    projection_type = "ALL"
+  }
+
+  local_secondary_index {
+    name            = "LSI_4"
+    range_key       = "LSI_4"
+    projection_type = "ALL"
+  }
+
+  local_secondary_index {
+    name            = "LSI_5"
+    range_key       = "LSI_5"
+    projection_type = "ALL"
   }
 
   ttl {
@@ -31,13 +76,88 @@ resource "aws_dynamodb_table" "basic-dynamodb-table" {
     enabled        = true
   }
 
-  global_secondary_index {
-    name            = "GSI"
-    hash_key        = "GSI_PK"
-    range_key       = "GSI_SK"
+  tags = {
+    Service     = local.app_name
+    Environment = var.env
+  }
+}
+
+resource "aws_dynamodb_table" "tasks" {
+  name           = "tasks-${local.app_name}-${var.env}"
+  billing_mode   = var.profile_table_config.billing_mode
+  read_capacity  = var.profile_table_config.read_capacity
+  write_capacity = var.profile_table_config.write_capacity
+  hash_key       = "PK"
+  range_key      = "SK"
+
+  attribute {
+    name = "PK"
+    type = "S"
+  }
+
+  attribute {
+    name = "SK"
+    type = "S"
+  }
+
+  attribute {
+    name = "LSI_1"
+    type = "S"
+  }
+
+  attribute {
+    name = "LSI_2"
+    type = "N"
+  }
+
+  attribute {
+    name = "LSI_3"
+    type = "S"
+  }
+
+  attribute {
+    name = "LSI_4"
+    type = "N"
+  }
+
+  attribute {
+    name = "LSI_5"
+    type = "S"
+  }
+
+  local_secondary_index {
+    name            = "LSI_1"
+    range_key       = "LSI_1"
     projection_type = "ALL"
-    read_capacity   = var.dynamodb_gsk_read_capacity
-    write_capacity  = var.dynamodb_gsk_write_capacity
+  }
+
+  local_secondary_index {
+    name            = "LSI_2"
+    range_key       = "LSI_2"
+    projection_type = "ALL"
+  }
+
+  local_secondary_index {
+    name            = "LSI_3"
+    range_key       = "LSI_3"
+    projection_type = "ALL"
+  }
+
+  local_secondary_index {
+    name            = "LSI_4"
+    range_key       = "LSI_4"
+    projection_type = "ALL"
+  }
+
+  local_secondary_index {
+    name            = "LSI_5"
+    range_key       = "LSI_5"
+    projection_type = "ALL"
+  }
+
+  ttl {
+    attribute_name = "TTL"
+    enabled        = true
   }
 
   tags = {

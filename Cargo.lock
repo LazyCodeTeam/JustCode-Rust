@@ -567,7 +567,6 @@ name = "bucket_domain"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "common_domain",
  "mockall",
 ]
 
@@ -1520,6 +1519,7 @@ dependencies = [
  "lazy_static",
  "regex",
  "serde",
+ "task_domain",
  "tokio",
  "use_case",
  "validator",

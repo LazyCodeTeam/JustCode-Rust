@@ -11,6 +11,7 @@ lambda_http = { workspace = true, features = ["apigw_rest"] }
 lazy_static = { workspace = true }
 regex = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
+task_domain = { path = "../../../../feature/task/domain" }
 tokio = { workspace = true }
 use_case = { path = "../../../../use_case", features = ["load_tasks"] }
 validator = { workspace = true }

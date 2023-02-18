@@ -19,7 +19,7 @@ pub struct SectionDto {
 impl From<SectionDto> for ExpectedSectionData {
     fn from(value: SectionDto) -> Self {
         ExpectedSectionData {
-            id: value.id,
+            id: value.id.replace('-', "").to_lowercase(),
             title: value.title,
             description: value.description,
             image: value.image,
@@ -36,14 +36,14 @@ mod test {
     fn test_from() {
         let task = TaskDto::default();
         let section = SectionDto {
-            id: "id".to_string(),
+            id: "id-ID".to_string(),
             title: "title".to_string(),
             description: None,
             image: None,
             tasks: vec![task.clone()],
         };
         let expected = ExpectedSectionData {
-            id: "id".to_string(),
+            id: "idid".to_string(),
             title: "title".to_string(),
             description: None,
             image: None,

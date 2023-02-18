@@ -15,11 +15,3 @@ task_domain = { path = "../../../../feature/task/domain" }
 tokio = { workspace = true }
 use_case = { path = "../../../../use_case", features = ["load_tasks"] }
 validator = { workspace = true }
-
-[lib]
-name = "load_tasks_v1"
-path = "src/lib.rs"
-
-[[bin]]
-name = "load_tasks_v1"
-path = "src/main.rs"

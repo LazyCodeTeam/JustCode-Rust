@@ -35,7 +35,7 @@ pub struct TaskDto {
 impl From<TaskDto> for ExpectedTaskData {
     fn from(value: TaskDto) -> Self {
         ExpectedTaskData {
-            id: value.id,
+            id: value.id.replace('-', "").to_lowercase(),
             title: value.title,
             content: value.content.into(),
             difficulty: value.difficulty,
@@ -53,7 +53,7 @@ mod test {
     fn test_from() {
         let content = TaskContentDto::default();
         let task = TaskDto {
-            id: "id".to_string(),
+            id: "id-ID".to_string(),
             title: "title".to_string(),
             content: content.clone(),
             difficulty: 1,
@@ -66,7 +66,7 @@ mod test {
         assert_eq!(
             expected_task_data,
             ExpectedTaskData {
-                id: "id".to_string(),
+                id: "idid".to_string(),
                 title: "title".to_string(),
                 content: content.into(),
                 difficulty: 1,

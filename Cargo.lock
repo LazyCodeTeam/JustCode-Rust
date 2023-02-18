@@ -2681,6 +2681,7 @@ dependencies = [
  "log",
  "mockall",
  "profile_domain",
+ "task_domain",
  "tokio",
 ]
 

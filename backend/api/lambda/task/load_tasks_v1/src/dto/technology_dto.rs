@@ -19,7 +19,7 @@ pub struct TechnologyDto {
 impl From<TechnologyDto> for ExpectedTechnologyData {
     fn from(value: TechnologyDto) -> Self {
         ExpectedTechnologyData {
-            id: value.id,
+            id: value.id.replace('-', "").to_lowercase(),
             title: value.title,
             description: value.description,
             image: value.image,
@@ -36,14 +36,14 @@ mod test {
     fn test_from() {
         let section = SectionDto::default();
         let technology = TechnologyDto {
-            id: "id".to_string(),
+            id: "id-ID".to_string(),
             title: "title".to_string(),
             description: None,
             image: None,
             sections: vec![section.clone()],
         };
         let expected = ExpectedTechnologyData {
-            id: "id".to_string(),
+            id: "idid".to_string(),
             title: "title".to_string(),
             description: None,
             image: None,

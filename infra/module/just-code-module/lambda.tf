@@ -8,7 +8,7 @@ module "create_profile_lambda" {
   zip_path      = "${path.module}/../../../target/lambdas/create_profile.zip"
   user_pool_arn = aws_cognito_user_pool.pool.arn
   env_variables = {
-    DYNAMODB_TABLE = aws_dynamodb_table.profile.name
+    PROFILE_DYNAMODB_TABLE = aws_dynamodb_table.profile.name
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -26,7 +26,7 @@ module "get_profile_v1_lambda" {
   zip_path              = "${path.module}/../../../target/lambdas/get_profile_v1.zip"
   gateway_execution_arn = module.gateway.execution_arn
   env_variables = {
-    DYNAMODB_TABLE = aws_dynamodb_table.profile.name
+    PROFILE_DYNAMODB_TABLE = aws_dynamodb_table.profile.name
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -44,7 +44,7 @@ module "update_push_data_v1_lambda" {
   zip_path              = "${path.module}/../../../target/lambdas/update_push_data_v1.zip"
   gateway_execution_arn = module.gateway.execution_arn
   env_variables = {
-    DYNAMODB_TABLE = aws_dynamodb_table.profile.name
+    PROFILE_DYNAMODB_TABLE = aws_dynamodb_table.profile.name
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -62,7 +62,7 @@ module "remove_push_data_v1_lambda" {
   zip_path              = "${path.module}/../../../target/lambdas/remove_push_data_v1.zip"
   gateway_execution_arn = module.gateway.execution_arn
   env_variables = {
-    DYNAMODB_TABLE = aws_dynamodb_table.profile.name
+    PROFILE_DYNAMODB_TABLE = aws_dynamodb_table.profile.name
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -80,7 +80,7 @@ module "update_profile_v1_lambda" {
   zip_path              = "${path.module}/../../../target/lambdas/update_profile_v1.zip"
   gateway_execution_arn = module.gateway.execution_arn
   env_variables = {
-    DYNAMODB_TABLE = aws_dynamodb_table.profile.name
+    PROFILE_DYNAMODB_TABLE = aws_dynamodb_table.profile.name
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -98,7 +98,8 @@ module "request_avatar_upload_v1_lambda" {
   zip_path              = "${path.module}/../../../target/lambdas/request_avatar_upload_v1.zip"
   gateway_execution_arn = module.gateway.execution_arn
   env_variables = {
-    DYNAMODB_TABLE = aws_dynamodb_table.profile.name
+    PROFILE_DYNAMODB_TABLE = aws_dynamodb_table.profile.name
+    S3_BUCKET              = aws_s3_bucket.images.id
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -117,7 +118,8 @@ module "on_avatar_created" {
   zip_path    = "${path.module}/../../../target/lambdas/on_avatar_created.zip"
   s3_arn      = aws_s3_bucket.images.arn
   env_variables = {
-    DYNAMODB_TABLE = aws_dynamodb_table.profile.name
+    PROFILE_DYNAMODB_TABLE = aws_dynamodb_table.profile.name
+    S3_BUCKET              = aws_s3_bucket.images.id
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",

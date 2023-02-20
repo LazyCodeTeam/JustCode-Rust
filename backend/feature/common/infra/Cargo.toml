@@ -9,7 +9,6 @@ aws-sdk-dynamodb = { workspace = true, optional = true }
 aws-sdk-s3 = { workspace = true, optional = true }
 aws-sdk-sqs = { workspace = true, optional = true }
 common_domain = { path = "../domain" }
-lazy_static = { workspace = true }
 log = { workspace = true }
 nanoid = { workspace = true }
 tokio = { workspace = true, features = ["sync", "parking_lot"] }

@@ -1,6 +1,7 @@
+use crate::config::CONFIG;
 use bucket_domain::model::bucket_object_head::BucketObjectHead;
 use common_domain::error::{Error, Result};
-use common_infra::{config::CONFIG, s3_client::get_s3_client};
+use common_infra::s3_client::get_s3_client;
 
 pub async fn get_s3_object_info(key: &str) -> Result<BucketObjectHead> {
     let client = get_s3_client().await;

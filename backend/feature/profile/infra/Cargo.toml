@@ -8,6 +8,7 @@ aws-sdk-dynamodb = { workspace = true }
 chrono = { workspace = true, features = ["serde"] }
 common_domain = { path = "../../common/domain" }
 common_infra = { path = "../../common/infra", features = ["dynamodb"] }
+lazy_static = { workspace = true }
 profile_domain = { path = "../domain" }
 serde = { workspace = true }
 serde_dynamo = { workspace = true }

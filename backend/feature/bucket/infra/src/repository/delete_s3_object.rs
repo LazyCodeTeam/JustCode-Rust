@@ -1,5 +1,6 @@
+use crate::config::CONFIG;
 use common_domain::error::{Error, Result};
-use common_infra::{config::CONFIG, s3_client::get_s3_client};
+use common_infra::s3_client::get_s3_client;
 
 pub async fn delete_s3_object(key: &str) -> Result<()> {
     get_s3_client()

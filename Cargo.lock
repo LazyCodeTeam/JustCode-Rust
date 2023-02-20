@@ -632,6 +632,7 @@ dependencies = [
  "chrono",
  "common_domain",
  "common_infra",
+ "lazy_static",
 ]
 
 [[package]]
@@ -817,7 +818,6 @@ dependencies = [
  "aws-sdk-s3",
  "aws-sdk-sqs",
  "common_domain",
- "lazy_static",
  "log",
  "nanoid",
  "tokio",
@@ -1969,6 +1969,7 @@ dependencies = [
  "chrono",
  "common_domain",
  "common_infra",
+ "lazy_static",
  "profile_domain",
  "serde",
  "serde_dynamo",

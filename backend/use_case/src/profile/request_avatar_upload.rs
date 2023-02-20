@@ -6,10 +6,12 @@ use common_domain::{
 use profile_domain::consts::AVATAR_IMAGE_PREFIX;
 use profile_domain::model::profile::Profile;
 
+const UPLOAD_AVATAR_VALID_FOR: u64 = 60; // sec
+
 define_repo! {
     pub struct RequestAvatarUploadRepository<A, B> {
         pub get_profile_by_id: Fn<'a>(id: &'a str) -> Result<Option<Profile>> as A,
-        pub get_avatar_upload_url: FnOnce<'a>(key: &'a str) -> Result<PresignedUrl> as B,
+        pub get_avatar_upload_url: FnOnce<'a>(key: &'a str, valid_fro: u64) -> Result<PresignedUrl> as B,
     }
 }
 
@@ -27,7 +29,11 @@ where
         return Err(profile_not_created(&profile_id));
     }
 
-    (repo.get_avatar_upload_url)(&format!("{AVATAR_IMAGE_PREFIX}{profile_id}")).await
+    (repo.get_avatar_upload_url)(
+        &format!("{AVATAR_IMAGE_PREFIX}{profile_id}"),
+        UPLOAD_AVATAR_VALID_FOR,
+    )
+    .await
 }
 
 fn profile_not_created(profile_id: &str) -> Error {
@@ -89,9 +95,9 @@ mod test {
 
         let (ctx, _get_avatar_upload_url_lock) = mock_get_avatar_upload_url::ctx().await;
         ctx.expect()
-            .withf(move |id| id == "profile/avatar/id")
+            .withf(move |id, _| id == "profile/avatar/id")
             .times(1)
-            .returning(move |_| {
+            .returning(move |_, _| {
                 Ok(PresignedUrl {
                     url: "url".to_owned(),
                     valid_until: date_time,

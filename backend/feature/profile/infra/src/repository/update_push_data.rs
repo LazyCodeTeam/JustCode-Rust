@@ -1,6 +1,7 @@
+use crate::config::CONFIG;
 use aws_sdk_dynamodb::model::AttributeValue;
 use common_domain::error::{Error, Result};
-use common_infra::{config::CONFIG, dynamodb_client::get_dynamodb_client};
+use common_infra::dynamodb_client::get_dynamodb_client;
 use profile_domain::model::push_data::PushData;
 
 use crate::{dto::platform_dto::PlatformDto, PROFILE_ID_PREFIX, PROFILE_SORT_KEY};

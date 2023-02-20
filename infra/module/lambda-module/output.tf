@@ -1,9 +1,9 @@
 output "invoke_arn" {
-  value = aws_lambda_function.lambda.invoke_arn
+  value = aws_lambda_alias.lambda.invoke_arn
 }
 
 output "arn" {
-  value = aws_lambda_function.lambda.arn
+  value = aws_lambda_alias.lambda.arn
 }
 
 output "permission_id" {

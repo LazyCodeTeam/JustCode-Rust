@@ -160,5 +160,6 @@ module "load_tasks_v1_lambda" {
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+    "arn:aws:iam::aws:policy/AmazonSQSFullAccess",
   ]
 }

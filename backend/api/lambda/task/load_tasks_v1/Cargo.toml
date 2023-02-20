@@ -12,6 +12,7 @@ lazy_static = { workspace = true }
 regex = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 task_domain = { path = "../../../../feature/task/domain" }
+task_infra = { path = "../../../../feature/task/infra" }
 tokio = { workspace = true }
 use_case = { path = "../../../../use_case", features = ["load_tasks"] }
 validator = { workspace = true }

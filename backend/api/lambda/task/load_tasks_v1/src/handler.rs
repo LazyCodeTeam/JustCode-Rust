@@ -14,7 +14,14 @@ pub async fn handle_request(event: Request) -> Result<Response<Body>, Error> {
         .and_then(Validate::validate)
         .map(|data| data.into_iter().map(ExpectedTechnologyData::from).collect())
         .into_future()
-        .and_then(|data| load_tasks(data, LoadTasksRepository {}))
+        .and_then(|data| {
+            load_tasks(
+                data,
+                LoadTasksRepository {
+                    add_actions_to_queue: task_infra::repository::add_actions_to_queue,
+                },
+            )
+        })
         .await
         .into_empty_response(StatusCode::OK)
 }

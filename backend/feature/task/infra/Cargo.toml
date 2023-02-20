@@ -5,3 +5,5 @@ edition = "2021"
 
 [dependencies]
 common_domain = { path = "../../common/domain" }
+common_infra = { path = "../../common/infra", features = ["sqs"] }
+lazy_static = { workspace = true }

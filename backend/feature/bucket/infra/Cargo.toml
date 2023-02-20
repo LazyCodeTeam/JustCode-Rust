@@ -10,3 +10,4 @@ bucket_domain = { path = "../domain" }
 chrono = { workspace = true }
 common_domain = { path = "../../common/domain" }
 common_infra = { path = "../../common/infra", features = ["s3"] }
+lazy_static = { workspace = true }

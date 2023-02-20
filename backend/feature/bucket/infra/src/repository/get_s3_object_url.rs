@@ -1,5 +1,5 @@
+use crate::config::CONFIG;
 use common_domain::error::{Error, Result};
-use common_infra::config::CONFIG;
 
 pub async fn get_s3_object_url(key: &str) -> Result<String> {
     aws_config::load_from_env()

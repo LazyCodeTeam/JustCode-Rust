@@ -1601,6 +1601,7 @@ dependencies = [
  "regex",
  "serde",
  "task_domain",
+ "task_infra",
  "tokio",
  "use_case",
  "validator",
@@ -2431,6 +2432,8 @@ name = "task_infra"
 version = "0.1.0"
 dependencies = [
  "common_domain",
+ "common_infra",
+ "lazy_static",
 ]
 
 [[package]]

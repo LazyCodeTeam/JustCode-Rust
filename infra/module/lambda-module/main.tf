@@ -24,6 +24,13 @@ resource "aws_iam_role" "lambda_exec" {
   })
 }
 
+resource "aws_lambda_alias" "lambda" {
+  name             = var.env
+  function_name    = aws_lambda_function.lambda.arn
+  function_version = aws_lambda_function.lambda.version
+
+}
+
 resource "aws_lambda_function" "lambda" {
   filename         = var.zip_path
   function_name    = "${var.name}-${var.env}"
@@ -54,6 +61,7 @@ resource "aws_lambda_permission" "gateway" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda.function_name
   principal     = "apigateway.amazonaws.com"
+  qualifier     = var.env
   source_arn    = "${var.gateway_execution_arn}/*/*"
 }
 
@@ -63,6 +71,7 @@ resource "aws_lambda_permission" "s3" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda.function_name
   principal     = "s3.amazonaws.com"
+  qualifier     = var.env
   source_arn    = var.s3_arn
 }
 
@@ -73,7 +82,8 @@ resource "aws_lambda_permission" "user_pool" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda.function_name
   principal     = "cognito-idp.amazonaws.com"
-  source_arn    = var.s3_arn
+  qualifier     = var.env
+  source_arn    = var.user_pool_arn
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_policy" {

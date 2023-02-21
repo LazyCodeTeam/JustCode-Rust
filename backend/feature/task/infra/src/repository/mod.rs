@@ -1,3 +1,3 @@
-mod add_aciton_to_queue;
+mod add_acitons_to_queue;
 
-pub use add_aciton_to_queue::add_action_to_queue;
+pub use add_acitons_to_queue::add_actions_to_queue;

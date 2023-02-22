@@ -156,6 +156,7 @@ module "load_tasks_v1_lambda" {
   gateway_execution_arn = module.gateway.execution_arn
   env_variables = {
     TASK_MIGRATION_SQS_QUEUE = aws_sqs_queue.tasks_migration.url
+    TASK_DYNAMODB_TABLE      = aws_dynamodb_table.tasks.name
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",

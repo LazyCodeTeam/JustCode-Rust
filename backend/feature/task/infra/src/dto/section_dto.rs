@@ -3,7 +3,7 @@ use task_domain::model::section::Section;
 
 use super::task_preview_dto::TaskPreviewDto;
 
-#[derive(Debug, PartialEq, Eq, Clone, Deserialize, Serialize)]
+#[derive(Debug, PartialEq, Eq, Clone, Serialize, Deserialize)]
 pub struct SectionDto {
     #[serde(rename = "SK")]
     pub id: String,

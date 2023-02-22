@@ -18,6 +18,7 @@ pub async fn handle_request(event: Request) -> Result<Response<Body>, Error> {
             load_tasks(
                 data,
                 LoadTasksRepository {
+                    get_tasks_tree: task_infra::repository::get_tasks_tree,
                     add_actions_to_queue: task_infra::repository::add_actions_to_queue,
                 },
             )

@@ -2431,11 +2431,13 @@ version = "0.1.0"
 name = "task_infra"
 version = "0.1.0"
 dependencies = [
+ "aws-sdk-dynamodb",
  "common_domain",
  "common_infra",
  "lazy_static",
+ "log",
  "serde",
- "serde_json",
+ "serde_dynamo",
  "task_domain",
 ]
 

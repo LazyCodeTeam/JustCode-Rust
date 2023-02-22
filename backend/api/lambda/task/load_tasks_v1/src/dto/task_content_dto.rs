@@ -12,7 +12,7 @@ use super::{
 };
 
 #[derive(Debug, PartialEq, Eq, Clone, Deserialize, Default)]
-#[serde(tag = "type")]
+#[serde(tag = "type", rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum TaskContentDto {
     #[default]
     Empty, // For testing only

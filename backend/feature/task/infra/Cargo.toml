@@ -6,4 +6,7 @@ edition = "2021"
 [dependencies]
 common_domain = { path = "../../common/domain" }
 common_infra = { path = "../../common/infra", features = ["sqs"] }
+task_domain = { path = "../../task/domain" }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
 lazy_static = { workspace = true }

@@ -2434,6 +2434,9 @@ dependencies = [
  "common_domain",
  "common_infra",
  "lazy_static",
+ "serde",
+ "serde_json",
+ "task_domain",
 ]
 
 [[package]]

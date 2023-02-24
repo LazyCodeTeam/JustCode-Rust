@@ -1,5 +1,7 @@
 #[cfg(feature = "dynamodb")]
 pub mod dynamodb_client;
+#[cfg(feature = "dynamodb")]
+pub mod dynamodb_identifiable;
 pub mod repository;
 #[cfg(feature = "s3")]
 pub mod s3_client;

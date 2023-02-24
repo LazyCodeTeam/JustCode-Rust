@@ -5,10 +5,14 @@ edition = "2021"
 
 [dependencies]
 aws-sdk-dynamodb = { workspace = true }
+aws-sdk-sqs = { workspace = true }
 common_domain = { path = "../../common/domain" }
-common_infra = { path = "../../common/infra", features = ["sqs"] }
-task_domain = { path = "../../task/domain" }
+common_infra = { path = "../../common/infra", features = ["sqs", "dynamodb"] }
+lazy_static = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 serde_dynamo = { workspace = true }
-lazy_static = { workspace = true }
-log = { workspace = true }
+serde_json = { workspace = true }
+task_domain = { path = "../../task/domain" }
+
+[features]
+dto = []

@@ -1,7 +1,10 @@
+#[cfg(feature = "fake_dto")]
+use fake::{Dummy, Fake};
 use serde::Deserialize;
 use task_domain::model::playground_variation::PlaygroundVariation;
 
 #[derive(Debug, PartialEq, Eq, Clone, Deserialize, Default)]
+#[cfg_attr(feature = "fake_dto", derive(Dummy, serde::Serialize))]
 pub struct PlaygroundVariationDto {
     pub content: String,
     pub description: String,

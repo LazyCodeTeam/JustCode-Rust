@@ -125,6 +125,80 @@ impl From<TaskContent> for TaskContentDto {
     }
 }
 
+impl From<TaskContentDto> for TaskContent {
+    fn from(task_content_dto: TaskContentDto) -> Self {
+        match task_content_dto {
+            TaskContentDto::Empty => Self::Empty,
+            TaskContentDto::Lesson { content } => Self::Lesson { content },
+            TaskContentDto::Playground {
+                content,
+                variations,
+                dynamic_description,
+            } => Self::Playground {
+                content,
+                variations: variations
+                    .into_iter()
+                    .map(|(key, value)| (key, value.into_iter().map(Into::into).collect()))
+                    .collect(),
+                dynamic_description,
+            },
+            TaskContentDto::SingleSelection {
+                content,
+                options,
+                correct_option,
+                hints,
+            } => Self::SingleSelection {
+                content,
+                options: options.into_iter().map(Into::into).collect(),
+                correct_option,
+                hints: hints.into_iter().map(Into::into).collect(),
+            },
+            TaskContentDto::MultipleSelection {
+                content,
+                options,
+                correct_options,
+                hints,
+            } => Self::MultipleSelection {
+                content,
+                options: options.into_iter().map(Into::into).collect(),
+                correct_options,
+                hints: hints.into_iter().map(Into::into).collect(),
+            },
+            TaskContentDto::KeywordsArrangement {
+                content,
+                keywords,
+                correct_order,
+                hints,
+            } => Self::KeywordsArrangement {
+                content,
+                keywords: keywords.into_iter().map(Into::into).collect(),
+                correct_order,
+                hints: hints.into_iter().map(Into::into).collect(),
+            },
+            TaskContentDto::LinesArrangement {
+                content,
+                lines,
+                correct_order,
+                hints,
+            } => Self::LinesArrangement {
+                content,
+                lines: lines.into_iter().map(Into::into).collect(),
+                correct_order,
+                hints: hints.into_iter().map(Into::into).collect(),
+            },
+            TaskContentDto::MissingCode {
+                content,
+                correct_code,
+                hints,
+            } => Self::MissingCode {
+                content,
+                correct_code,
+                hints: hints.into_iter().map(Into::into).collect(),
+            },
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -174,7 +248,7 @@ mod tests {
                     .into_iter()
                     .map(|(key, value)| (key, value.into_iter().map(Into::into).collect()))
                     .collect(),
-                dynamic_description: dynamic_description,
+                dynamic_description,
             }
         );
     }
@@ -281,7 +355,167 @@ mod tests {
             task_content_dto,
             TaskContentDto::MissingCode {
                 content: "content".to_string(),
-                correct_code: correct_code,
+                correct_code,
+                hints: hints.into_iter().map(Into::into).collect(),
+            }
+        );
+    }
+
+    #[test]
+    fn from_task_content_lesson_dto() {
+        let task_content_dto = TaskContentDto::Lesson {
+            content: "content".to_string(),
+        };
+
+        let task_content = TaskContent::from(task_content_dto);
+
+        assert_eq!(
+            task_content,
+            TaskContent::Lesson {
+                content: "content".to_string(),
+            }
+        );
+    }
+
+    #[test]
+    fn from_task_content_playground_dto() {
+        let variations =
+            HashMap::from([("var".to_string(), vec![PlaygroundVariationDto::default()])]);
+        let dynamic_description = HashMap::from([("var".to_string(), "desc".to_string())]);
+        let task_content_dto = TaskContentDto::Playground {
+            content: "content".to_string(),
+            variations: variations.clone(),
+            dynamic_description: dynamic_description.clone(),
+        };
+
+        let task_content = TaskContent::from(task_content_dto);
+
+        assert_eq!(
+            task_content,
+            TaskContent::Playground {
+                content: "content".to_string(),
+                variations: variations
+                    .into_iter()
+                    .map(|(key, value)| (key, value.into_iter().map(Into::into).collect()))
+                    .collect(),
+                dynamic_description,
+            }
+        );
+    }
+
+    #[test]
+    fn from_task_content_single_selection_dto() {
+        let options = vec![OptionDataDto::default()];
+        let hints = vec![HintDto::default()];
+        let task_content_dto = TaskContentDto::SingleSelection {
+            content: "content".to_string(),
+            options: options.clone(),
+            correct_option: 0,
+            hints: hints.clone(),
+        };
+
+        let task_content = TaskContent::from(task_content_dto);
+
+        assert_eq!(
+            task_content,
+            TaskContent::SingleSelection {
+                content: "content".to_string(),
+                options: options.into_iter().map(Into::into).collect(),
+                correct_option: 0,
+                hints: hints.into_iter().map(Into::into).collect(),
+            }
+        );
+    }
+
+    #[test]
+    fn from_task_content_multiple_selection_dto() {
+        let options = vec![OptionDataDto::default()];
+        let hints = vec![HintDto::default()];
+        let task_content_dto = TaskContentDto::MultipleSelection {
+            content: "content".to_string(),
+            options: options.clone(),
+            correct_options: vec![0],
+            hints: hints.clone(),
+        };
+
+        let task_content = TaskContent::from(task_content_dto);
+
+        assert_eq!(
+            task_content,
+            TaskContent::MultipleSelection {
+                content: "content".to_string(),
+                options: options.into_iter().map(Into::into).collect(),
+                correct_options: vec![0],
+                hints: hints.into_iter().map(Into::into).collect(),
+            }
+        );
+    }
+
+    #[test]
+    fn from_task_content_keywords_arrangement_dto() {
+        let keywords = vec![KeywordDto::default()];
+        let hints = vec![HintDto::default()];
+        let task_content_dto = TaskContentDto::KeywordsArrangement {
+            content: "content".to_string(),
+            keywords: keywords.clone(),
+            correct_order: vec![0],
+            hints: hints.clone(),
+        };
+
+        let task_content = TaskContent::from(task_content_dto);
+
+        assert_eq!(
+            task_content,
+            TaskContent::KeywordsArrangement {
+                content: "content".to_string(),
+                keywords: keywords.into_iter().map(Into::into).collect(),
+                correct_order: vec![0],
+                hints: hints.into_iter().map(Into::into).collect(),
+            }
+        );
+    }
+
+    #[test]
+    fn from_task_content_lines_arrangement_dto() {
+        let lines = vec![OptionDataDto::default()];
+        let hints = vec![HintDto::default()];
+        let task_content_dto = TaskContentDto::LinesArrangement {
+            content: "content".to_string(),
+            lines: lines.clone(),
+            correct_order: vec![0],
+            hints: hints.clone(),
+        };
+
+        let task_content = TaskContent::from(task_content_dto);
+
+        assert_eq!(
+            task_content,
+            TaskContent::LinesArrangement {
+                content: "content".to_string(),
+                lines: lines.into_iter().map(Into::into).collect(),
+                correct_order: vec![0],
+                hints: hints.into_iter().map(Into::into).collect(),
+            }
+        );
+    }
+
+    #[test]
+    fn from_task_content_missing_code_dto() {
+        let hints = vec![HintDto::default()];
+        let correct_code = HashMap::from([("var".to_string(), "code".to_string())]);
+        let task_content_dto = TaskContentDto::MissingCode {
+            content: "content".to_string(),
+            correct_code: correct_code.clone(),
+            hints: hints.clone(),
+        };
+
+        let task_content = TaskContent::from(task_content_dto);
+
+        assert_eq!(
+            task_content,
+            TaskContent::MissingCode {
+                content: "content".to_string(),
+                correct_code,
                 hints: hints.into_iter().map(Into::into).collect(),
             }
         );

@@ -5,7 +5,7 @@ lazy_static::lazy_static! {
 }
 
 pub struct Config {
-    pub task_migration_sqs_queuq: String,
+    pub task_migration_sqs_queue: String,
     pub dynamodb_table: String,
 }
 
@@ -16,7 +16,7 @@ impl Config {
         let dynamodb_table = env::var("TASK_DYNAMODB_TABLE").unwrap_or_else(|_| "".to_string());
 
         Self {
-            task_migration_sqs_queuq,
+            task_migration_sqs_queue: task_migration_sqs_queuq,
             dynamodb_table,
         }
     }
@@ -45,7 +45,7 @@ mod tests {
         let config = Config::new();
 
         assert_eq!(
-            config.task_migration_sqs_queuq,
+            config.task_migration_sqs_queue,
             "task-migration-just-code-prod"
         );
         assert_eq!(config.dynamodb_table, "task-just-code-prod");
@@ -57,7 +57,7 @@ mod tests {
 
         let config = Config::new();
 
-        assert_eq!(&config.task_migration_sqs_queuq, "");
+        assert_eq!(&config.task_migration_sqs_queue, "");
         assert_eq!(&config.dynamodb_table, "");
     }
 }

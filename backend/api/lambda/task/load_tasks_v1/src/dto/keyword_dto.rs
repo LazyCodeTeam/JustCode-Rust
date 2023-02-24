@@ -1,13 +1,17 @@
+#[cfg(feature = "fake_dto")]
+use fake::{Dummy, Fake};
 use serde::Deserialize;
 use task_domain::model::keyword::{Keyword, KeywordModifier};
 
 #[derive(Debug, PartialEq, Eq, Clone, Deserialize, Default)]
+#[cfg_attr(feature = "fake_dto", derive(Dummy, serde::Serialize))]
 pub struct KeywordDto {
     pub content: String,
     pub modifiers: Vec<ModifierDto>,
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Deserialize)]
+#[cfg_attr(feature = "fake", derive(fake::Dummy, serde::Serialize))]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ModifierDto {
     NewLine,

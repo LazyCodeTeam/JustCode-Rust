@@ -25,6 +25,7 @@ axum = { version = "0.6" }
 chrono = { version = "0.4" }
 clap = { version = "4.1" }
 darling = { version = "0.14" }
+fake = { version = "2.5" }
 futures = { version = "0.3" }
 futures-util = { version = "0.3" }
 git2 = { version = "0.16.1", default-features = false }
@@ -40,6 +41,7 @@ nanoid = { version = "0.4" }
 paste = { version = "1.0" }
 proc-macro2 = { version = "1.0" }
 quote = { version = "1.0" }
+rand = { version = "0.8" }
 regex = { version = "1.7" }
 serde = { version = "1.0" }
 serde_dynamo = { version = "4.0", features = ["aws-sdk-dynamodb+0_24"] }

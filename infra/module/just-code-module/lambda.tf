@@ -164,3 +164,44 @@ module "load_tasks_v1_lambda" {
     "arn:aws:iam::aws:policy/AmazonSQSFullAccess",
   ]
 }
+
+module "get_fake_tasks_to_load" {
+  source = "../lambda-module"
+
+  env                   = var.env
+  name                  = "get-fake-tasks-to-load"
+  app_name              = local.app_name
+  memory_size           = 128
+  zip_path              = "${path.module}/../../../target/lambdas/get_fake_tasks_to_load.zip"
+  gateway_execution_arn = module.gateway.execution_arn
+  policies = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+  ]
+}
+
+
+module "on_modifications_batch" {
+  source = "../lambda-module"
+
+  env         = var.env
+  name        = "on-modifications-batch"
+  app_name    = local.app_name
+  memory_size = 128
+  zip_path    = "${path.module}/../../../target/lambdas/on_modifications_batch.zip"
+  env_variables = {
+    TASK_DYNAMODB_TABLE = aws_dynamodb_table.tasks.name
+  }
+  policies = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole",
+  ]
+}
+
+resource "aws_lambda_event_source_mapping" "event_source_mapping" {
+  event_source_arn                   = aws_sqs_queue.tasks_migration.arn
+  function_name                      = module.on_modifications_batch.arn
+  batch_size                         = 25
+  enabled                            = true
+  maximum_batching_window_in_seconds = 20
+}

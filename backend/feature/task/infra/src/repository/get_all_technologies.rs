@@ -4,9 +4,7 @@ use common_infra::dynamodb_client::get_dynamodb_client;
 use serde_dynamo::from_items;
 use task_domain::model::technology::Technology;
 
-use crate::{config::CONFIG, dto::technology_dto::TechnologyDto};
-
-use super::TECHNOLOGY_PK;
+use crate::{config::CONFIG, dto::technology_dto::TechnologyDto, TECHNOLOGY_PK};
 
 pub async fn get_all_technologies() -> Result<Vec<Technology>> {
     get_dynamodb_client()

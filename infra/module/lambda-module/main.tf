@@ -75,7 +75,6 @@ resource "aws_lambda_permission" "s3" {
   source_arn    = var.s3_arn
 }
 
-
 resource "aws_lambda_permission" "user_pool" {
   count = var.user_pool_arn == null ? 0 : 1
 

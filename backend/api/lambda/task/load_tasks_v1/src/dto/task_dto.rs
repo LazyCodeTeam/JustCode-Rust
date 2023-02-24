@@ -1,5 +1,8 @@
+#[cfg(feature = "fake_dto")]
+use fake::{Dummy, Fake};
 use serde::Deserialize;
 use task_domain::model::expected_task_data::ExpectedTaskData;
+use uuid::Uuid;
 use validator::Validate;
 
 use super::task_content_dto::TaskContentDto;
@@ -17,12 +20,13 @@ const fn default_for_anonymous() -> bool {
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Deserialize, Validate, Default)]
+#[cfg_attr(feature = "fake_dto", derive(Dummy, serde::Serialize))]
 pub struct TaskDto {
-    #[validate(regex(path = "super::UUID_PATTERN", message = "Invalid UUID format"))]
-    pub id: String,
+    pub id: Uuid,
     #[validate(length(min = 1))]
     pub title: String,
     pub content: TaskContentDto,
+    #[dummy(faker = "1..10")]
     #[validate(range(min = 1, max = 10))]
     #[serde(default = "default_difficulty")]
     pub difficulty: u8,
@@ -35,7 +39,7 @@ pub struct TaskDto {
 impl From<TaskDto> for ExpectedTaskData {
     fn from(value: TaskDto) -> Self {
         ExpectedTaskData {
-            id: value.id.replace('-', "").to_lowercase(),
+            id: value.id.simple().to_string(),
             title: value.title,
             content: value.content.into(),
             difficulty: value.difficulty,
@@ -52,8 +56,9 @@ mod test {
     #[test]
     fn test_from() {
         let content = TaskContentDto::default();
+        let uuid = Uuid::new_v4();
         let task = TaskDto {
-            id: "id-ID".to_string(),
+            id: uuid,
             title: "title".to_string(),
             content: content.clone(),
             difficulty: 1,
@@ -66,7 +71,7 @@ mod test {
         assert_eq!(
             expected_task_data,
             ExpectedTaskData {
-                id: "idid".to_string(),
+                id: uuid.simple().to_string(),
                 title: "title".to_string(),
                 content: content.into(),
                 difficulty: 1,

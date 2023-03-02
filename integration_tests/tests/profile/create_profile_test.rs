@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, env};
 
 use crate::common::dynamodb::with_table;
 use aws_lambda_events::cognito::{
@@ -19,7 +19,8 @@ async fn create_profile_test() {
     with_table(client, run_test).await;
 }
 
-async fn run_test() {
+async fn run_test(table: &str) {
+    env::set_var("PROFILE_DYNAMODB_TABLE", table);
     let id = "123";
     let email = "example@gmail.com";
     let username = "example";

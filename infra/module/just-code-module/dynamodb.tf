@@ -23,7 +23,7 @@ resource "aws_dynamodb_table" "profile" {
 
   attribute {
     name = "LSI_2"
-    type = "N"
+    type = "S"
   }
 
   attribute {
@@ -38,7 +38,7 @@ resource "aws_dynamodb_table" "profile" {
 
   attribute {
     name = "LSI_5"
-    type = "S"
+    type = "N"
   }
 
   local_secondary_index {
@@ -87,8 +87,13 @@ resource "aws_dynamodb_table" "tasks" {
   billing_mode   = var.profile_table_config.billing_mode
   read_capacity  = var.profile_table_config.read_capacity
   write_capacity = var.profile_table_config.write_capacity
-  hash_key       = "PK"
-  range_key      = "SK"
+
+  point_in_time_recovery {
+    enabled = true
+  }
+
+  hash_key  = "PK"
+  range_key = "SK"
 
   attribute {
     name = "PK"
@@ -107,7 +112,7 @@ resource "aws_dynamodb_table" "tasks" {
 
   attribute {
     name = "LSI_2"
-    type = "N"
+    type = "S"
   }
 
   attribute {
@@ -122,7 +127,7 @@ resource "aws_dynamodb_table" "tasks" {
 
   attribute {
     name = "LSI_5"
-    type = "S"
+    type = "N"
   }
 
   local_secondary_index {

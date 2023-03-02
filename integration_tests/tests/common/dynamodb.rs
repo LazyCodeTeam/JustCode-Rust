@@ -139,9 +139,9 @@ lazy_static::lazy_static! {
     static ref DYNAMODB_LOCK: tokio::sync::Mutex<()> = tokio::sync::Mutex::new(());
 }
 
-pub async fn with_table<F, FUT, R>(client: &Client, f: F) -> R
+pub async fn with_table<'a, F, FUT, R>(client: &Client, f: F) -> R
 where
-    F: FnOnce() -> FUT,
+    F: FnOnce(&'a str) -> FUT,
     FUT: std::future::Future<Output = R>,
 {
     let _lock = DYNAMODB_LOCK.lock().await;
@@ -153,7 +153,7 @@ where
         .await
         .expect("Failed to wait for table to be created");
     env::set_var("DYNAMODB_TABLE", table);
-    let result = AssertUnwindSafe(f()).catch_unwind().await;
+    let result = AssertUnwindSafe(f(table)).catch_unwind().await;
     delete_table(client, table)
         .await
         .expect("Failed to delete table");

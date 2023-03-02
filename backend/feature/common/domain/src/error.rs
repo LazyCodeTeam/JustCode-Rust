@@ -58,9 +58,9 @@ impl Default for ErrorOutput {
 }
 
 impl Error {
-    pub fn unknown(message: String) -> Self {
+    pub fn unknown(message: impl ToString) -> Self {
         Self {
-            debug_message: message,
+            debug_message: message.to_string(),
             ..Default::default()
         }
     }

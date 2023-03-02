@@ -43,5 +43,11 @@ module "gateway" {
       method            = "PUT"
       auth_type         = "MODERATOR_API_KEY"
     },
+    {
+      lambda_invoke_arn = module.get_fake_tasks_to_load.invoke_arn
+      route             = "/v1/task/load/fake"
+      method            = "GET"
+      auth_type         = "MODERATOR_API_KEY"
+    },
   ]
 }

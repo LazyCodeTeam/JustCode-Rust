@@ -19,5 +19,6 @@ name = "create_profile"
 path = "src/lib.rs"
 
 [[bin]]
+test = false
 name = "create_profile"
 path = "src/main.rs"

@@ -32,6 +32,7 @@ impl From<Vec<ExpectedTechnologyData>> for RawTasksTree {
                     tasks_preview.push(TaskPreview {
                         id: task.id.clone(),
                         title: task.title.clone(),
+                        for_anonymous: false,
                     });
 
                     tasks.push(Task {
@@ -166,6 +167,7 @@ mod tests {
                         tasks_preview: vec![TaskPreview {
                             id: "id 1".to_string(),
                             title: "title 1".to_string(),
+                            for_anonymous: false,
                         }],
                     },
                     Section {
@@ -178,6 +180,7 @@ mod tests {
                         tasks_preview: vec![TaskPreview {
                             id: "id 2".to_string(),
                             title: "title 2".to_string(),
+                            for_anonymous: false,
                         }],
                     },
                 ],

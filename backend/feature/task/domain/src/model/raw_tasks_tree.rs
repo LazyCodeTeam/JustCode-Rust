@@ -61,6 +61,7 @@ mod test {
                 tasks_preview: vec![TaskPreview {
                     id: "task_id".to_owned(),
                     title: "title".to_owned(),
+                    for_anonymous: false,
                 }],
             }],
             tasks: vec![Task {
@@ -152,6 +153,7 @@ mod test {
                     tasks_preview: vec![TaskPreview {
                         id: "task_id".to_owned(),
                         title: "title".to_owned(),
+                        for_anonymous: false,
                     }],
                 }),
                 Modification::AddTask(Task {
@@ -192,6 +194,7 @@ mod test {
                 tasks_preview: vec![TaskPreview {
                     id: "task_id".to_owned(),
                     title: "title".to_owned(),
+                    for_anonymous: false,
                 }],
             }],
             tasks: vec![Task {
@@ -232,6 +235,7 @@ mod test {
                     tasks_preview: vec![TaskPreview {
                         id: "task_id".to_owned(),
                         title: "title".to_owned(),
+                        for_anonymous: false,
                     }],
                 }),
                 Modification::RemoveTask(Task {
@@ -272,6 +276,7 @@ mod test {
                 tasks_preview: vec![TaskPreview {
                     id: "task_id".to_owned(),
                     title: "title".to_owned(),
+                    for_anonymous: false,
                 }],
             }],
             tasks: vec![Task {

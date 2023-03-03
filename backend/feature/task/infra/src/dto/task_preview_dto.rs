@@ -5,6 +5,7 @@ use task_domain::model::task_preview::TaskPreview;
 pub struct TaskPreviewDto {
     pub id: String,
     pub title: String,
+    pub for_anonymous: bool,
 }
 
 impl From<TaskPreview> for TaskPreviewDto {
@@ -12,6 +13,7 @@ impl From<TaskPreview> for TaskPreviewDto {
         Self {
             id: task_preview.id,
             title: task_preview.title,
+            for_anonymous: task_preview.for_anonymous,
         }
     }
 }
@@ -21,6 +23,7 @@ impl From<TaskPreviewDto> for TaskPreview {
         Self {
             id: task_preview_dto.id,
             title: task_preview_dto.title,
+            for_anonymous: task_preview_dto.for_anonymous,
         }
     }
 }
@@ -34,6 +37,7 @@ mod tests {
         let task_preview = TaskPreview {
             id: "id".to_string(),
             title: "title".to_string(),
+            for_anonymous: false,
         };
 
         let task_preview_dto = TaskPreviewDto::from(task_preview);
@@ -43,6 +47,7 @@ mod tests {
             TaskPreviewDto {
                 id: "id".to_string(),
                 title: "title".to_string(),
+                for_anonymous: false,
             }
         );
     }
@@ -52,6 +57,7 @@ mod tests {
         let task_preview_dto = TaskPreviewDto {
             id: "id".to_string(),
             title: "title".to_string(),
+            for_anonymous: false,
         };
 
         let task_preview = TaskPreview::from(task_preview_dto);
@@ -61,6 +67,7 @@ mod tests {
             TaskPreview {
                 id: "id".to_string(),
                 title: "title".to_string(),
+                for_anonymous: false,
             }
         );
     }

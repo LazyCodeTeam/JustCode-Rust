@@ -1,0 +1,11 @@
+[package]
+name = "get_fake_content_to_load"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+common_api = { path = "../../../common_api", features = ["lambda"] }
+fake = { workspace = true }
+lambda_http = { workspace = true, features = ["apigw_rest"] }
+load_content_v1 = { path = "../load_content_v1", features = ["fake_dto"] }
+tokio = { workspace = true }

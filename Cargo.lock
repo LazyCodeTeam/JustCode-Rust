@@ -836,6 +836,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "content_domain"
+version = "0.1.0"
+dependencies = [
+ "common_domain",
+]
+
+[[package]]
+name = "content_infra"
+version = "0.1.0"
+dependencies = [
+ "aws-sdk-dynamodb",
+ "aws-sdk-sqs",
+ "common_domain",
+ "common_infra",
+ "content_domain",
+ "lazy_static",
+ "serde",
+ "serde_dynamo",
+ "serde_json",
+]
+
+[[package]]
 name = "core-foundation"
 version = "0.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1274,13 +1296,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "get_fake_tasks_to_load"
+name = "get_fake_content_to_load"
 version = "0.1.0"
 dependencies = [
  "common_api",
  "fake",
  "lambda_http",
- "load_tasks_v1",
+ "load_content_v1",
  "tokio",
 ]
 
@@ -1710,18 +1732,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f051f77a7c8e6957c0696eac88f26b0117e54f52d3fc682ab19397a8812846a4"
 
 [[package]]
-name = "load_tasks_v1"
+name = "load_content_v1"
 version = "0.1.0"
 dependencies = [
  "common_api",
  "common_domain",
+ "content_domain",
+ "content_infra",
  "fake",
  "futures",
  "lambda_http",
  "rand",
  "serde",
- "task_domain",
- "task_infra",
  "tokio",
  "use_case",
  "uuid",
@@ -1896,10 +1918,10 @@ dependencies = [
  "aws_lambda_events",
  "common_api",
  "common_domain",
+ "content_domain",
+ "content_infra",
  "futures",
  "lambda_runtime",
- "task_domain",
- "task_infra",
  "tokio",
  "use_case",
 ]
@@ -2594,28 +2616,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "20518fe4a4c9acf048008599e464deb21beeae3d3578418951a189c235a7a9a8"
 
 [[package]]
-name = "task_domain"
-version = "0.1.0"
-dependencies = [
- "common_domain",
-]
-
-[[package]]
-name = "task_infra"
-version = "0.1.0"
-dependencies = [
- "aws-sdk-dynamodb",
- "aws-sdk-sqs",
- "common_domain",
- "common_infra",
- "lazy_static",
- "serde",
- "serde_dynamo",
- "serde_json",
- "task_domain",
-]
-
-[[package]]
 name = "termcolor"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2996,10 +2996,10 @@ dependencies = [
  "chrono",
  "code_domain",
  "common_domain",
+ "content_domain",
  "log",
  "mockall",
  "profile_domain",
- "task_domain",
  "tokio",
 ]
 

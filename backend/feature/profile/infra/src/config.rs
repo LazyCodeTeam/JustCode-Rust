@@ -10,8 +10,8 @@ pub struct Config {
 
 impl Config {
     pub fn new() -> Self {
-        let dynamodb_table = env::var("PROFILE_DYNAMODB_TABLE")
-            .unwrap_or_else(|_| "profile-just-code-dev".to_string());
+        let dynamodb_table =
+            env::var("DYNAMODB_TABLE").unwrap_or_else(|_| "just-code-dev".to_string());
 
         Self { dynamodb_table }
     }
@@ -34,18 +34,18 @@ mod tests {
     }
 
     fn with_set_values() {
-        env::set_var("PROFILE_DYNAMODB_TABLE", "profile-just-code-prod");
+        env::set_var("DYNAMODB_TABLE", "just-code-prod");
 
         let config = Config::new();
 
-        assert_eq!(config.dynamodb_table, "profile-just-code-prod");
+        assert_eq!(config.dynamodb_table, "just-code-prod");
     }
 
     fn with_no_values() {
-        env::remove_var("PROFILE_DYNAMODB_TABLE");
+        env::remove_var("DYNAMODB_TABLE");
 
         let config = Config::new();
 
-        assert_eq!(&config.dynamodb_table, "profile-just-code-dev");
+        assert_eq!(&config.dynamodb_table, "just-code-dev");
     }
 }

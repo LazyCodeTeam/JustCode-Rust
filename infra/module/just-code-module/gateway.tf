@@ -38,14 +38,14 @@ module "gateway" {
       auth_type         = "COGNITO"
     },
     {
-      lambda_invoke_arn = module.load_tasks_v1_lambda.invoke_arn
-      route             = "/v1/task/load"
+      lambda_invoke_arn = module.load_content_v1_lambda.invoke_arn
+      route             = "/v1/content/load"
       method            = "PUT"
       auth_type         = "MODERATOR_API_KEY"
     },
     {
-      lambda_invoke_arn = module.get_fake_tasks_to_load.invoke_arn
-      route             = "/v1/task/load/fake"
+      lambda_invoke_arn = module.get_fake_content_to_load.invoke_arn
+      route             = "/v1/content/load/fake"
       method            = "GET"
       auth_type         = "MODERATOR_API_KEY"
     },

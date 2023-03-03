@@ -8,7 +8,7 @@ module "create_profile_lambda" {
   zip_path      = "${path.module}/../../../target/lambdas/create_profile.zip"
   user_pool_arn = aws_cognito_user_pool.pool.arn
   env_variables = {
-    PROFILE_DYNAMODB_TABLE = aws_dynamodb_table.profile.name
+    DYNAMODB_TABLE = aws_dynamodb_table.main.name
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -26,7 +26,7 @@ module "get_profile_v1_lambda" {
   zip_path              = "${path.module}/../../../target/lambdas/get_profile_v1.zip"
   gateway_execution_arn = module.gateway.execution_arn
   env_variables = {
-    PROFILE_DYNAMODB_TABLE = aws_dynamodb_table.profile.name
+    DYNAMODB_TABLE = aws_dynamodb_table.main.name
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -44,7 +44,7 @@ module "update_push_data_v1_lambda" {
   zip_path              = "${path.module}/../../../target/lambdas/update_push_data_v1.zip"
   gateway_execution_arn = module.gateway.execution_arn
   env_variables = {
-    PROFILE_DYNAMODB_TABLE = aws_dynamodb_table.profile.name
+    DYNAMODB_TABLE = aws_dynamodb_table.main.name
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -62,7 +62,7 @@ module "remove_push_data_v1_lambda" {
   zip_path              = "${path.module}/../../../target/lambdas/remove_push_data_v1.zip"
   gateway_execution_arn = module.gateway.execution_arn
   env_variables = {
-    PROFILE_DYNAMODB_TABLE = aws_dynamodb_table.profile.name
+    DYNAMODB_TABLE = aws_dynamodb_table.main.name
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -80,7 +80,7 @@ module "update_profile_v1_lambda" {
   zip_path              = "${path.module}/../../../target/lambdas/update_profile_v1.zip"
   gateway_execution_arn = module.gateway.execution_arn
   env_variables = {
-    PROFILE_DYNAMODB_TABLE = aws_dynamodb_table.profile.name
+    DYNAMODB_TABLE = aws_dynamodb_table.main.name
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -98,8 +98,8 @@ module "request_avatar_upload_v1_lambda" {
   zip_path              = "${path.module}/../../../target/lambdas/request_avatar_upload_v1.zip"
   gateway_execution_arn = module.gateway.execution_arn
   env_variables = {
-    PROFILE_DYNAMODB_TABLE = aws_dynamodb_table.profile.name
-    S3_BUCKET              = aws_s3_bucket.images.id
+    DYNAMODB_TABLE = aws_dynamodb_table.main.name
+    S3_BUCKET      = aws_s3_bucket.images.id
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -118,8 +118,8 @@ module "on_avatar_created" {
   zip_path    = "${path.module}/../../../target/lambdas/on_avatar_created.zip"
   s3_arn      = aws_s3_bucket.images.arn
   env_variables = {
-    PROFILE_DYNAMODB_TABLE = aws_dynamodb_table.profile.name
-    S3_BUCKET              = aws_s3_bucket.images.id
+    DYNAMODB_TABLE = aws_dynamodb_table.main.name
+    S3_BUCKET      = aws_s3_bucket.images.id
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -145,18 +145,18 @@ module "moderator_api_key_validator" {
   ]
 }
 
-module "load_tasks_v1_lambda" {
+module "load_content_v1_lambda" {
   source = "../lambda-module"
 
   env                   = var.env
-  name                  = "load-tasks-v1"
+  name                  = "load-content-v1"
   app_name              = local.app_name
   memory_size           = 128
-  zip_path              = "${path.module}/../../../target/lambdas/load_tasks_v1.zip"
+  zip_path              = "${path.module}/../../../target/lambdas/load_content_v1.zip"
   gateway_execution_arn = module.gateway.execution_arn
   env_variables = {
     TASK_MIGRATION_SQS_QUEUE = aws_sqs_queue.tasks_migration.url
-    TASK_DYNAMODB_TABLE      = aws_dynamodb_table.tasks.name
+    DYNAMODB_TABLE           = aws_dynamodb_table.main.name
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -165,14 +165,14 @@ module "load_tasks_v1_lambda" {
   ]
 }
 
-module "get_fake_tasks_to_load" {
+module "get_fake_content_to_load" {
   source = "../lambda-module"
 
   env                   = var.env
-  name                  = "get-fake-tasks-to-load"
+  name                  = "get-fake-content-to-load"
   app_name              = local.app_name
   memory_size           = 128
-  zip_path              = "${path.module}/../../../target/lambdas/get_fake_tasks_to_load.zip"
+  zip_path              = "${path.module}/../../../target/lambdas/get_fake_content_to_load.zip"
   gateway_execution_arn = module.gateway.execution_arn
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -189,7 +189,7 @@ module "on_modifications_batch" {
   memory_size = 128
   zip_path    = "${path.module}/../../../target/lambdas/on_modifications_batch.zip"
   env_variables = {
-    TASK_DYNAMODB_TABLE = aws_dynamodb_table.tasks.name
+    DYNAMODB_TABLE = aws_dynamodb_table.main.name
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",

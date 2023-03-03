@@ -4,15 +4,22 @@ use common_infra::dynamodb_client::get_dynamodb_client;
 use content_domain::model::technology::Technology;
 use serde_dynamo::from_items;
 
-use crate::{config::CONFIG, dto::technology_dto::TechnologyDto, TECHNOLOGY_PK};
+use crate::{
+    config::CONFIG, dto::technology_dto::TechnologyDto, TECHNOLOGY_ID_PREFIX, TECHNOLOGY_PK,
+};
 
 pub async fn get_all_technologies() -> Result<Vec<Technology>> {
     get_dynamodb_client()
         .await
         .query()
         .table_name(&CONFIG.dynamodb_table)
-        .key_condition_expression("PK = :pk")
+        .index_name("LSI_1")
+        .key_condition_expression("PK = :pk and begins_with(LSI_1, :lsi_1)")
         .expression_attribute_values(":pk", AttributeValue::S(TECHNOLOGY_PK.to_string()))
+        .expression_attribute_values(
+            ":lsi_1",
+            AttributeValue::S(TECHNOLOGY_ID_PREFIX.to_string()),
+        )
         .send()
         .await
         .map_err(|e| Error::unknown(format!("Failed to get technologies: {e:?}")))

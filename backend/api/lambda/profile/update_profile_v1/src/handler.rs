@@ -1,5 +1,5 @@
 use common_api::lambda::{
-    from_request::FromRequest, into_response::IntoResponse, user_context::UserContext,
+    from_request::FromRequest, into_response::IntoEmptyRespone, user_context::UserContext,
 };
 use common_domain::into_future::IntoFuture;
 use futures::TryFutureExt;

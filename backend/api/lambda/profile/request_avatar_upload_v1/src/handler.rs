@@ -22,5 +22,6 @@ pub async fn handle_request(event: Request) -> Result<Response<Body>, Error> {
             )
         })
         .await
-        .into_response::<PresignedUrlDto>(StatusCode::OK)
+        .map(PresignedUrlDto::from)
+        .into_response(StatusCode::OK)
 }

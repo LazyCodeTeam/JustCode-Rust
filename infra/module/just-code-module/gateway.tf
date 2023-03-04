@@ -52,7 +52,13 @@ module "gateway" {
     },
     {
       lambda_invoke_arn = module.get_technologies_v1_lambda.invoke_arn
-      route             = "/v1/content/technology"
+      route             = "/v1/content/technologies"
+      method            = "GET"
+      auth_type         = "APP_API_KEY"
+    },
+    {
+      lambda_invoke_arn = module.get_sections_v1_lambda.invoke_arn
+      route             = "/v1/content/technology/{technology_id}/sections"
       method            = "GET"
       auth_type         = "APP_API_KEY"
     },

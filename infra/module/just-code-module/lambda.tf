@@ -145,6 +145,23 @@ module "moderator_api_key_validator" {
   ]
 }
 
+module "app_api_key_validator" {
+  source = "../lambda-module"
+
+  env                   = var.env
+  name                  = "app-api-key-validator"
+  app_name              = local.app_name
+  memory_size           = 128
+  zip_path              = "${path.module}/../../../target/lambdas/api_key_validator.zip"
+  gateway_execution_arn = module.gateway.execution_arn
+  env_variables = {
+    API_KEY = var.app_api_key
+  }
+  policies = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+  ]
+}
+
 module "load_content_v1_lambda" {
   source = "../lambda-module"
 
@@ -204,4 +221,23 @@ resource "aws_lambda_event_source_mapping" "event_source_mapping" {
   batch_size                         = 25
   enabled                            = true
   maximum_batching_window_in_seconds = 20
+}
+
+
+module "get_technologies_v1_lambda" {
+  source = "../lambda-module"
+
+  env                   = var.env
+  name                  = "get-technologies-v1"
+  app_name              = local.app_name
+  memory_size           = 128
+  zip_path              = "${path.module}/../../../target/lambdas/get_technologies_v1.zip"
+  gateway_execution_arn = module.gateway.execution_arn
+  env_variables = {
+    DYNAMODB_TABLE = aws_dynamodb_table.main.name
+  }
+  policies = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+  ]
 }

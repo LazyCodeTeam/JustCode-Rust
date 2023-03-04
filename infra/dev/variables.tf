@@ -9,3 +9,9 @@ variable "moderator_api_key" {
   sensitive = true
   default   = ""
 }
+
+variable "app_api_key" {
+  type      = string
+  sensitive = true
+  default   = ""
+}

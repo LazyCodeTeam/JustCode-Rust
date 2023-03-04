@@ -6,6 +6,7 @@ module "gateway" {
   env                                    = var.env
   app_name                               = local.app_name
   moderator_authorizer_lambda_invoke_arn = module.moderator_api_key_validator.invoke_arn
+  app_authorizer_lambda_invoke_arn       = module.app_api_key_validator.invoke_arn
   lambda_integrations = [
     {
       lambda_invoke_arn = module.update_profile_v1_lambda.invoke_arn
@@ -48,6 +49,12 @@ module "gateway" {
       route             = "/v1/content/load/fake"
       method            = "GET"
       auth_type         = "MODERATOR_API_KEY"
+    },
+    {
+      lambda_invoke_arn = module.get_technologies_v1_lambda.invoke_arn
+      route             = "/v1/content/technology"
+      method            = "GET"
+      auth_type         = "APP_API_KEY"
     },
   ]
 }

@@ -12,11 +12,13 @@ locals {
     NONE              = null,
     COGNITO           = "JWT",
     MODERATOR_API_KEY = "CUSTOM"
+    APP_API_KEY       = "CUSTOM"
   }
   authorizer_id = {
     NONE              = null,
     COGNITO           = aws_apigatewayv2_authorizer.auth.id,
     MODERATOR_API_KEY = aws_apigatewayv2_authorizer.moderator.id
+    APP_API_KEY       = aws_apigatewayv2_authorizer.app.id
   }
 }
 
@@ -101,4 +103,16 @@ resource "aws_apigatewayv2_authorizer" "moderator" {
   name                              = "${var.app_name}-${var.env}-moderator-authorizer"
   authorizer_payload_format_version = "2.0"
   enable_simple_responses           = true
+  authorizer_result_ttl_in_seconds  = 3600
+}
+
+resource "aws_apigatewayv2_authorizer" "app" {
+  api_id                            = aws_apigatewayv2_api.default.id
+  authorizer_type                   = "REQUEST"
+  authorizer_uri                    = var.app_authorizer_lambda_invoke_arn
+  identity_sources                  = ["$request.header.X-Api-Key"]
+  name                              = "${var.app_name}-${var.env}-app-authorizer"
+  authorizer_payload_format_version = "2.0"
+  enable_simple_responses           = true
+  authorizer_result_ttl_in_seconds  = 3600
 }

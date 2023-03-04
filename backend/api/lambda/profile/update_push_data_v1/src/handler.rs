@@ -1,4 +1,4 @@
-use common_api::lambda::into_response::IntoResponse;
+use common_api::lambda::into_response::IntoEmptyRespone;
 use common_api::lambda::validate::Validate;
 use common_api::lambda::{from_request::FromRequest, user_context::UserContext};
 use common_domain::into_future::IntoFuture;

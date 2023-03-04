@@ -1,5 +1,5 @@
 use common_api::lambda::{
-    from_request::FromRequest, into_response::IntoResponse, validate::Validate,
+    from_request::FromRequest, into_response::IntoEmptyRespone, validate::Validate,
 };
 use common_domain::into_future::IntoFuture;
 use content_domain::model::expected_technology_data::ExpectedTechnologyData;
@@ -30,5 +30,5 @@ pub async fn handle_request(event: Request) -> Result<Response<Body>, Error> {
             )
         })
         .await
-        .into_empty_response(StatusCode::OK)
+        .into_empty_response(StatusCode::ACCEPTED)
 }

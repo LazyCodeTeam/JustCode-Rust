@@ -1,0 +1,13 @@
+[package]
+name = "get_technologies_v1"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+common_api = { path = "../../../common_api", features = ["lambda"] }
+content_domain = { path = "../../../../feature/content/domain" }
+content_infra = { path = "../../../../feature/content/infra" }
+lambda_http = { workspace = true, features = ["apigw_rest"] }
+serde = { workspace = true, features = ["derive"] }
+tokio = { workspace = true }
+use_case = { path = "../../../../use_case", features = ["get_technologies"] }

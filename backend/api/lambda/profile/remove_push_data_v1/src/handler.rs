@@ -1,4 +1,4 @@
-use common_api::lambda::{into_response::IntoResponse, user_context::UserContext};
+use common_api::lambda::{into_response::IntoEmptyRespone, user_context::UserContext};
 use common_domain::into_future::IntoFuture;
 use futures::TryFutureExt;
 use lambda_http::{http::StatusCode, Body, Error, Request, Response};

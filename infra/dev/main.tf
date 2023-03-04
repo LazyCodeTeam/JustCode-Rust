@@ -25,4 +25,5 @@ module "app" {
   region            = "eu-central-1"
   env               = "dev"
   moderator_api_key = var.moderator_api_key
+  app_api_key       = var.app_api_key
 }

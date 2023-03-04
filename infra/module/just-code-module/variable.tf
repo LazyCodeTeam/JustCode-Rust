@@ -50,3 +50,7 @@ variable "tasks_table_config" {
 variable "moderator_api_key" {
   type = string
 }
+
+variable "app_api_key" {
+  type = string
+}

@@ -20,5 +20,6 @@ pub async fn handle_request(event: Request) -> Result<Response<Body>, Error> {
             )
         })
         .await
-        .into_response::<ProfileDto>(StatusCode::OK)
+        .map(ProfileDto::from)
+        .into_response(StatusCode::OK)
 }

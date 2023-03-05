@@ -41,6 +41,7 @@ fn map_error_type(error_type: ErrorType) -> StatusCode {
         ErrorType::Unknown => StatusCode::INTERNAL_SERVER_ERROR,
         ErrorType::Conflict => StatusCode::CONFLICT,
         ErrorType::NotFound => StatusCode::NOT_FOUND,
+        ErrorType::NotModified => StatusCode::NOT_MODIFIED,
         ErrorType::Forbidden => StatusCode::FORBIDDEN,
         ErrorType::Unauthorized => StatusCode::UNAUTHORIZED,
     }

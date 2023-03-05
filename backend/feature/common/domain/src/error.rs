@@ -12,6 +12,7 @@ pub enum ErrorType {
     InvalidInput,
     Conflict,
     NotFound,
+    NotModified,
     Forbidden,
     Unauthorized,
     Unknown,
@@ -97,6 +98,7 @@ impl From<ErrorType> for Level {
             ErrorType::Unknown => Level::Error,
             ErrorType::Conflict => Level::Info,
             ErrorType::Forbidden => Level::Info,
+            ErrorType::NotModified => Level::Debug,
             ErrorType::Unauthorized => Level::Info,
             ErrorType::NotFound => Level::Info,
         }

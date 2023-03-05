@@ -17,7 +17,7 @@ pub async fn handle_request(event: Request) -> Result<Response<Body>, Error> {
             get_public_sections(
                 technology_id.to_owned(),
                 GetPublicSectionsRepo {
-                    get_sections: content_infra::repository::get_technology_sections,
+                    get_sections: content_infra::repository::get_ordered_technology_sections,
                 },
             )
         })

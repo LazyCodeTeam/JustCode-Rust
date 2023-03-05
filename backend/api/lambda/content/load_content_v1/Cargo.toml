@@ -11,9 +11,5 @@ content_dto = { path = "../dto", features = ["input"] }
 content_infra = { path = "../../../../feature/content/infra" }
 futures = { workspace = true }
 lambda_http = { workspace = true, features = ["apigw_rest"] }
-rand = { workspace = true, optional = true }
-serde = { workspace = true, features = ["derive"] }
 tokio = { workspace = true }
 use_case = { path = "../../../../use_case", features = ["load_content"] }
-uuid = { workspace = true, features = ["serde", "v4"] }
-validator = { workspace = true, features = ["derive"] }

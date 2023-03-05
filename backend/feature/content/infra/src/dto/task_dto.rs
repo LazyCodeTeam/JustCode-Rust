@@ -16,7 +16,6 @@ pub struct TaskDto {
     pub lsi: String,
     pub title: String,
     pub difficulty: u8,
-    pub dynamic: bool,
     pub for_anonymous: bool,
     pub content: TaskContentDto,
 }
@@ -33,15 +32,14 @@ impl DynamoDbIdentifiable for TaskDto {
 
 impl From<Task> for TaskDto {
     fn from(task: Task) -> Self {
-        let lsi = if task.dynamic {
-            format!("{}{}", DYNAMIC_TASK_ID_PREFIX, task.id)
-        } else {
-            format!(
+        let lsi = match task.position {
+            None => format!("{}{}", DYNAMIC_TASK_ID_PREFIX, task.id),
+            Some(position) => format!(
                 "{}{:0>len$}",
                 TASK_ID_PREFIX,
-                task.position,
+                position,
                 len = POSITIONED_ID_LENGTH,
-            )
+            ),
         };
 
         Self {
@@ -50,7 +48,6 @@ impl From<Task> for TaskDto {
             lsi,
             title: task.title,
             difficulty: task.difficulty,
-            dynamic: task.dynamic,
             for_anonymous: task.for_anonymous,
             content: task.content.into(),
         }
@@ -63,13 +60,8 @@ impl From<TaskDto> for Task {
             id: task_dto.id.replace(TASK_ID_PREFIX, ""),
             section_id: task_dto.section_id.replace(SECTION_ID_PREFIX, ""),
             title: task_dto.title,
-            position: task_dto
-                .lsi
-                .replace(TASK_ID_PREFIX, "")
-                .parse()
-                .unwrap_or_default(),
+            position: task_dto.lsi.replace(TASK_ID_PREFIX, "").parse::<u64>().ok(),
             difficulty: task_dto.difficulty,
-            dynamic: task_dto.dynamic,
             for_anonymous: task_dto.for_anonymous,
             content: task_dto.content.into(),
         }
@@ -89,9 +81,8 @@ mod tests {
             id: "id".to_string(),
             section_id: "section_id".to_string(),
             title: "title".to_string(),
-            position: 2,
+            position: Some(2),
             difficulty: 1,
-            dynamic: false,
             for_anonymous: true,
             content: content.clone(),
         };
@@ -106,7 +97,6 @@ mod tests {
                 lsi: "task-00000000000000000000000000000002".to_string(),
                 title: "title".to_string(),
                 difficulty: 1,
-                dynamic: false,
                 for_anonymous: true,
                 content: content.into(),
             }
@@ -120,9 +110,8 @@ mod tests {
             id: "id".to_string(),
             section_id: "section_id".to_string(),
             title: "title".to_string(),
-            position: 2,
+            position: None,
             difficulty: 1,
-            dynamic: true,
             for_anonymous: true,
             content: content.clone(),
         };
@@ -134,10 +123,9 @@ mod tests {
             TaskDto {
                 id: "task-id".to_string(),
                 section_id: "section-section_id".to_string(),
-                lsi: "task-dynamic-id".to_string(),
+                lsi: "dynamic_task-id".to_string(),
                 title: "title".to_string(),
                 difficulty: 1,
-                dynamic: true,
                 for_anonymous: true,
                 content: content.into(),
             }
@@ -153,7 +141,6 @@ mod tests {
             lsi: "task-00000000000000000000000000000002".to_string(),
             title: "title".to_string(),
             difficulty: 1,
-            dynamic: true,
             for_anonymous: true,
             content: content.clone().into(),
         };
@@ -166,9 +153,37 @@ mod tests {
                 id: "id".to_string(),
                 section_id: "section_id".to_string(),
                 title: "title".to_string(),
-                position: 2,
+                position: Some(2),
                 difficulty: 1,
-                dynamic: true,
+                for_anonymous: true,
+                content,
+            }
+        );
+    }
+
+    #[test]
+    fn from_dynamic_task_dto() {
+        let content = TaskContent::default();
+        let task_dto = TaskDto {
+            id: "task-id".to_string(),
+            section_id: "section-section_id".to_string(),
+            lsi: "task-aaaa".to_string(),
+            title: "title".to_string(),
+            difficulty: 1,
+            for_anonymous: true,
+            content: content.clone().into(),
+        };
+
+        let task = Task::from(task_dto);
+
+        assert_eq!(
+            task,
+            Task {
+                id: "id".to_string(),
+                section_id: "section_id".to_string(),
+                title: "title".to_string(),
+                position: None,
+                difficulty: 1,
                 for_anonymous: true,
                 content,
             }

@@ -7,7 +7,7 @@ use use_case::content::get_public_technologies::{
 
 pub async fn handle_request(_event: Request) -> Result<Response<Body>, Error> {
     get_public_technologies(GetPublicTechnologiesRepo {
-        get_technologies: content_infra::repository::get_all_technologies,
+        get_technologies: content_infra::repository::get_ordered_technologies,
     })
     .await
     .map(|technologies| {

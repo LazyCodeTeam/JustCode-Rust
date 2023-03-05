@@ -1259,12 +1259,10 @@ version = "0.1.0"
 dependencies = [
  "common_api",
  "common_domain",
- "content_domain",
  "content_dto",
  "content_infra",
  "futures",
  "lambda_http",
- "serde",
  "tokio",
  "use_case",
 ]
@@ -1288,11 +1286,9 @@ name = "get_public_technologies_v1"
 version = "0.1.0"
 dependencies = [
  "common_api",
- "content_domain",
  "content_dto",
  "content_infra",
  "lambda_http",
- "serde",
  "tokio",
  "use_case",
 ]
@@ -1718,12 +1714,8 @@ dependencies = [
  "content_infra",
  "futures",
  "lambda_http",
- "rand",
- "serde",
  "tokio",
  "use_case",
- "uuid",
- "validator",
 ]
 
 [[package]]

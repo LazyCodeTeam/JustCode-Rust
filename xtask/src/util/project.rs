@@ -26,6 +26,9 @@ pub fn get_project_names(path: PathBuf) -> Vec<String> {
     }
     let cargo_path = path.join(CARGO_FILE);
     if let Some(cargo) = get_cargo_content(&cargo_path) {
+        if !path.join("src").join("main.rs").exists() {
+            return vec![];
+        }
         return vec![cargo.package.name];
     }
 

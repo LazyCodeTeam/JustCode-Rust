@@ -62,5 +62,11 @@ module "gateway" {
       method            = "GET"
       auth_type         = "APP_API_KEY"
     },
+    {
+      lambda_invoke_arn = module.get_tasks_v1_lambda.invoke_arn
+      route             = "/v1/content/section/{section_id}/tasks"
+      method            = "GET"
+      auth_type         = "APP_API_KEY"
+    },
   ]
 }

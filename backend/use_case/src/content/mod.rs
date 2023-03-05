@@ -1,5 +1,7 @@
 #[cfg(feature = "get_sections")]
 pub mod get_sections;
+#[cfg(feature = "get_tasks")]
+pub mod get_tasks;
 #[cfg(feature = "get_technologies")]
 pub mod get_technologies;
 #[cfg(feature = "load_content")]

@@ -1,0 +1,14 @@
+[package]
+name = "get_tasks_v1"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+common_api = { path = "../../../common_api", features = ["lambda"] }
+common_domain = { path = "../../../../feature/common/domain" }
+content_dto = { path = "../dto", features = ["output"] }
+content_infra = { path = "../../../../feature/content/infra" }
+futures = { workspace = true }
+lambda_http = { workspace = true, features = ["apigw_rest"] }
+tokio = { workspace = true }
+use_case = { path = "../../../../use_case", features = ["get_tasks"] }

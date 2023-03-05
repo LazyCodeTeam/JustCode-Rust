@@ -842,6 +842,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "content_dto"
+version = "0.1.0"
+dependencies = [
+ "content_domain",
+ "serde",
+]
+
+[[package]]
 name = "content_infra"
 version = "0.1.0"
 dependencies = [
@@ -1327,6 +1335,22 @@ dependencies = [
  "common_api",
  "common_domain",
  "content_domain",
+ "content_infra",
+ "futures",
+ "lambda_http",
+ "serde",
+ "tokio",
+ "use_case",
+]
+
+[[package]]
+name = "get_tasks_v1"
+version = "0.1.0"
+dependencies = [
+ "common_api",
+ "common_domain",
+ "content_domain",
+ "content_dto",
  "content_infra",
  "futures",
  "lambda_http",

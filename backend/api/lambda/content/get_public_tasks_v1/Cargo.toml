@@ -1,5 +1,5 @@
 [package]
-name = "get_tasks_v1"
+name = "get_public_tasks_v1"
 version = "0.1.0"
 edition = "2021"
 
@@ -11,4 +11,4 @@ content_infra = { path = "../../../../feature/content/infra" }
 futures = { workspace = true }
 lambda_http = { workspace = true, features = ["apigw_rest"] }
 tokio = { workspace = true }
-use_case = { path = "../../../../use_case", features = ["get_tasks"] }
+use_case = { path = "../../../../use_case", features = ["get_public_tasks"] }

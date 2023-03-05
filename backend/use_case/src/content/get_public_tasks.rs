@@ -5,12 +5,15 @@ use common_domain::{
 use content_domain::model::task::Task;
 
 define_repo! {
-    pub struct GetTasksRepo<A> {
+    pub struct GetPublicTasksRepo<A> {
         pub get_tasks: Fn<'a>(section_id: &'a str) -> Result<Vec<content_domain::model::task::Task>> as A,
     }
 }
 
-pub async fn get_tasks<A>(section_id: String, repo: GetTasksRepo<A>) -> Result<Vec<Task>>
+pub async fn get_public_tasks<A>(
+    section_id: String,
+    repo: GetPublicTasksRepo<A>,
+) -> Result<Vec<Task>>
 where
     A: GetTasksType,
 {
@@ -38,11 +41,11 @@ mod tests {
             .withf(|id| "section_id" == id)
             .return_once(move |_| Ok(out));
 
-        let repo = GetTasksRepo {
+        let repo = GetPublicTasksRepo {
             get_tasks: mock_get_tasks::call,
         };
 
-        let result = get_tasks("section_id".to_string(), repo).await;
+        let result = get_public_tasks("section_id".to_string(), repo).await;
 
         assert!(result.is_ok());
         assert_eq!(result.unwrap(), tasks);
@@ -56,11 +59,11 @@ mod tests {
             .withf(|id| "section_id" == id)
             .return_once(move |_| Err(Error::not_found()));
 
-        let repo = GetTasksRepo {
+        let repo = GetPublicTasksRepo {
             get_tasks: mock_get_tasks::call,
         };
 
-        let result = get_tasks("section_id".to_string(), repo).await;
+        let result = get_public_tasks("section_id".to_string(), repo).await;
 
         assert!(result.is_err());
         assert_eq!(result.unwrap_err(), Error::not_found());

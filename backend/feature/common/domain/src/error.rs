@@ -65,6 +65,18 @@ impl Error {
         }
     }
 
+    pub fn not_found() -> Self {
+        Self {
+            error_type: ErrorType::NotFound,
+            output: Box::new(ErrorOutput {
+                message: "Not found".to_owned(),
+                code: "not_found".to_owned(),
+                ..Default::default()
+            }),
+            ..Default::default()
+        }
+    }
+
     pub fn log(&self) {
         log::log!(self.error_type.into(), "{self}");
     }
@@ -160,5 +172,23 @@ pub mod test {
         assert_eq!(Level::from(ErrorType::Forbidden), Level::Info);
         assert_eq!(Level::from(ErrorType::Unauthorized), Level::Info);
         assert_eq!(Level::from(ErrorType::NotFound), Level::Info);
+    }
+
+    #[test]
+    fn not_found() {
+        let value = Error::not_found();
+
+        assert_eq!(
+            value,
+            Error {
+                error_type: ErrorType::NotFound,
+                output: Box::new(ErrorOutput {
+                    message: "Not found".to_owned(),
+                    code: "not_found".to_owned(),
+                    ..Default::default()
+                }),
+                ..Default::default()
+            }
+        )
     }
 }

@@ -16,6 +16,7 @@ pub use finish_transaction_if_ready::finish_transaction_if_ready;
 pub use get_all_technologies::get_all_technologies;
 pub use get_full_content::get_full_content;
 pub use get_sections::get_technology_sections;
+pub use get_tasks::get_section_tasks;
 pub use increase_queue_items_count::increase_queue_items_count;
 pub use increment_transaction_counter::increment_transaction_counter;
 pub use is_transaction_in_progress::is_transaction_in_progress;

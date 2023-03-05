@@ -1,0 +1,12 @@
+[package]
+name = "content_dto"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+content_domain = { path = "../../../../feature/content/domain" }
+serde = { workspace = true, features = ["derive"] }
+
+[features]
+input = []
+output = []

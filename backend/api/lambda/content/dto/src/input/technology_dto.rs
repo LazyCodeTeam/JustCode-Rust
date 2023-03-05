@@ -1,13 +1,10 @@
 use super::section_dto::SectionDto;
 use content_domain::model::expected_technology_data::ExpectedTechnologyData;
-#[cfg(feature = "fake_dto")]
-use fake::{Dummy, Fake, Faker};
 use serde::Deserialize;
 use uuid::Uuid;
 use validator::Validate;
 
 #[derive(Debug, PartialEq, Eq, Clone, Deserialize, Validate, Default)]
-#[cfg_attr(feature = "fake_dto", derive(Dummy, serde::Serialize))]
 pub struct TechnologyDto {
     pub id: Uuid,
     #[validate(length(min = 1))]
@@ -16,7 +13,6 @@ pub struct TechnologyDto {
     #[validate(url(message = "Invalid URL format"))]
     pub image: Option<String>,
     #[validate]
-    #[dummy(faker = "(Faker, 3..10)")]
     pub sections: Vec<SectionDto>,
 }
 

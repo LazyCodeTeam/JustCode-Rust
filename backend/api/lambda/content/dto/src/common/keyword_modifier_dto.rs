@@ -19,6 +19,16 @@ impl From<KeywordModifier> for KeywordModifierDto {
     }
 }
 
+impl From<KeywordModifierDto> for KeywordModifier {
+    fn from(modifier: KeywordModifierDto) -> Self {
+        match modifier {
+            KeywordModifierDto::NewLine => Self::NewLine,
+            KeywordModifierDto::AddIndentation => Self::AddIndentation,
+            KeywordModifierDto::RemoveIndentation => Self::RemoveIndentation,
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -36,6 +46,22 @@ mod tests {
         assert_eq!(
             KeywordModifierDto::from(KeywordModifier::RemoveIndentation),
             KeywordModifierDto::RemoveIndentation
+        );
+    }
+
+    #[test]
+    fn from_keyword_modifier_dto() {
+        assert_eq!(
+            KeywordModifier::from(KeywordModifierDto::NewLine),
+            KeywordModifier::NewLine
+        );
+        assert_eq!(
+            KeywordModifier::from(KeywordModifierDto::AddIndentation),
+            KeywordModifier::AddIndentation
+        );
+        assert_eq!(
+            KeywordModifier::from(KeywordModifierDto::RemoveIndentation),
+            KeywordModifier::RemoveIndentation
         );
     }
 }

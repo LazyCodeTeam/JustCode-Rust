@@ -1,16 +1,14 @@
 use std::collections::HashMap;
 
 use content_domain::model::task_content::TaskContent;
-#[cfg(feature = "fake_dto")]
-use fake::{Dummy, Fake, Faker};
 use serde::Deserialize;
 use validator::Validate;
 
+use crate::common::{hint_dto::HintDto, playground_variant_dto::PlaygroundVariationDto};
+
 use super::{
-    hint_dto::HintDto,
     keyword_dto::{KeywordDto, Keywords},
     option_dto::{OptionDto, OptionsData},
-    playground_variation_dto::PlaygroundVariationDto,
 };
 
 #[derive(Debug, PartialEq, Eq, Clone, Deserialize, Default)]
@@ -29,43 +27,31 @@ pub enum TaskContentDto {
     },
     SingleSelection {
         content: String,
-        #[dummy(faker = "(Faker, 3..10)")]
         options: Vec<OptionDto>,
-        #[dummy(faker = "0..2")]
         correct_option: u16,
-        #[dummy(faker = "(Faker, 3..10)")]
         hints: Vec<HintDto>,
     },
     MultipleSelection {
         content: String,
-        #[dummy(faker = "(Faker, 3..10)")]
         options: Vec<OptionDto>,
-        #[dummy(faker = "(Faker, 0)")]
         correct_options: Vec<u16>,
-        #[dummy(faker = "(Faker, 3..10)")]
         hints: Vec<HintDto>,
     },
     KeywordsArrangement {
         content: String,
-        #[dummy(faker = "(Faker, 3..10)")]
         keywords: Vec<KeywordDto>,
-        #[dummy(faker = "(Faker, 0)")]
         correct_order: Vec<u16>,
-        #[dummy(faker = "(Faker, 3..10)")]
         hints: Vec<HintDto>,
     },
     LinesArrangement {
         content: String,
         lines: Vec<OptionDto>,
-        #[dummy(faker = "(Faker, 0)")]
         correct_order: Vec<u16>,
-        #[dummy(faker = "(Faker, 3..10)")]
         hints: Vec<HintDto>,
     },
     MissingCode {
         content: String,
         correct_code: HashMap<String, String>,
-        #[dummy(faker = "(Faker, 3..10)")]
         hints: Vec<HintDto>,
     },
 }

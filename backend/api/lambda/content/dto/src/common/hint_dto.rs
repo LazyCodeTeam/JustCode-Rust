@@ -14,6 +14,14 @@ impl From<Hint> for HintDto {
     }
 }
 
+impl From<HintDto> for Hint {
+    fn from(hint_dto: HintDto) -> Self {
+        Self {
+            content: hint_dto.content,
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -25,5 +33,14 @@ mod tests {
         };
         let hint_dto = HintDto::from(hint);
         assert_eq!(hint_dto.content, "content");
+    }
+
+    #[test]
+    fn from_hint_dto() {
+        let hint_dto = HintDto {
+            content: "content".to_string(),
+        };
+        let hint = Hint::from(hint_dto);
+        assert_eq!(hint.content, "content");
     }
 }

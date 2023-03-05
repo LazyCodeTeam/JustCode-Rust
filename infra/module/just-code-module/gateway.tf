@@ -45,12 +45,6 @@ module "gateway" {
       auth_type         = "MODERATOR_API_KEY"
     },
     {
-      lambda_invoke_arn = module.get_fake_content_to_load.invoke_arn
-      route             = "/v1/content/load/fake"
-      method            = "GET"
-      auth_type         = "MODERATOR_API_KEY"
-    },
-    {
       lambda_invoke_arn = module.get_public_technologies_v1_lambda.invoke_arn
       route             = "/v1/content/public/technologies"
       method            = "GET"

@@ -7,6 +7,7 @@ edition = "2021"
 common_api = { path = "../../../common_api", features = ["lambda"] }
 common_domain = { path = "../../../../feature/common/domain" }
 content_domain = { path = "../../../../feature/content/domain" }
+content_dto = { path = "../dto", features = ["output"] }
 content_infra = { path = "../../../../feature/content/infra" }
 futures = { workspace = true }
 lambda_http = { workspace = true, features = ["apigw_rest"] }

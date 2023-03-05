@@ -6,7 +6,9 @@ edition = "2021"
 [dependencies]
 content_domain = { path = "../../../../feature/content/domain" }
 serde = { workspace = true, features = ["derive"] }
+uuid = { workspace = true, features = ["serde", "v4"], optional = true }
+validator = { workspace = true, features = ["derive"], optional = true }
 
 [features]
-input = []
+input = ["uuid", "validator"]
 output = []

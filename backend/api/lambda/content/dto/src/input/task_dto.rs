@@ -1,6 +1,4 @@
 use content_domain::model::expected_task_data::ExpectedTaskData;
-#[cfg(feature = "fake_dto")]
-use fake::{Dummy, Fake};
 use serde::Deserialize;
 use uuid::Uuid;
 use validator::Validate;
@@ -26,7 +24,6 @@ pub struct TaskDto {
     #[validate(length(min = 1))]
     pub title: String,
     pub content: TaskContentDto,
-    #[dummy(faker = "1..10")]
     #[validate(range(min = 1, max = 10))]
     #[serde(default = "default_difficulty")]
     pub difficulty: u8,

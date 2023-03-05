@@ -51,20 +51,20 @@ module "gateway" {
       auth_type         = "MODERATOR_API_KEY"
     },
     {
-      lambda_invoke_arn = module.get_technologies_v1_lambda.invoke_arn
-      route             = "/v1/content/technologies"
+      lambda_invoke_arn = module.get_public_technologies_v1_lambda.invoke_arn
+      route             = "/v1/content/public/technologies"
       method            = "GET"
       auth_type         = "APP_API_KEY"
     },
     {
-      lambda_invoke_arn = module.get_sections_v1_lambda.invoke_arn
-      route             = "/v1/content/technology/{technology_id}/sections"
+      lambda_invoke_arn = module.get_public_sections_v1_lambda.invoke_arn
+      route             = "/v1/content/public/technology/{technology_id}/sections"
       method            = "GET"
       auth_type         = "APP_API_KEY"
     },
     {
-      lambda_invoke_arn = module.get_tasks_v1_lambda.invoke_arn
-      route             = "/v1/content/section/{section_id}/tasks"
+      lambda_invoke_arn = module.get_public_tasks_v1_lambda.invoke_arn
+      route             = "/v1/content/public/section/{section_id}/tasks"
       method            = "GET"
       auth_type         = "APP_API_KEY"
     },

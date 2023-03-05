@@ -2,14 +2,14 @@ use common_domain::{define_repo, error::Error, error::Result};
 use content_domain::model::section::Section;
 
 define_repo! {
-    pub struct GetSectionsRepo<A> {
+    pub struct GetPublicSectionsRepo<A> {
         pub get_sections: Fn<'a>(technology_id: &'a str) -> Result<Vec<Section>> as A,
     }
 }
 
-pub async fn get_sections<A>(
+pub async fn get_public_sections<A>(
     technology_id: String,
-    repo: GetSectionsRepo<A>,
+    repo: GetPublicSectionsRepo<A>,
 ) -> Result<Vec<Section>>
 where
     A: GetSectionsType,
@@ -35,11 +35,11 @@ mod test {
             .withf(|technology_id| technology_id == "technology_id")
             .returning(|_| Ok(vec![]));
 
-        let repo = GetSectionsRepo {
+        let repo = GetPublicSectionsRepo {
             get_sections: mock_get_sections::call,
         };
 
-        let result = get_sections("technology_id".to_owned(), repo).await;
+        let result = get_public_sections("technology_id".to_owned(), repo).await;
 
         assert_eq!(result, Err(Error::not_found()));
     }
@@ -54,11 +54,11 @@ mod test {
             .withf(|technology_id| technology_id == "technology_id")
             .return_once(move |_| Ok(out));
 
-        let repo = GetSectionsRepo {
+        let repo = GetPublicSectionsRepo {
             get_sections: mock_get_sections::call,
         };
 
-        let result = get_sections("technology_id".to_owned(), repo).await;
+        let result = get_public_sections("technology_id".to_owned(), repo).await;
 
         assert_eq!(result, Ok(sections));
     }

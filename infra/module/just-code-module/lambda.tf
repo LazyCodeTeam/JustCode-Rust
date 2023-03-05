@@ -224,14 +224,14 @@ resource "aws_lambda_event_source_mapping" "event_source_mapping" {
 }
 
 
-module "get_technologies_v1_lambda" {
+module "get_public_technologies_v1_lambda" {
   source = "../lambda-module"
 
   env                   = var.env
-  name                  = "get-technologies-v1"
+  name                  = "get-public-technologies-v1"
   app_name              = local.app_name
   memory_size           = 128
-  zip_path              = "${path.module}/../../../target/lambdas/get_technologies_v1.zip"
+  zip_path              = "${path.module}/../../../target/lambdas/get_public_technologies_v1.zip"
   gateway_execution_arn = module.gateway.execution_arn
   env_variables = {
     DYNAMODB_TABLE = aws_dynamodb_table.main.name
@@ -242,14 +242,14 @@ module "get_technologies_v1_lambda" {
   ]
 }
 
-module "get_sections_v1_lambda" {
+module "get_public_sections_v1_lambda" {
   source = "../lambda-module"
 
   env                   = var.env
-  name                  = "get-sections-v1"
+  name                  = "get-public-sections-v1"
   app_name              = local.app_name
   memory_size           = 128
-  zip_path              = "${path.module}/../../../target/lambdas/get_sections_v1.zip"
+  zip_path              = "${path.module}/../../../target/lambdas/get_public_sections_v1.zip"
   gateway_execution_arn = module.gateway.execution_arn
   env_variables = {
     DYNAMODB_TABLE = aws_dynamodb_table.main.name
@@ -260,14 +260,14 @@ module "get_sections_v1_lambda" {
   ]
 }
 
-module "get_tasks_v1_lambda" {
+module "get_public_tasks_v1_lambda" {
   source = "../lambda-module"
 
   env                   = var.env
-  name                  = "get-tasks-v1"
+  name                  = "get-public-tasks-v1"
   app_name              = local.app_name
   memory_size           = 128
-  zip_path              = "${path.module}/../../../target/lambdas/get_tasks_v1.zip"
+  zip_path              = "${path.module}/../../../target/lambdas/get_public_tasks_v1.zip"
   gateway_execution_arn = module.gateway.execution_arn
   env_variables = {
     DYNAMODB_TABLE = aws_dynamodb_table.main.name

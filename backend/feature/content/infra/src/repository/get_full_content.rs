@@ -2,8 +2,8 @@ use common_domain::error::Result;
 use content_domain::model::full_content::FullContent;
 
 use super::{
-    get_all_technologies, get_sections::get_sections_for_multiple_technologies,
-    get_tasks::get_tasks_for_multiple_technologies,
+    get_sections::get_sections_for_multiple_technologies,
+    get_tasks::get_tasks_for_multiple_technologies, get_technologies::get_all_technologies,
 };
 
 pub async fn get_full_content() -> Result<FullContent> {

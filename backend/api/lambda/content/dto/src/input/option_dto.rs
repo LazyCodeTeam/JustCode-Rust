@@ -1,10 +1,7 @@
 use content_domain::model::option_data::OptionData;
-#[cfg(feature = "fake_dto")]
-use fake::{Dummy, Fake};
 use serde::Deserialize;
 
 #[derive(Debug, PartialEq, Eq, Clone, Deserialize, Default)]
-#[cfg_attr(feature = "fake_dto", derive(Dummy, serde::Serialize))]
 pub struct OptionDto {
     pub content: String,
 }

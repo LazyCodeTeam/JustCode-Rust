@@ -17,7 +17,7 @@ pub async fn handle_request(event: Request) -> Result<Response<Body>, Error> {
             get_public_tasks(
                 technology_id.to_owned(),
                 GetPublicTasksRepo {
-                    get_tasks: content_infra::repository::get_section_tasks,
+                    get_tasks: content_infra::repository::get_ordered_section_tasks,
                 },
             )
         })

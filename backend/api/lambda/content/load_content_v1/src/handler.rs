@@ -3,11 +3,10 @@ use common_api::lambda::{
 };
 use common_domain::into_future::IntoFuture;
 use content_domain::model::expected_technology_data::ExpectedTechnologyData;
+use content_dto::input::technology_dto::TechnologyDto;
 use futures::TryFutureExt;
 use lambda_http::{http::StatusCode, Body, Error, Request, Response};
 use use_case::content::load_content::{load_tasks, LoadContentRepository};
-
-use crate::dto::technology_dto::TechnologyDto;
 
 pub async fn handle_request(event: Request) -> Result<Response<Body>, Error> {
     Vec::<TechnologyDto>::from_request(&event)

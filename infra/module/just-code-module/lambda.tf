@@ -182,21 +182,6 @@ module "load_content_v1_lambda" {
   ]
 }
 
-module "get_fake_content_to_load" {
-  source = "../lambda-module"
-
-  env                   = var.env
-  name                  = "get-fake-content-to-load"
-  app_name              = local.app_name
-  memory_size           = 128
-  zip_path              = "${path.module}/../../../target/lambdas/get_fake_content_to_load.zip"
-  gateway_execution_arn = module.gateway.execution_arn
-  policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-  ]
-}
-
-
 module "on_modifications_batch" {
   source = "../lambda-module"
 

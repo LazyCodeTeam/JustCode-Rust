@@ -8,10 +8,9 @@ use super::{modification::Modification, task_content::TaskContent};
 pub struct Task {
     pub id: String,
     pub section_id: String,
-    pub position: u64,
+    pub position: Option<u64>,
     pub title: String,
     pub difficulty: u8,
-    pub dynamic: bool,
     pub for_anonymous: bool,
     pub content: TaskContent,
 }
@@ -48,9 +47,8 @@ mod tests {
             id: "id".to_owned(),
             section_id: "section_id".to_owned(),
             title: "title".to_owned(),
-            position: 0,
+            position: Some(0),
             difficulty: 1,
-            dynamic: true,
             for_anonymous: false,
             content: TaskContent::Empty,
         };
@@ -76,8 +74,7 @@ mod tests {
             section_id: "section_id".to_owned(),
             title: "title".to_owned(),
             difficulty: 1,
-            position: 0,
-            dynamic: true,
+            position: Some(0),
             for_anonymous: false,
             content: TaskContent::Empty,
         };

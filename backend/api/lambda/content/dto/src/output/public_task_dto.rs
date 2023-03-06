@@ -48,9 +48,8 @@ mod tests {
     fn from_task_anonymous() {
         let task = Task {
             id: "id".to_string(),
-            dynamic: false,
             section_id: "section_id".to_string(),
-            position: 1,
+            position: Some(1),
             title: "title".to_string(),
             difficulty: 1,
             content: TaskContent::Empty,
@@ -72,9 +71,8 @@ mod tests {
     fn from_task_not_anonymous() {
         let task = Task {
             id: "id".to_string(),
-            dynamic: false,
             section_id: "section_id".to_string(),
-            position: 1,
+            position: Some(1),
             title: "title".to_string(),
             difficulty: 1,
             content: TaskContent::Empty,

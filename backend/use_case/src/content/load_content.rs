@@ -29,7 +29,7 @@ where
     let changes = result.detect_changes(content);
 
     if changes.is_empty() {
-        return Ok(());
+        return Err(not_modified_error());
     }
 
     let is_transaction_in_progress = (repo.is_transaction_in_progress)().await?;
@@ -52,6 +52,18 @@ fn transaction_already_in_progress_error() -> Error {
         output: Box::new(ErrorOutput {
             message: "Tasks upload already in progress".to_owned(),
             code: "upload_already_in_progress".to_owned(),
+            ..Default::default()
+        }),
+    }
+}
+
+fn not_modified_error() -> Error {
+    Error {
+        error_type: ErrorType::NotModified,
+        debug_message: "No changes detected - load_tasks".to_owned(),
+        output: Box::new(ErrorOutput {
+            message: "No changes detected".to_owned(),
+            code: "no_changes_detected".to_owned(),
             ..Default::default()
         }),
     }
@@ -122,7 +134,8 @@ mod test {
 
         let result = load_tasks(vec![], repo).await;
 
-        assert!(result.is_ok());
+        assert!(result.is_err());
+        assert_eq!(result.err().unwrap(), not_modified_error());
     }
 
     #[tokio::test]

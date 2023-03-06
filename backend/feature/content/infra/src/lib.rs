@@ -11,6 +11,7 @@ const TECHNOLOGY_ID_PREFIX: &str = "technology-";
 const SECTION_ID_PREFIX: &str = "section-";
 
 const TASK_ID_PREFIX: &str = "task-";
+const DYNAMIC_TASK_ID_PREFIX: &str = "dynamic_task-";
 
 const POSITIONED_ID_LENGTH: usize = 32;
 

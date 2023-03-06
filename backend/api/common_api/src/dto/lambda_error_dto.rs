@@ -23,6 +23,7 @@ fn map_error_type(error_type: ErrorType) -> StatusCode {
         ErrorType::InvalidInput => StatusCode::BAD_REQUEST,
         ErrorType::Unknown => StatusCode::INTERNAL_SERVER_ERROR,
         ErrorType::Conflict => StatusCode::CONFLICT,
+        ErrorType::NotModified => StatusCode::NOT_MODIFIED,
         ErrorType::NotFound => StatusCode::NOT_FOUND,
         ErrorType::Forbidden => StatusCode::FORBIDDEN,
         ErrorType::Unauthorized => StatusCode::UNAUTHORIZED,

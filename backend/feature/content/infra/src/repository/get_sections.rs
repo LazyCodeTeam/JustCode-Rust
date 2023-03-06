@@ -10,14 +10,41 @@ pub async fn get_sections_for_multiple_technologies(ids: Vec<String>) -> Result<
     let mut sections = Vec::new();
 
     for id in ids {
-        let technology_sections = get_technology_sections(&id).await?;
+        let technology_sections = get_all_technology_sections(&id).await?;
         sections.extend(technology_sections);
     }
 
     Ok(sections)
 }
 
-pub async fn get_technology_sections(technology_id: &str) -> Result<Vec<Section>> {
+pub async fn get_all_technology_sections(technology_id: &str) -> Result<Vec<Section>> {
+    get_dynamodb_client()
+        .await
+        .query()
+        .table_name(&CONFIG.dynamodb_table)
+        .key_condition_expression("PK = :pk and begins_with(SK, :sk)")
+        .expression_attribute_values(
+            ":pk",
+            AttributeValue::S(format!("{}{}", TECHNOLOGY_ID_PREFIX, technology_id)),
+        )
+        .expression_attribute_values(":sk", AttributeValue::S(SECTION_ID_PREFIX.to_string()))
+        .send()
+        .await
+        .map_err(|e| Error::unknown(format!("Failed to get sections: {e:?}")))
+        .and_then(|r| {
+            r.items
+                .ok_or_else(|| {
+                    Error::unknown("Failed to get sections - option is empty".to_owned())
+                })
+                .and_then(|items| {
+                    from_items::<_, SectionDto>(items)
+                        .map_err(|e| Error::unknown(format!("Failed to parse sections: {e:?}")))
+                        .map(|dtos| dtos.into_iter().map(Into::into).collect())
+                })
+        })
+}
+
+pub async fn get_ordered_technology_sections(technology_id: &str) -> Result<Vec<Section>> {
     get_dynamodb_client()
         .await
         .query()

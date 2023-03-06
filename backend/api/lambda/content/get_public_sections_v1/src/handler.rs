@@ -1,10 +1,9 @@
 use common_api::lambda::into_response::IntoResponse;
 use common_domain::into_future::IntoFuture;
+use content_dto::output::section_dto::SectionDto;
 use futures::TryFutureExt;
 use lambda_http::{http::StatusCode, Body, Error, Request, RequestExt, Response};
 use use_case::content::get_public_sections::{get_public_sections, GetPublicSectionsRepo};
-
-use crate::dto::section_dto::SectionDto;
 
 const TECHNOLOGY_ID_PARAM_NAME: &str = "technology_id";
 
@@ -18,7 +17,7 @@ pub async fn handle_request(event: Request) -> Result<Response<Body>, Error> {
             get_public_sections(
                 technology_id.to_owned(),
                 GetPublicSectionsRepo {
-                    get_sections: content_infra::repository::get_technology_sections,
+                    get_sections: content_infra::repository::get_ordered_technology_sections,
                 },
             )
         })

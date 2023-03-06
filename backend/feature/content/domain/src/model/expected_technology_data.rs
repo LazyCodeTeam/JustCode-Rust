@@ -28,19 +28,27 @@ impl From<Vec<ExpectedTechnologyData>> for FullContent {
                     title: section.title.clone(),
                 });
 
-                for (index, task) in section.tasks.into_iter().enumerate() {
+                let mut current_task_position = 0;
+                for task in section.tasks.into_iter() {
                     tasks_preview.push(TaskPreview {
                         id: task.id.clone(),
                         title: task.title.clone(),
-                        for_anonymous: false,
+                        for_anonymous: task.for_anonymous,
                     });
+                    let position = if task.dynamic {
+                        None
+                    } else {
+                        let result = Some(current_task_position);
+                        current_task_position += 1;
+
+                        result
+                    };
 
                     tasks.push(Task {
                         id: task.id,
                         title: task.title,
                         difficulty: task.difficulty,
-                        position: index as u64,
-                        dynamic: task.dynamic,
+                        position,
                         for_anonymous: task.for_anonymous,
                         content: task.content,
                         section_id: section.id.clone(),
@@ -167,7 +175,7 @@ mod tests {
                         tasks_preview: vec![TaskPreview {
                             id: "id 1".to_string(),
                             title: "title 1".to_string(),
-                            for_anonymous: false,
+                            for_anonymous: true,
                         }],
                     },
                     Section {
@@ -189,8 +197,7 @@ mod tests {
                         id: "id 1".to_string(),
                         title: "title 1".to_string(),
                         difficulty: 1,
-                        position: 0,
-                        dynamic: true,
+                        position: None,
                         for_anonymous: true,
                         content: TaskContent::Empty,
                         section_id: "id 1".to_string(),
@@ -198,9 +205,8 @@ mod tests {
                     Task {
                         id: "id 2".to_string(),
                         title: "title 2".to_string(),
-                        position: 0,
+                        position: Some(0),
                         difficulty: 2,
-                        dynamic: false,
                         for_anonymous: false,
                         content: TaskContent::Empty,
                         section_id: "id 2".to_string(),

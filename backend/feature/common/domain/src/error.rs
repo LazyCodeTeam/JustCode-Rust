@@ -7,7 +7,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 const UNKNOWN_ERROR_MESSAGE: &str = "Unknown server error";
 const UNKNOWN_ERROR_CODE: &str = "unknown";
 
-#[derive(PartialEq, Eq, Clone, Copy, Debug)]
+#[derive(PartialEq, Eq, Clone, Copy, Debug, Default)]
 pub enum ErrorType {
     InvalidInput,
     Conflict,
@@ -15,6 +15,7 @@ pub enum ErrorType {
     NotModified,
     Forbidden,
     Unauthorized,
+    #[default]
     Unknown,
 }
 
@@ -30,12 +31,6 @@ pub struct ErrorOutput {
     pub message: String,
     pub code: String,
     pub args: HashMap<String, String>,
-}
-
-impl Default for ErrorType {
-    fn default() -> Self {
-        ErrorType::Unknown
-    }
 }
 
 impl Default for Error {

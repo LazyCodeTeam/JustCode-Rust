@@ -1,14 +1,9 @@
-#[derive(PartialOrd, Ord, PartialEq, Eq, Debug, Clone, Copy)]
+#[derive(PartialOrd, Ord, PartialEq, Eq, Debug, Clone, Copy, Default)]
 pub enum UserRole {
+    #[default]
     User,
     Editor,
     Admin,
-}
-
-impl Default for UserRole {
-    fn default() -> Self {
-        UserRole::User
-    }
 }
 
 #[cfg(test)]

@@ -6,6 +6,6 @@ output "arn" {
   value = aws_lambda_alias.lambda.arn
 }
 
-output "permission_id" {
-  value = length(aws_lambda_permission.s3) == 0 ? null : aws_lambda_permission.s3[0].id
+output "function_name" {
+  value = aws_lambda_alias.lambda.function_name
 }

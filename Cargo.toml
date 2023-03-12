@@ -1,13 +1,11 @@
 [workspace]
 members = [
   "backend/api/common_api",
-  "backend/api/container/*",
   "backend/api/gen",
   "backend/api/lambda/auth/*",
   "backend/api/lambda/content/*",
   "backend/api/lambda/profile/*",
   "backend/feature/bucket/*",
-  "backend/feature/code/*",
   "backend/feature/common/*",
   "backend/feature/content/*",
   "backend/feature/profile/*",

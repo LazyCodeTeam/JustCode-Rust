@@ -1,0 +1,180 @@
+openapi: "3.0.1"
+info:
+  title: "just-code-dev"
+  version: "2023-03-10 06:01:08UTC"
+servers:
+- url: "mbq7t4sa77.execute-api.eu-central-1.amazonaws.com/{basePath}"
+  variables:
+    basePath:
+      default: "api"
+tags:
+- name: "Environment"
+  x-amazon-apigateway-tag-value: "dev"
+- name: "Service"
+  x-amazon-apigateway-tag-value: "just-code"
+paths:
+  /v1/profile/current/push:
+    put:
+      responses:
+        default:
+          description: "Default response for PUT /v1/profile/current/push"
+      security:
+      - just-code-dev-auth: []
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "1.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${update_push_data_v1}
+        connectionType: "INTERNET"
+    delete:
+      responses:
+        default:
+          description: "Default response for DELETE /v1/profile/current/push"
+      security:
+      - just-code-dev-auth: []
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "1.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${remove_push_data_v1}
+        connectionType: "INTERNET"
+  /v1/content/public/section/{section_id}/tasks:
+    get:
+      responses:
+        default:
+          description: "Default response for GET /v1/content/public/section/{section_id}/tasks"
+      security:
+      - just-code-dev-app-authorizer: []
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "1.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${get_public_tasks_v1}
+        connectionType: "INTERNET"
+    parameters:
+    - name: "section_id"
+      in: "path"
+      description: "Generated path parameter for section_id"
+      required: true
+      schema:
+        type: "string"
+  /v1/content/public/technologies:
+    get:
+      responses:
+        default:
+          description: "Default response for GET /v1/content/public/technologies"
+      security:
+      - just-code-dev-app-authorizer: []
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "1.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${get_public_technologies_v1}
+        connectionType: "INTERNET"
+  /v1/content/public/technology/{technology_id}/sections:
+    get:
+      responses:
+        default:
+          description: "Default response for GET /v1/content/public/technology/{technology_id}/sections"
+      security:
+      - just-code-dev-app-authorizer: []
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "1.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${get_public_sections_v1}
+        connectionType: "INTERNET"
+    parameters:
+    - name: "technology_id"
+      in: "path"
+      description: "Generated path parameter for technology_id"
+      required: true
+      schema:
+        type: "string"
+  /v1/profile/current:
+    get:
+      responses:
+        default:
+          description: "Default response for GET /v1/profile/current"
+      security:
+      - just-code-dev-auth: []
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "1.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${get_profile_v1}
+        connectionType: "INTERNET"
+    put:
+      responses:
+        default:
+          description: "Default response for PUT /v1/profile/current"
+      security:
+      - just-code-dev-auth: []
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "1.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${update_profile_v1}
+        connectionType: "INTERNET"
+  /v1/profile/current/avatar:
+    post:
+      responses:
+        default:
+          description: "Default response for POST /v1/profile/current/avatar"
+      security:
+      - just-code-dev-auth: []
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "1.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${request_avatar_upload_v1}
+        connectionType: "INTERNET"
+  /v1/content/load:
+    put:
+      responses:
+        default:
+          description: "Default response for PUT /v1/content/load"
+      security:
+      - just-code-dev-moderator-authorizer: []
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "1.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${load_content_v1}
+        connectionType: "INTERNET"
+components:
+  securitySchemes:
+    just-code-dev-app-authorizer:
+      type: "apiKey"
+      name: "X-Api-Key"
+      in: "header"
+      x-amazon-apigateway-authorizer:
+        identitySource: "$request.header.X-Api-Key"
+        authorizerUri: ${app_api_key_validator}
+        authorizerPayloadFormatVersion: "2.0"
+        authorizerResultTtlInSeconds: 3600
+        type: "request"
+        enableSimpleResponses: true
+    just-code-dev-moderator-authorizer:
+      type: "apiKey"
+      name: "X-Api-Key"
+      in: "header"
+      x-amazon-apigateway-authorizer:
+        identitySource: "$request.header.X-Api-Key"
+        authorizerUri: ${moderator_api_key_validator}
+        authorizerPayloadFormatVersion: "2.0"
+        authorizerResultTtlInSeconds: 3600
+        type: "request"
+        enableSimpleResponses: true
+    just-code-dev-auth:
+      type: "oauth2"
+      flows: {}
+      x-amazon-apigateway-authorizer:
+        identitySource: "$request.header.Authorization"
+        jwtConfiguration:
+          audience:
+          - ${cognito_client_id}
+          issuer: ${cognito_issuer}
+        type: "jwt"
+x-amazon-apigateway-importexport-version: "1.0"
+

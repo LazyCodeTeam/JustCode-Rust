@@ -26,5 +26,5 @@ resource "aws_s3_bucket_notification" "avatar" {
     filter_prefix       = "profile/avatar/"
   }
 
-  depends_on = [module.on_avatar_created.permission_id]
+  depends_on = [aws_lambda_permission.on_avatar_created_s3]
 }

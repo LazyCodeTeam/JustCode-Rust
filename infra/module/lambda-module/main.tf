@@ -28,7 +28,6 @@ resource "aws_lambda_alias" "lambda" {
   name             = var.env
   function_name    = aws_lambda_function.lambda.arn
   function_version = aws_lambda_function.lambda.version
-
 }
 
 resource "aws_lambda_function" "lambda" {
@@ -55,35 +54,6 @@ resource "aws_lambda_function" "lambda" {
   }
 }
 
-resource "aws_lambda_permission" "gateway" {
-  count = var.gateway_execution_arn == null ? 0 : 1
-
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.lambda.function_name
-  principal     = "apigateway.amazonaws.com"
-  qualifier     = var.env
-  source_arn    = "${var.gateway_execution_arn}/*/*"
-}
-
-resource "aws_lambda_permission" "s3" {
-  count = var.s3_arn == null ? 0 : 1
-
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.lambda.function_name
-  principal     = "s3.amazonaws.com"
-  qualifier     = var.env
-  source_arn    = var.s3_arn
-}
-
-resource "aws_lambda_permission" "user_pool" {
-  count = var.user_pool_arn == null ? 0 : 1
-
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.lambda.function_name
-  principal     = "cognito-idp.amazonaws.com"
-  qualifier     = var.env
-  source_arn    = var.user_pool_arn
-}
 
 resource "aws_iam_role_policy_attachment" "lambda_policy" {
   count = length(var.policies)

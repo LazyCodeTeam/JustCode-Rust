@@ -23,21 +23,6 @@ variable "zip_path" {
   type = string
 }
 
-variable "gateway_execution_arn" {
-  type    = string
-  default = null
-}
-
-variable "s3_arn" {
-  type    = string
-  default = null
-}
-
-variable "user_pool_arn" {
-  type    = string
-  default = null
-}
-
 variable "arch" {
   type    = string
   default = "arm64"

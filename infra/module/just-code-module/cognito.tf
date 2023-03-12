@@ -52,7 +52,7 @@ resource "aws_cognito_user_pool_client" "client" {
   access_token_validity                = 15
   refresh_token_validity               = 30
   allowed_oauth_flows                  = ["code"]
-  callback_urls                        = ["https://example.com/"]
+  callback_urls                        = ["https://${aws_s3_bucket.swaggerui.bucket_regional_domain_name}/oauth2-redirect.html", "https://example.com/"]
   logout_urls                          = ["https://example.com/"]
 
   allowed_oauth_scopes = [

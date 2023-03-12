@@ -54,7 +54,7 @@ jobs:
           args: cargo-llvm-cov
       - name: Run tests
         run: |
-          OUT=$(cargo llvm-cov test -- --nocapture --test-threads 1 | grep TOTAL | xargs)
+          OUT=$(cargo llvm-cov test -- --exclude gen --nocapture --test-threads 1 | grep TOTAL | xargs)
           TOTAL=$(echo $OUT | cut -d " " -f 8)
           MISSED=$(echo $OUT | cut -d " " -f 9)
           COV=$(echo $OUT | cut -d " " -f 10)
@@ -115,7 +115,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: --all-targets --all-features -- -D warnings
+          args: --all-targets --exclude gen --workspace --all-features -- -D warnings
       - name: Detect unused dependencies
         uses: actions-rs/cargo@v1
         with:

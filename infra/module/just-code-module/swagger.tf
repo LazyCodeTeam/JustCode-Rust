@@ -29,13 +29,22 @@ resource "aws_s3_object" "swaggerui-index" {
   etag         = filemd5("${path.module}/../../../openapi/index.html")
 }
 
+resource "aws_s3_object" "swaggerui-oauth2-redirect" {
+  acl          = "public-read"
+  bucket       = aws_s3_bucket.swaggerui.id
+  key          = "oauth2-redirect.html"
+  source       = "${path.module}/../../../openapi/oauth2-redirect.html"
+  content_type = "text/html"
+  etag         = filemd5("${path.module}/../../../openapi/oauth2-redirect.html")
+}
+
 resource "aws_s3_object" "swaggerui-yaml" {
   acl          = "public-read"
   bucket       = aws_s3_bucket.swaggerui.id
   key          = "swagger.yaml"
   source       = "${path.module}/../../../openapi/swagger.yaml"
   content_type = "text/yaml"
-  etag         = filemd5("${path.module}/../../../openapi/swagger.yaml")
+  etag         = md5(local.swagger)
   depends_on = [
     local_file.rendered_swagger
   ]

@@ -2,6 +2,7 @@ locals {
   swagger = templatefile("${path.module}/../../../openapi/swagger_template.yaml", {
     cognito_client_id = aws_cognito_user_pool_client.client.id
     cognito_issuer    = "https://${aws_cognito_user_pool.pool.endpoint}"
+    cognito_base_url  = "https://${aws_cognito_user_pool_domain.domain.domain}.auth.${var.region}.amazoncognito.com"
 
     get_profile_v1              = module.get_profile_v1_lambda.invoke_arn
     update_push_data_v1         = module.update_push_data_v1_lambda.invoke_arn
@@ -21,6 +22,12 @@ resource "aws_apigatewayv2_api" "just_code" {
   name          = "${local.app_name}-${var.env}"
   protocol_type = "HTTP"
   body          = local.swagger
+
+  cors_configuration {
+    allow_origins = ["https://${aws_s3_bucket.swaggerui.bucket_regional_domain_name}"]
+    allow_methods = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    allow_headers = ["Content-Type", "Authorization", "X-Amz-Date", "X-Api-Key", "X-Amz-Security-Token"]
+  }
 
   tags = {
     Service     = local.app_name

@@ -1,7 +1,6 @@
 use common_api::lambda::register_handler::register_handler;
 use lambda_http::Error;
 
-mod dto;
 mod handler;
 
 #[tokio::main]

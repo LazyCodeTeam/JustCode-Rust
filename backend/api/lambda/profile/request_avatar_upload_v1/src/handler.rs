@@ -1,12 +1,14 @@
-use common_api::lambda::{into_response::IntoResponse, user_context::UserContext};
+use common_api::{
+    dto::PresignedUrlDto,
+    lambda::{into_response::IntoResponse, user_context::UserContext},
+    FromModel,
+};
 use common_domain::into_future::IntoFuture;
 use futures::TryFutureExt;
 use lambda_http::{http::StatusCode, Body, Error, Request, Response};
 use use_case::profile::request_avatar_upload::{
     request_avatar_upload, RequestAvatarUploadRepository,
 };
-
-use crate::dto::presigned_url::PresignedUrlDto;
 
 pub async fn handle_request(event: Request) -> Result<Response<Body>, Error> {
     event
@@ -22,6 +24,6 @@ pub async fn handle_request(event: Request) -> Result<Response<Body>, Error> {
             )
         })
         .await
-        .map(PresignedUrlDto::from)
+        .map(PresignedUrlDto::from_model)
         .into_response(StatusCode::OK)
 }

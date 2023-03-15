@@ -1,0 +1,38 @@
+use bucket_domain::model::presigned_url::PresignedUrl;
+
+use crate::{dto::PresignedUrlDto, FromModel};
+
+impl FromModel<PresignedUrl> for PresignedUrlDto {
+    fn from_model(model: PresignedUrl) -> Self {
+        Self {
+            url: model.url,
+            valid_until: model.valid_until.to_rfc3339(),
+            headers: model.headers,
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::collections::HashMap;
+
+    use chrono::Utc;
+
+    use super::*;
+
+    #[test]
+    fn test_from_presigned_url() {
+        let presigned_url = PresignedUrl {
+            url: "https://example.com".to_string(),
+            valid_until: Utc::now(),
+            headers: HashMap::from([("key".to_string(), "value".to_string())]),
+        };
+        let presigned_url_dto = PresignedUrlDto::from_model(presigned_url.clone());
+        assert_eq!(presigned_url_dto.url, presigned_url.url);
+        assert_eq!(
+            presigned_url_dto.valid_until,
+            presigned_url.valid_until.to_rfc3339()
+        );
+        assert_eq!(presigned_url_dto.headers, presigned_url.headers);
+    }
+}

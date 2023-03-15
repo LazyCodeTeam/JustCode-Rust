@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 common_api = { path = "../../../common_api", features = ["lambda"] }
-content_dto = { path = "../dto", features = ["output"] }
+content_dto = { path = "../dto" }
 content_infra = { path = "../../../../feature/content/infra" }
 lambda_http = { workspace = true, features = ["apigw_rest"] }
 tokio = { workspace = true }

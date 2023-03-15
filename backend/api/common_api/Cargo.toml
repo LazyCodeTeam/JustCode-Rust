@@ -4,8 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-axum = { workspace = true, optional = true }
+bucket_domain = { path = "../../feature/bucket/domain" }
+chrono = { workspace = true }
 common_domain = { path = "../../feature/common/domain" }
+gen = { path = "../gen" }
 http = { workspace = true }
 lambda_http = { workspace = true, features = ["apigw_rest"], optional = true }
 lambda_runtime = { workspace = true, optional = true }
@@ -25,4 +27,3 @@ lambda = [
   "tower-http",
   "lambda_runtime",
 ]
-axum_api = ["axum"]

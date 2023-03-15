@@ -66,17 +66,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "async-trait"
-version = "0.1.66"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b84f9ebcc6c1f5b8cb160f6990096a5c127f423fcb6e1ccc46c370cbdfb75dfc"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
 name = "autocfg"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -530,56 +519,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "axum"
-version = "0.6.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2fb79c228270dcf2426e74864cabc94babb5dbab01a4314e702d2f16540e1591"
-dependencies = [
- "async-trait",
- "axum-core",
- "bitflags",
- "bytes",
- "futures-util",
- "http",
- "http-body",
- "hyper",
- "itoa",
- "matchit",
- "memchr",
- "mime",
- "percent-encoding",
- "pin-project-lite",
- "rustversion",
- "serde",
- "serde_json",
- "serde_path_to_error",
- "serde_urlencoded",
- "sync_wrapper",
- "tokio",
- "tower",
- "tower-http",
- "tower-layer",
- "tower-service",
-]
-
-[[package]]
-name = "axum-core"
-version = "0.3.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b2f958c80c248b34b9a877a643811be8dbca03ca5ba827f2b63baf3a81e5fc4e"
-dependencies = [
- "async-trait",
- "bytes",
- "futures-util",
- "http",
- "http-body",
- "mime",
- "rustversion",
- "tower-layer",
- "tower-service",
-]
-
-[[package]]
 name = "base64"
 version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -747,8 +686,10 @@ dependencies = [
 name = "common_api"
 version = "0.1.0"
 dependencies = [
- "axum",
+ "bucket_domain",
+ "chrono",
  "common_domain",
+ "gen",
  "http",
  "lambda_http",
  "lambda_runtime",
@@ -799,10 +740,10 @@ dependencies = [
 name = "content_dto"
 version = "0.1.0"
 dependencies = [
+ "common_domain",
  "content_domain",
- "serde",
+ "gen",
  "uuid",
- "validator",
 ]
 
 [[package]]
@@ -1215,6 +1156,7 @@ dependencies = [
  "serde_derive",
  "serde_json",
  "url",
+ "uuid",
 ]
 
 [[package]]
@@ -1235,9 +1177,8 @@ dependencies = [
  "common_domain",
  "futures",
  "lambda_http",
- "profile_domain",
+ "profile_dto",
  "profile_infra",
- "serde",
  "tokio",
  "use_case",
 ]
@@ -1508,12 +1449,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "if_chain"
-version = "1.0.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cb56e1aa765b4b4f3aadfab769793b7087bb03a4ea4920644a6d238e2df5b9ed"
-
-[[package]]
 name = "indexmap"
 version = "1.9.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1731,12 +1666,6 @@ name = "matches"
 version = "0.1.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2532096657941c2fea9c289d370a250971c689d4f143798ff67113ec042024a5"
-
-[[package]]
-name = "matchit"
-version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b87248edafb776e59e6ee64a79086f65890d3510f2c656c000bf2a7e8a0aea40"
 
 [[package]]
 name = "md-5"
@@ -2161,6 +2090,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "profile_dto"
+version = "0.1.0"
+dependencies = [
+ "common_domain",
+ "gen",
+ "profile_domain",
+]
+
+[[package]]
 name = "profile_infra"
 version = "0.1.0"
 dependencies = [
@@ -2267,14 +2205,12 @@ dependencies = [
 name = "request_avatar_upload_v1"
 version = "0.1.0"
 dependencies = [
- "bucket_domain",
  "bucket_infra",
  "common_api",
  "common_domain",
  "futures",
  "lambda_http",
  "profile_infra",
- "serde",
  "tokio",
  "use_case",
 ]
@@ -2398,12 +2334,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "rustversion"
-version = "1.0.12"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4f3208ce4d8448b3f3e7d168a73f5e0c43a61e32930de3bceeccedb388b6bf06"
-
-[[package]]
 name = "ryu"
 version = "1.0.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2517,15 +2447,6 @@ checksum = "1c533a59c9d8a93a09c6ab31f0fd5e5f4dd1b8fc9434804029839884765d04ea"
 dependencies = [
  "itoa",
  "ryu",
- "serde",
-]
-
-[[package]]
-name = "serde_path_to_error"
-version = "0.1.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "db0969fff533976baadd92e08b1d102c5a3d8a8049eadfd69d4d1e3c5b2ed189"
-dependencies = [
  "serde",
 ]
 
@@ -2663,12 +2584,6 @@ dependencies = [
  "quote",
  "unicode-ident",
 ]
-
-[[package]]
-name = "sync_wrapper"
-version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2047c6ded9c721764247e62cd3b03c09ffc529b2ba5b10ec482ae507a4a70160"
 
 [[package]]
 name = "tempfile"
@@ -2896,7 +2811,6 @@ dependencies = [
  "http-body",
  "http-range-header",
  "pin-project-lite",
- "tower",
  "tower-layer",
  "tower-service",
  "tracing",
@@ -3036,8 +2950,8 @@ dependencies = [
  "futures",
  "lambda_http",
  "profile_domain",
+ "profile_dto",
  "profile_infra",
- "serde",
  "tokio",
  "use_case",
 ]
@@ -3051,11 +2965,10 @@ dependencies = [
  "futures",
  "lambda_http",
  "profile_domain",
+ "profile_dto",
  "profile_infra",
- "serde",
  "tokio",
  "use_case",
- "validator",
 ]
 
 [[package]]
@@ -3112,33 +3025,6 @@ dependencies = [
  "serde_derive",
  "serde_json",
  "url",
- "validator_derive",
-]
-
-[[package]]
-name = "validator_derive"
-version = "0.16.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bc44ca3088bb3ba384d9aecf40c6a23a676ce23e09bdaca2073d99c207f864af"
-dependencies = [
- "if_chain",
- "lazy_static",
- "proc-macro-error",
- "proc-macro2",
- "quote",
- "regex",
- "syn",
- "validator_types",
-]
-
-[[package]]
-name = "validator_types"
-version = "0.16.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "111abfe30072511849c5910134e8baf8dc05de4c0e5903d681cbd5c9c4d611e3"
-dependencies = [
- "proc-macro2",
- "syn",
 ]
 
 [[package]]

@@ -3,110 +3,33 @@ info:
   title: "just-code-dev"
   version: "2023-03-10 06:01:08UTC"
 servers:
-- url: "https://mbq7t4sa77.execute-api.eu-central-1.amazonaws.com/{basePath}"
-  variables:
-    basePath:
-      default: "api"
-
+  - url: "https://ux55hiuu9e.execute-api.eu-central-1.amazonaws.com/{basePath}"
+    variables:
+      basePath:
+        default: "api"
 tags:
   - name: profile
     description: Profile
-
+  - name: content
+    description: Content
 paths:
-  /v1/profile/current/push:
-    put:
-      responses:
-        default:
-          description: "Default response for PUT /v1/profile/current/push"
-      security:
-      - just-code-dev-auth:
-        - email
-      x-amazon-apigateway-integration:
-        payloadFormatVersion: "1.0"
-        type: "aws_proxy"
-        httpMethod: "POST"
-        uri: ${update_push_data_v1}
-        connectionType: "INTERNET"
-    delete:
-      responses:
-        default:
-          description: "Default response for DELETE /v1/profile/current/push"
-      security:
-      - just-code-dev-auth:
-        - email
-      x-amazon-apigateway-integration:
-        payloadFormatVersion: "1.0"
-        type: "aws_proxy"
-        httpMethod: "POST"
-        uri: ${remove_push_data_v1}
-        connectionType: "INTERNET"
-  /v1/content/public/section/{section_id}/tasks:
-    get:
-      responses:
-        default:
-          description: "Default response for GET /v1/content/public/section/{section_id}/tasks"
-      security:
-      - just-code-dev-app-authorizer: []
-      x-amazon-apigateway-integration:
-        payloadFormatVersion: "1.0"
-        type: "aws_proxy"
-        httpMethod: "POST"
-        uri: ${get_public_tasks_v1}
-        connectionType: "INTERNET"
-    parameters:
-    - name: "section_id"
-      in: "path"
-      description: "Generated path parameter for section_id"
-      required: true
-      schema:
-        type: "string"
-  /v1/content/public/technologies:
-    get:
-      responses:
-        default:
-          description: "Default response for GET /v1/content/public/technologies"
-      security:
-      - just-code-dev-app-authorizer: []
-      x-amazon-apigateway-integration:
-        payloadFormatVersion: "1.0"
-        type: "aws_proxy"
-        httpMethod: "POST"
-        uri: ${get_public_technologies_v1}
-        connectionType: "INTERNET"
-  /v1/content/public/technology/{technology_id}/sections:
-    get:
-      responses:
-        default:
-          description: "Default response for GET /v1/content/public/technology/{technology_id}/sections"
-      security:
-      - just-code-dev-app-authorizer: []
-      x-amazon-apigateway-integration:
-        payloadFormatVersion: "1.0"
-        type: "aws_proxy"
-        httpMethod: "POST"
-        uri: ${get_public_sections_v1}
-        connectionType: "INTERNET"
-    parameters:
-    - name: "technology_id"
-      in: "path"
-      description: "Generated path parameter for technology_id"
-      required: true
-      schema:
-        type: "string"
+  ###########################################################
+  # Profile
+  ###########################################################
   /v1/profile/current:
     get:
       tags:
         - profile
       responses:
-        '200':
+        "200":
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProfileDto'
+                $ref: "#/components/schemas/ProfileDto"
       security:
-      - just-code-dev-auth: 
-        - email
+        - just-code-dev-auth:
+            - email
       x-amazon-apigateway-integration:
         payloadFormatVersion: "1.0"
         type: "aws_proxy"
@@ -114,12 +37,20 @@ paths:
         uri: ${get_profile_v1}
         connectionType: "INTERNET"
     put:
+      tags:
+        - profile
       security:
-      - just-code-dev-auth:
-        - email
+        - just-code-dev-auth:
+            - email
       responses:
-        default:
-          description: "Default response for PUT /v1/profile/current"
+        "200":
+          description: Updated
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProfileDto"
       x-amazon-apigateway-integration:
         payloadFormatVersion: "1.0"
         type: "aws_proxy"
@@ -128,25 +59,158 @@ paths:
         connectionType: "INTERNET"
   /v1/profile/current/avatar:
     post:
+      tags:
+        - profile
       responses:
-        default:
-          description: "Default response for POST /v1/profile/current/avatar"
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PresignedUrlDto"
       security:
-      - just-code-dev-auth:
-        - email
+        - just-code-dev-auth:
+            - email
       x-amazon-apigateway-integration:
         payloadFormatVersion: "1.0"
         type: "aws_proxy"
         httpMethod: "POST"
         uri: ${request_avatar_upload_v1}
         connectionType: "INTERNET"
+  /v1/profile/current/push:
+    put:
+      tags:
+        - profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PushDataDto"
+      responses:
+        "200":
+          description: Saved
+      security:
+        - just-code-dev-auth:
+            - email
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "1.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${update_push_data_v1}
+        connectionType: "INTERNET"
+    delete:
+      tags:
+        - profile
+      responses:
+        "200":
+          description: Deleted
+      security:
+        - just-code-dev-auth:
+            - email
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "1.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${remove_push_data_v1}
+        connectionType: "INTERNET"
+  ###########################################################
+  # Content
+  ###########################################################
+  /v1/content/public/technologies:
+    get:
+      tags:
+        - content
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TechnologyDto"
+      security:
+        - just-code-dev-app-authorizer: []
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "1.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${get_public_technologies_v1}
+        connectionType: "INTERNET"
+  /v1/content/public/technology/{technology_id}/sections:
+    get:
+      tags:
+        - content
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SectionDto"
+      security:
+        - just-code-dev-app-authorizer: []
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "1.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${get_public_sections_v1}
+        connectionType: "INTERNET"
+    parameters:
+      - name: "technology_id"
+        in: "path"
+        description: "Generated path parameter for technology_id"
+        required: true
+        schema:
+          type: "string"
+  /v1/content/public/section/{section_id}/tasks:
+    get:
+      tags:
+        - content
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PublicTaskDto"
+      security:
+        - just-code-dev-app-authorizer: []
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "1.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${get_public_tasks_v1}
+        connectionType: "INTERNET"
+    parameters:
+      - name: "section_id"
+        in: "path"
+        description: "Generated path parameter for section_id"
+        required: true
+        schema:
+          type: "string"
   /v1/content/load:
     put:
+      tags:
+        - content
       responses:
-        default:
-          description: "Default response for PUT /v1/content/load"
+        "202":
+          description: Accepted
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/ExpectedTechnologyDto"
       security:
-      - just-code-dev-moderator-authorizer: []
+        - just-code-dev-moderator-authorizer: []
       x-amazon-apigateway-integration:
         payloadFormatVersion: "1.0"
         type: "aws_proxy"
@@ -154,27 +218,6 @@ paths:
         uri: ${load_content_v1}
         connectionType: "INTERNET"
 components:
-  schemas:
-    ProfileDto:
-      type: object
-      required:
-        - id
-        - name
-        - email
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        email:
-          type: string
-        avatar_url:
-          type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
-
   securitySchemes:
     just-code-dev-app-authorizer:
       type: "apiKey"
@@ -201,20 +244,647 @@ components:
     just-code-dev-auth:
       type: "oauth2"
       description: Using Cognito oAuth
-      flows: 
+      flows:
         authorizationCode:
           authorizationUrl: ${cognito_base_url}/oauth2/authorize
           tokenUrl: ${cognito_base_url}/oauth2/token
           refreshUrl: ${cognito_base_url}/oauth2/token
           scopes:
-            email: 'Email access'      
-            
+            email: "Email access"
       x-amazon-apigateway-authorizer:
         identitySource: "$request.header.Authorization"
         jwtConfiguration:
           audience:
-          - ${cognito_client_id}
+            - ${cognito_client_id}
           issuer: ${cognito_issuer}
         type: "jwt"
+  schemas:
+    ###########################################################
+    # Profile
+    ###########################################################
+    ProfileDto:
+      type: object
+      required:
+        - id
+        - name
+        - email
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        avatar_url:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+    UpdateProfileDto:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+    PlatformDto:
+      type: string
+      enum:
+        - IOS
+        - ANDROID
+    PushDataDto:
+      type: object
+      required:
+        - platform
+        - token
+      properties:
+        platform:
+          $ref: "#/components/schemas/PlatformDto"
+        token:
+          type: string
+    PresignedUrlDto:
+      type: object
+      required:
+        - valid_until
+        - url
+        - headers
+      properties:
+        valid_until:
+          type: string
+          format: date-time
+        url:
+          type: string
+          format: uri
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+    ###########################################################
+    # Content
+    ###########################################################
+    TechnologyDto:
+      type: object
+      required:
+        - id
+        - name
+        - sections_preview
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+          format: uri
+        sections_preview:
+          type: array
+          items:
+            $ref: "#/components/schemas/SectionPreviewDto"
+    SectionPreviewDto:
+      type: object
+      required:
+        - id
+        - title
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+    SectionDto:
+      type: object
+      required:
+        - id
+        - title
+        - tasks_preview
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+          format: uri
+        tasks_preview:
+          type: array
+          items:
+            $ref: "#/components/schemas/TaskPreviewDto"
+    TaskPreviewDto:
+      type: object
+      required:
+        - id
+        - title
+        - is_available
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        is_available:
+          type: boolean
+    PublicTaskDto:
+      type: object
+      oneOf:
+        - $ref: "#/components/schemas/PublicTaskNotAvailableDto"
+        - $ref: "#/components/schemas/PublicTaskAvailableDto"
+      discriminator:
+        propertyName: kind
+        mapping:
+          AVAILABLE: "#/components/schemas/PublicTaskAvailableDto"
+          NOT_AVAILABLE: "#/components/schemas/PublicTaskNotAvailableDto"
+    PublicTaskNotAvailableDto:
+      type: object
+      required:
+        - id
+        - title
+        - difficulty
+        - kind
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        difficulty:
+          type: integer
+          minimum: 1
+          maximum: 10
+        kind:
+          $ref: "#/components/schemas/PublicTaskKindDto"
+    PublicTaskAvailableDto:
+      type: object
+      required:
+        - id
+        - title
+        - difficulty
+        - kind
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        difficulty:
+          type: integer
+          minimum: 1
+          maximum: 10
+        kind:
+          $ref: "#/components/schemas/PublicTaskKindDto"
+        content:
+          $ref: "#/components/schemas/TaskContentDto"
+    KeywordDto:
+      type: object
+      required:
+        - id
+        - content
+        - modifiers
+      properties:
+        id:
+          type: integer
+          minimum: 0
+          maximum: 65535
+        content:
+          type: string
+        modifiers:
+          type: array
+          items:
+            $ref: "#/components/schemas/KeywordModifierDto"
+    KeywordModifierDto:
+      type: string
+      enum:
+        - NEW_LINE
+        - ADD_INDENTATION
+        - REMOVE_INDENTATION
+    OptionDto:
+      type: object
+      required:
+        - id
+        - content
+      properties:
+        id:
+          type: integer
+          minimum: 0
+          maximum: 65535
+        content:
+          type: string
+    HintDto:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+    PlaygroundVariationDto:
+      type: object
+      required:
+        - content
+        - description
+      properties:
+        content:
+          type: string
+        description:
+          type: string
+    TaskContentLessonDto:
+      type: object
+      required:
+        - content
+        - kind
+      properties:
+        kind:
+          $ref: "#/components/schemas/TaskContentKindDto"
+        content:
+          type: string
+    TaskContentPlaygroundDto:
+      type: object
+      required:
+        - content
+        - dynamic_content
+        - variations
+        - kind
+      properties:
+        kind:
+          $ref: "#/components/schemas/TaskContentKindDto"
+        content:
+          type: string
+        dynamic_content:
+          type: object
+          additionalProperties:
+            type: string
+        variations:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: "#/components/schemas/PlaygroundVariationDto"
+    TaskContentSingleSelectionDto:
+      type: object
+      required:
+        - content
+        - options
+        - correct_option
+        - hints
+        - kind
+      properties:
+        kind:
+          $ref: "#/components/schemas/TaskContentKindDto"
+        content:
+          type: string
+        options:
+          type: array
+          items:
+            $ref: "#/components/schemas/OptionDto"
+        correct_option:
+          type: integer
+          minimum: 0
+          maximum: 65535
+        hints:
+          type: array
+          items:
+            $ref: "#/components/schemas/HintDto"
+    TaskContentMultipleSelectionDto:
+      type: object
+      required:
+        - content
+        - options
+        - correct_options
+        - hints
+        - kind
+      properties:
+        kind:
+          $ref: "#/components/schemas/TaskContentKindDto"
+        content:
+          type: string
+        options:
+          type: array
+          items:
+            $ref: "#/components/schemas/OptionDto"
+        correct_options:
+          type: array
+          items:
+            type: integer
+            minimum: 0
+            maximum: 65535
+        hints:
+          type: array
+          items:
+            $ref: "#/components/schemas/HintDto"
+    TaskContentKeywordsArrangementDto:
+      type: object
+      required:
+        - content
+        - keywords
+        - correct_order
+        - hints
+        - kind
+      properties:
+        kind:
+          $ref: "#/components/schemas/TaskContentKindDto"
+        content:
+          type: string
+        keywords:
+          type: array
+          items:
+            $ref: "#/components/schemas/KeywordDto"
+        correct_order:
+          type: array
+          items:
+            type: integer
+            minimum: 0
+            maximum: 65535
+        hints:
+          type: array
+          items:
+            $ref: "#/components/schemas/HintDto"
+    TaskContentLinesArrangementDto:
+      type: object
+      required:
+        - content
+        - options
+        - correct_order
+        - hints
+        - kind
+      properties:
+        kind:
+          $ref: "#/components/schemas/TaskContentKindDto"
+        content:
+          type: string
+        options:
+          type: array
+          items:
+            $ref: "#/components/schemas/OptionDto"
+        correct_order:
+          type: array
+          items:
+            type: integer
+            minimum: 0
+            maximum: 65535
+        hints:
+          type: array
+          items:
+            $ref: "#/components/schemas/HintDto"
+    TaskContentMissingCodeDto:
+      type: object
+      required:
+        - content
+        - correct_code
+        - hints
+        - kind
+      properties:
+        kind:
+          $ref: "#/components/schemas/TaskContentKindDto"
+        content:
+          type: string
+        correct_code:
+          type: object
+          additionalProperties:
+            type: string
+        hints:
+          type: array
+          items:
+            $ref: "#/components/schemas/HintDto"
+    TaskContentDto:
+      type: object
+      oneOf:
+        - $ref: "#/components/schemas/TaskContentLessonDto"
+        - $ref: "#/components/schemas/TaskContentPlaygroundDto"
+        - $ref: "#/components/schemas/TaskContentSingleSelectionDto"
+        - $ref: "#/components/schemas/TaskContentMultipleSelectionDto"
+        - $ref: "#/components/schemas/TaskContentKeywordsArrangementDto"
+        - $ref: "#/components/schemas/TaskContentLinesArrangementDto"
+        - $ref: "#/components/schemas/TaskContentMissingCodeDto"
+      discriminator:
+        propertyName: kind
+        mapping:
+          LESSON: "#/components/schemas/TaskContentLessonDto"
+          PLAYGROUND: "#/components/schemas/TaskContentPlaygroundDto"
+          SINGLE_SELECTION: "#/components/schemas/TaskContentSingleSelectionDto"
+          MULTIPLE_SELECTION: "#/components/schemas/TaskContentMultipleSelectionDto"
+          KEYWORDS_ARRANGEMENT: "#/components/schemas/TaskContentKeywordsArrangementDto"
+          LINES_ARRANGEMENT: "#/components/schemas/TaskContentLinesArrangementDto"
+          MISSING_CODE: "#/components/schemas/TaskContentMissingCodeDto"
+    PublicTaskKindDto:
+      type: string
+      enum:
+        - AVAILABLE
+        - NOT_AVAILABLE
+    TaskContentKindDto:
+      type: string
+      enum:
+        - LESSON
+        - PLAYGROUND
+        - SINGLE_SELECTION
+        - MULTIPLE_SELECTION
+        - KEYWORDS_ARRANGEMENT
+        - LINES_ARRANGEMENT
+        - MISSING_CODE
+    ExpectedKeywordDto:
+      type: object
+      required:
+        - content
+        - modifiers
+      properties:
+        content:
+          type: string
+        modifiers:
+          type: array
+          items:
+            $ref: "#/components/schemas/KeywordModifierDto"
+    ExpectedOptionDto:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+    ExpectedTaskContentSingleSelectionDto:
+      type: object
+      required:
+        - content
+        - options
+        - correct_option
+        - hints
+        - kind
+      properties:
+        kind:
+          $ref: "#/components/schemas/TaskContentKindDto"
+        content:
+          type: string
+        options:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExpectedOptionDto"
+        correct_option:
+          type: integer
+          minimum: 0
+          maximum: 65535
+        hints:
+          type: array
+          items:
+            $ref: "#/components/schemas/HintDto"
+    ExpectedTaskContentMultipleSelectionDto:
+      type: object
+      required:
+        - content
+        - options
+        - correct_options
+        - hints
+        - kind
+      properties:
+        kind:
+          $ref: "#/components/schemas/TaskContentKindDto"
+        content:
+          type: string
+        options:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExpectedOptionDto"
+        correct_options:
+          type: array
+          items:
+            type: integer
+            minimum: 0
+            maximum: 65535
+        hints:
+          type: array
+          items:
+            $ref: "#/components/schemas/HintDto"
+    ExpectedTaskContentKeywordsArrangementDto:
+      type: object
+      required:
+        - content
+        - keywords
+        - correct_order
+        - hints
+        - kind
+      properties:
+        kind:
+          $ref: "#/components/schemas/TaskContentKindDto"
+        content:
+          type: string
+        keywords:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExpectedKeywordDto"
+        correct_order:
+          type: array
+          items:
+            type: integer
+            minimum: 0
+            maximum: 65535
+        hints:
+          type: array
+          items:
+            $ref: "#/components/schemas/HintDto"
+    ExpectedTaskContentLinesArrangementDto:
+      type: object
+      required:
+        - content
+        - options
+        - correct_order
+        - hints
+        - kind
+      properties:
+        kind:
+          $ref: "#/components/schemas/TaskContentKindDto"
+        content:
+          type: string
+        options:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExpectedOptionDto"
+        correct_order:
+          type: array
+          items:
+            type: integer
+            minimum: 0
+            maximum: 65535
+        hints:
+          type: array
+          items:
+            $ref: "#/components/schemas/HintDto"
+    ExpectedTaskContentDto:
+      type: object
+      oneOf:
+        - $ref: "#/components/schemas/TaskContentLessonDto"
+        - $ref: "#/components/schemas/TaskContentPlaygroundDto"
+        - $ref: "#/components/schemas/ExpectedTaskContentSingleSelectionDto"
+        - $ref: "#/components/schemas/ExpectedTaskContentMultipleSelectionDto"
+        - $ref: "#/components/schemas/ExpectedTaskContentKeywordsArrangementDto"
+        - $ref: "#/components/schemas/ExpectedTaskContentLinesArrangementDto"
+        - $ref: "#/components/schemas/TaskContentMissingCodeDto"
+      discriminator:
+        propertyName: kind
+        mapping:
+          LESSON: "#/components/schemas/TaskContentLessonDto"
+          PLAYGROUND: "#/components/schemas/TaskContentPlaygroundDto"
+          SINGLE_SELECTION: "#/components/schemas/ExpectedTaskContentSingleSelectionDto"
+          MULTIPLE_SELECTION: "#/components/schemas/ExpectedTaskContentMultipleSelectionDto"
+          KEYWORDS_ARRANGEMENT: "#/components/schemas/ExpectedTaskContentKeywordsArrangementDto"
+          LINES_ARRANGEMENT: "#/components/schemas/ExpectedTaskContentLinesArrangementDto"
+          MISSING_CODE: "#/components/schemas/TaskContentMissingCodeDto"
+    ExpectedTaskDto:
+      type: object
+      required:
+        - id
+        - title
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content:
+          $ref: "#/components/schemas/ExpectedTaskContentDto"
+        difficulty:
+          type: integer
+          minimum: 1
+          maximum: 10
+        dynamic:
+          type: boolean
+        for_anonymous:
+          type: boolean
+    ExpectedSectionDto:
+      type: object
+      required:
+        - id
+        - title
+        - tasks
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+          format: uri
+        tasks:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExpectedTaskDto"
+    ExpectedTechnologyDto:
+      type: object
+      required:
+        - id
+        - name
+        - sections
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+          format: uri
+        sections:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExpectedSectionDto"
 x-amazon-apigateway-importexport-version: "1.0"
-

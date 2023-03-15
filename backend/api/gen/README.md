@@ -21,24 +21,60 @@ gen = { path = "./gen" }
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *https://mbq7t4sa77.execute-api.eu-central-1.amazonaws.com/api*
+All URIs are relative to *https://ux55hiuu9e.execute-api.eu-central-1.amazonaws.com/api*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*DefaultApi* | [**v1_content_load_put**](docs/DefaultApi.md#v1_content_load_put) | **PUT** /v1/content/load | 
-*DefaultApi* | [**v1_content_public_section_section_id_tasks_get**](docs/DefaultApi.md#v1_content_public_section_section_id_tasks_get) | **GET** /v1/content/public/section/{section_id}/tasks | 
-*DefaultApi* | [**v1_content_public_technologies_get**](docs/DefaultApi.md#v1_content_public_technologies_get) | **GET** /v1/content/public/technologies | 
-*DefaultApi* | [**v1_content_public_technology_technology_id_sections_get**](docs/DefaultApi.md#v1_content_public_technology_technology_id_sections_get) | **GET** /v1/content/public/technology/{technology_id}/sections | 
-*DefaultApi* | [**v1_profile_current_avatar_post**](docs/DefaultApi.md#v1_profile_current_avatar_post) | **POST** /v1/profile/current/avatar | 
-*DefaultApi* | [**v1_profile_current_push_delete**](docs/DefaultApi.md#v1_profile_current_push_delete) | **DELETE** /v1/profile/current/push | 
-*DefaultApi* | [**v1_profile_current_push_put**](docs/DefaultApi.md#v1_profile_current_push_put) | **PUT** /v1/profile/current/push | 
-*DefaultApi* | [**v1_profile_current_put**](docs/DefaultApi.md#v1_profile_current_put) | **PUT** /v1/profile/current | 
+*ContentApi* | [**v1_content_load_put**](docs/ContentApi.md#v1_content_load_put) | **PUT** /v1/content/load | 
+*ContentApi* | [**v1_content_public_section_section_id_tasks_get**](docs/ContentApi.md#v1_content_public_section_section_id_tasks_get) | **GET** /v1/content/public/section/{section_id}/tasks | 
+*ContentApi* | [**v1_content_public_technologies_get**](docs/ContentApi.md#v1_content_public_technologies_get) | **GET** /v1/content/public/technologies | 
+*ContentApi* | [**v1_content_public_technology_technology_id_sections_get**](docs/ContentApi.md#v1_content_public_technology_technology_id_sections_get) | **GET** /v1/content/public/technology/{technology_id}/sections | 
+*ProfileApi* | [**v1_profile_current_avatar_post**](docs/ProfileApi.md#v1_profile_current_avatar_post) | **POST** /v1/profile/current/avatar | 
 *ProfileApi* | [**v1_profile_current_get**](docs/ProfileApi.md#v1_profile_current_get) | **GET** /v1/profile/current | 
+*ProfileApi* | [**v1_profile_current_push_delete**](docs/ProfileApi.md#v1_profile_current_push_delete) | **DELETE** /v1/profile/current/push | 
+*ProfileApi* | [**v1_profile_current_push_put**](docs/ProfileApi.md#v1_profile_current_push_put) | **PUT** /v1/profile/current/push | 
+*ProfileApi* | [**v1_profile_current_put**](docs/ProfileApi.md#v1_profile_current_put) | **PUT** /v1/profile/current | 
 
 
 ## Documentation For Models
 
+ - [ExpectedKeywordDto](docs/ExpectedKeywordDto.md)
+ - [ExpectedOptionDto](docs/ExpectedOptionDto.md)
+ - [ExpectedSectionDto](docs/ExpectedSectionDto.md)
+ - [ExpectedTaskContentDto](docs/ExpectedTaskContentDto.md)
+ - [ExpectedTaskContentKeywordsArrangementDto](docs/ExpectedTaskContentKeywordsArrangementDto.md)
+ - [ExpectedTaskContentLinesArrangementDto](docs/ExpectedTaskContentLinesArrangementDto.md)
+ - [ExpectedTaskContentMultipleSelectionDto](docs/ExpectedTaskContentMultipleSelectionDto.md)
+ - [ExpectedTaskContentSingleSelectionDto](docs/ExpectedTaskContentSingleSelectionDto.md)
+ - [ExpectedTaskDto](docs/ExpectedTaskDto.md)
+ - [ExpectedTechnologyDto](docs/ExpectedTechnologyDto.md)
+ - [HintDto](docs/HintDto.md)
+ - [KeywordDto](docs/KeywordDto.md)
+ - [KeywordModifierDto](docs/KeywordModifierDto.md)
+ - [OptionDto](docs/OptionDto.md)
+ - [PlatformDto](docs/PlatformDto.md)
+ - [PlaygroundVariationDto](docs/PlaygroundVariationDto.md)
+ - [PresignedUrlDto](docs/PresignedUrlDto.md)
  - [ProfileDto](docs/ProfileDto.md)
+ - [PublicTaskAvailableDto](docs/PublicTaskAvailableDto.md)
+ - [PublicTaskDto](docs/PublicTaskDto.md)
+ - [PublicTaskKindDto](docs/PublicTaskKindDto.md)
+ - [PublicTaskNotAvailableDto](docs/PublicTaskNotAvailableDto.md)
+ - [PushDataDto](docs/PushDataDto.md)
+ - [SectionDto](docs/SectionDto.md)
+ - [SectionPreviewDto](docs/SectionPreviewDto.md)
+ - [TaskContentDto](docs/TaskContentDto.md)
+ - [TaskContentKeywordsArrangementDto](docs/TaskContentKeywordsArrangementDto.md)
+ - [TaskContentKindDto](docs/TaskContentKindDto.md)
+ - [TaskContentLessonDto](docs/TaskContentLessonDto.md)
+ - [TaskContentLinesArrangementDto](docs/TaskContentLinesArrangementDto.md)
+ - [TaskContentMissingCodeDto](docs/TaskContentMissingCodeDto.md)
+ - [TaskContentMultipleSelectionDto](docs/TaskContentMultipleSelectionDto.md)
+ - [TaskContentPlaygroundDto](docs/TaskContentPlaygroundDto.md)
+ - [TaskContentSingleSelectionDto](docs/TaskContentSingleSelectionDto.md)
+ - [TaskPreviewDto](docs/TaskPreviewDto.md)
+ - [TechnologyDto](docs/TechnologyDto.md)
+ - [UpdateProfileDto](docs/UpdateProfileDto.md)
 
 
 To get access to the crate's generated documentation, use:

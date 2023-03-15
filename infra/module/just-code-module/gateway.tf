@@ -63,5 +63,5 @@ resource "aws_apigatewayv2_stage" "just_code_api" {
 resource "aws_cloudwatch_log_group" "just_code_api_gw" {
   name = "/aws/api_gw/${aws_apigatewayv2_api.just_code.name}"
 
-  retention_in_days = 30
+  retention_in_days = 7
 }

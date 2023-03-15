@@ -1,6 +1,6 @@
 use common_api::lambda::into_response::IntoResponse;
 use common_domain::into_future::IntoFuture;
-use content_dto::output::public_task_dto::PublicTaskDto;
+use content_dto::{IntoDto, PublicTaskDto};
 use futures::TryFutureExt;
 use lambda_http::{http::StatusCode, Body, Error, Request, RequestExt, Response};
 use use_case::content::get_public_tasks::{get_public_tasks, GetPublicTasksRepo};
@@ -25,7 +25,7 @@ pub async fn handle_request(event: Request) -> Result<Response<Body>, Error> {
         .map(|sections| {
             sections
                 .into_iter()
-                .map(Into::into)
+                .map(IntoDto::into_dto)
                 .collect::<Vec<PublicTaskDto>>()
         })
         .into_response(StatusCode::OK)

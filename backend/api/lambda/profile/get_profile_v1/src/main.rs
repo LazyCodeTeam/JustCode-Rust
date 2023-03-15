@@ -1,4 +1,3 @@
-mod dto;
 mod handler;
 
 use common_api::lambda::register_handler::register_handler;

@@ -4,11 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+common_domain = { path = "../../../../feature/common/domain" }
 content_domain = { path = "../../../../feature/content/domain" }
-serde = { workspace = true, features = ["derive"] }
-uuid = { workspace = true, features = ["serde", "v4"], optional = true }
-validator = { workspace = true, features = ["derive"], optional = true }
+gen = { path = "../../../gen" }
 
-[features]
-input = ["uuid", "validator"]
-output = []
+[dev-dependencies]
+uuid = { workspace = true, features = ["v4"] }

@@ -37,7 +37,7 @@ impl Configuration {
 impl Default for Configuration {
     fn default() -> Self {
         Configuration {
-            base_path: "https://mbq7t4sa77.execute-api.eu-central-1.amazonaws.com/api".to_owned(),
+            base_path: "https://ux55hiuu9e.execute-api.eu-central-1.amazonaws.com/api".to_owned(),
             user_agent: Some("OpenAPI-Generator/2023-03-10 06:01:08UTC/rust".to_owned()),
             client: reqwest::Client::new(),
             basic_auth: None,

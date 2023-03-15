@@ -1,0 +1,9 @@
+[package]
+name = "profile_dto"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+common_domain = { path = "../../../../feature/common/domain" }
+gen = { path = "../../../gen" }
+profile_domain = { path = "../../../../feature/profile/domain" }

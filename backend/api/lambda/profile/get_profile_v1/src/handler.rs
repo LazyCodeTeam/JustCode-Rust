@@ -2,10 +2,9 @@ use common_api::lambda::{into_response::IntoResponse, user_context::UserContext}
 use common_domain::into_future::IntoFuture;
 use futures::TryFutureExt;
 use lambda_http::{http::StatusCode, Body, Error, Request, Response};
+use profile_dto::{FromModel, ProfileDto};
 use profile_infra::repository;
 use use_case::profile::get_profile_by_id::{get_profile_by_id, GetProfileByIdRepository};
-
-use crate::dto::profile_dto::ProfileDto;
 
 pub async fn handle_request(event: Request) -> Result<Response<Body>, Error> {
     event
@@ -20,6 +19,6 @@ pub async fn handle_request(event: Request) -> Result<Response<Body>, Error> {
             )
         })
         .await
-        .map(ProfileDto::from)
+        .map(ProfileDto::from_model)
         .into_response(StatusCode::OK)
 }

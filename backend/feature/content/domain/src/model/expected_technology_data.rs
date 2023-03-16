@@ -30,11 +30,13 @@ impl From<Vec<ExpectedTechnologyData>> for FullContent {
 
                 let mut current_task_position = 0;
                 for task in section.tasks.into_iter() {
-                    tasks_preview.push(TaskPreview {
-                        id: task.id.clone(),
-                        title: task.title.clone(),
-                        for_anonymous: task.for_anonymous,
-                    });
+                    if !task.dynamic {
+                        tasks_preview.push(TaskPreview {
+                            id: task.id.clone(),
+                            title: task.title.clone(),
+                            for_anonymous: task.for_anonymous,
+                        });
+                    }
                     let position = if task.dynamic {
                         None
                     } else {
@@ -107,7 +109,7 @@ mod tests {
                         id: "id 1".to_string(),
                         title: "title 1".to_string(),
                         difficulty: 1,
-                        dynamic: true,
+                        dynamic: false,
                         for_anonymous: true,
                         content: TaskContent::Empty,
                     }],
@@ -123,14 +125,24 @@ mod tests {
                     title: "title 2".to_string(),
                     description: Some("description 2".to_string()),
                     image: Some("image 2".to_string()),
-                    tasks: vec![ExpectedTaskData {
-                        id: "id 2".to_string(),
-                        title: "title 2".to_string(),
-                        difficulty: 2,
-                        dynamic: false,
-                        for_anonymous: false,
-                        content: TaskContent::Empty,
-                    }],
+                    tasks: vec![
+                        ExpectedTaskData {
+                            id: "id 2".to_string(),
+                            title: "title 2".to_string(),
+                            difficulty: 2,
+                            dynamic: false,
+                            for_anonymous: false,
+                            content: TaskContent::Empty,
+                        },
+                        ExpectedTaskData {
+                            id: "id 3".to_string(),
+                            title: "title 3".to_string(),
+                            difficulty: 3,
+                            dynamic: true,
+                            for_anonymous: false,
+                            content: TaskContent::Empty,
+                        },
+                    ],
                 }],
             },
         ];
@@ -197,7 +209,7 @@ mod tests {
                         id: "id 1".to_string(),
                         title: "title 1".to_string(),
                         difficulty: 1,
-                        position: None,
+                        position: Some(0),
                         for_anonymous: true,
                         content: TaskContent::Empty,
                         section_id: "id 1".to_string(),
@@ -207,6 +219,15 @@ mod tests {
                         title: "title 2".to_string(),
                         position: Some(0),
                         difficulty: 2,
+                        for_anonymous: false,
+                        content: TaskContent::Empty,
+                        section_id: "id 2".to_string(),
+                    },
+                    Task {
+                        id: "id 3".to_string(),
+                        title: "title 3".to_string(),
+                        position: None,
+                        difficulty: 3,
                         for_anonymous: false,
                         content: TaskContent::Empty,
                         section_id: "id 2".to_string(),

@@ -1,9 +1,9 @@
-use crate::dto::error_dto::ErrorDto;
+use crate::{dto::ErrorDto, IntoDto};
 use common_domain::error::{Error, ErrorType};
 use http::StatusCode;
 use lambda_http::{Body, Response};
 
-#[derive(PartialEq, Eq, Debug)]
+#[derive(PartialEq, Debug)]
 pub struct LambdaErrorDto {
     pub status_code: StatusCode,
     pub error_dto: ErrorDto,
@@ -13,7 +13,7 @@ impl From<Error> for LambdaErrorDto {
     fn from(error: Error) -> Self {
         Self {
             status_code: map_error_type(error.error_type),
-            error_dto: (*error.output).into(),
+            error_dto: (*error.output).into_dto(),
         }
     }
 }
@@ -54,7 +54,7 @@ impl TryFrom<LambdaErrorDto> for Response<Body> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::dto::error_dto::ErrorDto;
+    use crate::{dto::ErrorDto, FromModel};
     use common_domain::error::Error;
     use http::StatusCode;
 
@@ -65,7 +65,7 @@ mod test {
         let result = LambdaErrorDto::from(error.clone());
 
         assert_eq!(result.status_code, StatusCode::INTERNAL_SERVER_ERROR);
-        assert_eq!(result.error_dto, ErrorDto::from(*error.output));
+        assert_eq!(result.error_dto, ErrorDto::from_model(*error.output));
     }
 
     #[test]

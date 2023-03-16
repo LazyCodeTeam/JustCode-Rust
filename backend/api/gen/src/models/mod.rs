@@ -1,3 +1,5 @@
+pub mod error_dto;
+pub use self::error_dto::ErrorDto;
 pub mod expected_keyword_dto;
 pub use self::expected_keyword_dto::ExpectedKeywordDto;
 pub mod expected_option_dto;

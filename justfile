@@ -25,12 +25,11 @@ build:
   just gen
   cargo xtask build-lambda --use-cross --target aarch64-unknown-linux-gnu
 
-dev_dir := justfile_directory() / "infra" / "dev"
-dev_secrets_dir := dev_dir / "secret.tfvars"
+infra_dir := justfile_directory() / "infra"
 
-publish_dev:
-  terraform -chdir={{dev_dir}} apply -auto-approve -var-file {{dev_secrets_dir}}
+publish env: 
+  terraform -chdir={{infra_dir / env}} apply -auto-approve -var-file {{infra_dir / env / "secret.tfvars"}}
 
-bap_dev:
+bap env:
   just build
-  just publish_dev
+  just publish env

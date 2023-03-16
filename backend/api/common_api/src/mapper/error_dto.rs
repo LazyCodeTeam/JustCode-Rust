@@ -1,27 +1,20 @@
+use crate::{dto::ErrorDto, FromModel};
 use common_domain::error::ErrorOutput;
-use std::collections::HashMap;
 
-use serde::Serialize;
-
-#[derive(Serialize, PartialEq, Eq, Debug)]
-pub struct ErrorDto {
-    pub message: String,
-    pub code: String,
-    pub args: HashMap<String, String>,
-}
-
-impl From<ErrorOutput> for ErrorDto {
-    fn from(error: ErrorOutput) -> Self {
+impl FromModel<ErrorOutput> for ErrorDto {
+    fn from_model(model: ErrorOutput) -> Self {
         Self {
-            message: error.message,
-            code: error.code,
-            args: error.args,
+            message: model.message,
+            code: model.code,
+            args: model.args,
         }
     }
 }
 
 #[cfg(test)]
 mod test {
+    use std::collections::HashMap;
+
     use super::*;
 
     #[test]
@@ -36,7 +29,7 @@ mod test {
         };
 
         assert_eq!(
-            ErrorDto::from(error_details),
+            ErrorDto::from_model(error_details),
             ErrorDto {
                 message,
                 code,

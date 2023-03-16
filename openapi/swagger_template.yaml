@@ -27,6 +27,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ProfileDto"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
       security:
         - just-code-dev-auth:
             - email
@@ -45,6 +51,12 @@ paths:
       responses:
         "200":
           description: Updated
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
       requestBody:
         required: true
         content:
@@ -68,6 +80,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PresignedUrlDto"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
       security:
         - just-code-dev-auth:
             - email
@@ -90,6 +108,18 @@ paths:
       responses:
         "200":
           description: Saved
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
       security:
         - just-code-dev-auth:
             - email
@@ -105,6 +135,12 @@ paths:
       responses:
         "200":
           description: Deleted
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
       security:
         - just-code-dev-auth:
             - email
@@ -130,6 +166,12 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/TechnologyDto"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
       security:
         - just-code-dev-app-authorizer: []
       x-amazon-apigateway-integration:
@@ -151,6 +193,18 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/SectionDto"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
       security:
         - just-code-dev-app-authorizer: []
       x-amazon-apigateway-integration:
@@ -179,6 +233,18 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/PublicTaskDto"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
       security:
         - just-code-dev-app-authorizer: []
       x-amazon-apigateway-integration:
@@ -201,6 +267,26 @@ paths:
       responses:
         "202":
           description: Accepted
+        "304":
+          description: Content on server is the same
+        "409":
+          description: Upload already in progress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
       requestBody:
         required: true
         content:
@@ -887,4 +973,19 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ExpectedSectionDto"
+    ErrorDto:
+      type: object
+      required:
+        - message
+        - code
+        - args
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+        args:
+          type: object
+          additionalProperties:
+            type: string
 x-amazon-apigateway-importexport-version: "1.0"

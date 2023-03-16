@@ -17,6 +17,7 @@ use crate::apis::ResponseContent;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum V1ProfileCurrentAvatarPostError {
+    Status500(crate::models::ErrorDto),
     UnknownValue(serde_json::Value),
 }
 
@@ -24,6 +25,7 @@ pub enum V1ProfileCurrentAvatarPostError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum V1ProfileCurrentGetError {
+    Status500(crate::models::ErrorDto),
     UnknownValue(serde_json::Value),
 }
 
@@ -31,6 +33,7 @@ pub enum V1ProfileCurrentGetError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum V1ProfileCurrentPushDeleteError {
+    Status500(crate::models::ErrorDto),
     UnknownValue(serde_json::Value),
 }
 
@@ -38,6 +41,8 @@ pub enum V1ProfileCurrentPushDeleteError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum V1ProfileCurrentPushPutError {
+    Status400(crate::models::ErrorDto),
+    Status500(crate::models::ErrorDto),
     UnknownValue(serde_json::Value),
 }
 
@@ -45,6 +50,7 @@ pub enum V1ProfileCurrentPushPutError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum V1ProfileCurrentPutError {
+    Status500(crate::models::ErrorDto),
     UnknownValue(serde_json::Value),
 }
 

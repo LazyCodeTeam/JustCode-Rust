@@ -17,6 +17,9 @@ use crate::apis::ResponseContent;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum V1ContentLoadPutError {
+    Status409(crate::models::ErrorDto),
+    Status400(crate::models::ErrorDto),
+    Status500(crate::models::ErrorDto),
     UnknownValue(serde_json::Value),
 }
 
@@ -24,6 +27,8 @@ pub enum V1ContentLoadPutError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum V1ContentPublicSectionSectionIdTasksGetError {
+    Status404(crate::models::ErrorDto),
+    Status500(crate::models::ErrorDto),
     UnknownValue(serde_json::Value),
 }
 
@@ -31,6 +36,7 @@ pub enum V1ContentPublicSectionSectionIdTasksGetError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum V1ContentPublicTechnologiesGetError {
+    Status500(crate::models::ErrorDto),
     UnknownValue(serde_json::Value),
 }
 
@@ -38,6 +44,8 @@ pub enum V1ContentPublicTechnologiesGetError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum V1ContentPublicTechnologyTechnologyIdSectionsGetError {
+    Status404(crate::models::ErrorDto),
+    Status500(crate::models::ErrorDto),
     UnknownValue(serde_json::Value),
 }
 

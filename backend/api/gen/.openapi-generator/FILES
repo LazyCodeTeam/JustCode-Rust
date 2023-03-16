@@ -3,6 +3,7 @@
 Cargo.toml
 README.md
 docs/ContentApi.md
+docs/ErrorDto.md
 docs/ExpectedKeywordDto.md
 docs/ExpectedOptionDto.md
 docs/ExpectedSectionDto.md
@@ -47,6 +48,7 @@ src/apis/content_api.rs
 src/apis/mod.rs
 src/apis/profile_api.rs
 src/lib.rs
+src/models/error_dto.rs
 src/models/expected_keyword_dto.rs
 src/models/expected_option_dto.rs
 src/models/expected_section_dto.rs

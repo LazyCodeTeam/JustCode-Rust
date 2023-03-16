@@ -25,15 +25,15 @@ All URIs are relative to *https://ux55hiuu9e.execute-api.eu-central-1.amazonaws.
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*ContentApi* | [**v1_content_load_put**](docs/ContentApi.md#v1_content_load_put) | **PUT** /v1/content/load | 
-*ContentApi* | [**v1_content_public_section_section_id_tasks_get**](docs/ContentApi.md#v1_content_public_section_section_id_tasks_get) | **GET** /v1/content/public/section/{section_id}/tasks | 
-*ContentApi* | [**v1_content_public_technologies_get**](docs/ContentApi.md#v1_content_public_technologies_get) | **GET** /v1/content/public/technologies | 
-*ContentApi* | [**v1_content_public_technology_technology_id_sections_get**](docs/ContentApi.md#v1_content_public_technology_technology_id_sections_get) | **GET** /v1/content/public/technology/{technology_id}/sections | 
-*ProfileApi* | [**v1_profile_current_avatar_post**](docs/ProfileApi.md#v1_profile_current_avatar_post) | **POST** /v1/profile/current/avatar | 
-*ProfileApi* | [**v1_profile_current_get**](docs/ProfileApi.md#v1_profile_current_get) | **GET** /v1/profile/current | 
-*ProfileApi* | [**v1_profile_current_push_delete**](docs/ProfileApi.md#v1_profile_current_push_delete) | **DELETE** /v1/profile/current/push | 
-*ProfileApi* | [**v1_profile_current_push_put**](docs/ProfileApi.md#v1_profile_current_push_put) | **PUT** /v1/profile/current/push | 
-*ProfileApi* | [**v1_profile_current_put**](docs/ProfileApi.md#v1_profile_current_put) | **PUT** /v1/profile/current | 
+*ContentApi* | [**v1_content_load_put**](docs/ContentApi.md#v1_content_load_put) | **Put** /v1/content/load | 
+*ContentApi* | [**v1_content_public_section_section_id_tasks_get**](docs/ContentApi.md#v1_content_public_section_section_id_tasks_get) | **Get** /v1/content/public/section/{section_id}/tasks | 
+*ContentApi* | [**v1_content_public_technologies_get**](docs/ContentApi.md#v1_content_public_technologies_get) | **Get** /v1/content/public/technologies | 
+*ContentApi* | [**v1_content_public_technology_technology_id_sections_get**](docs/ContentApi.md#v1_content_public_technology_technology_id_sections_get) | **Get** /v1/content/public/technology/{technology_id}/sections | 
+*ProfileApi* | [**v1_profile_current_avatar_post**](docs/ProfileApi.md#v1_profile_current_avatar_post) | **Post** /v1/profile/current/avatar | 
+*ProfileApi* | [**v1_profile_current_get**](docs/ProfileApi.md#v1_profile_current_get) | **Get** /v1/profile/current | 
+*ProfileApi* | [**v1_profile_current_push_delete**](docs/ProfileApi.md#v1_profile_current_push_delete) | **Delete** /v1/profile/current/push | 
+*ProfileApi* | [**v1_profile_current_push_put**](docs/ProfileApi.md#v1_profile_current_push_put) | **Put** /v1/profile/current/push | 
+*ProfileApi* | [**v1_profile_current_put**](docs/ProfileApi.md#v1_profile_current_put) | **Put** /v1/profile/current | 
 
 
 ## Documentation For Models

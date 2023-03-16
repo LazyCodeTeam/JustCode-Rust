@@ -303,6 +303,43 @@ paths:
         httpMethod: "POST"
         uri: ${load_content_v1}
         connectionType: "INTERNET"
+  /v1/content/load/dry-run:
+    put:
+      tags:
+        - content
+      responses:
+        "202":
+          description: Accepted
+        "304":
+          description: Content on server is the same
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/ExpectedTechnologyDto"
+      security:
+        - just-code-dev-moderator-authorizer: []
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "1.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${load_content_dry_run_v1}
+        connectionType: "INTERNET"
 components:
   securitySchemes:
     just-code-dev-app-authorizer:

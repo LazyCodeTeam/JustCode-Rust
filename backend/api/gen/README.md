@@ -38,6 +38,7 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [ErrorDto](docs/ErrorDto.md)
  - [ExpectedKeywordDto](docs/ExpectedKeywordDto.md)
  - [ExpectedOptionDto](docs/ExpectedOptionDto.md)
  - [ExpectedSectionDto](docs/ExpectedSectionDto.md)

@@ -4,10 +4,10 @@ All URIs are relative to *https://ux55hiuu9e.execute-api.eu-central-1.amazonaws.
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**v1_content_load_put**](ContentApi.md#v1_content_load_put) | **PUT** /v1/content/load | 
-[**v1_content_public_section_section_id_tasks_get**](ContentApi.md#v1_content_public_section_section_id_tasks_get) | **GET** /v1/content/public/section/{section_id}/tasks | 
-[**v1_content_public_technologies_get**](ContentApi.md#v1_content_public_technologies_get) | **GET** /v1/content/public/technologies | 
-[**v1_content_public_technology_technology_id_sections_get**](ContentApi.md#v1_content_public_technology_technology_id_sections_get) | **GET** /v1/content/public/technology/{technology_id}/sections | 
+[**v1_content_load_put**](ContentApi.md#v1_content_load_put) | **Put** /v1/content/load | 
+[**v1_content_public_section_section_id_tasks_get**](ContentApi.md#v1_content_public_section_section_id_tasks_get) | **Get** /v1/content/public/section/{section_id}/tasks | 
+[**v1_content_public_technologies_get**](ContentApi.md#v1_content_public_technologies_get) | **Get** /v1/content/public/technologies | 
+[**v1_content_public_technology_technology_id_sections_get**](ContentApi.md#v1_content_public_technology_technology_id_sections_get) | **Get** /v1/content/public/technology/{technology_id}/sections | 
 
 
 

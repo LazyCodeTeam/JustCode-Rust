@@ -4,11 +4,11 @@ All URIs are relative to *https://ux55hiuu9e.execute-api.eu-central-1.amazonaws.
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**v1_profile_current_avatar_post**](ProfileApi.md#v1_profile_current_avatar_post) | **POST** /v1/profile/current/avatar | 
-[**v1_profile_current_get**](ProfileApi.md#v1_profile_current_get) | **GET** /v1/profile/current | 
-[**v1_profile_current_push_delete**](ProfileApi.md#v1_profile_current_push_delete) | **DELETE** /v1/profile/current/push | 
-[**v1_profile_current_push_put**](ProfileApi.md#v1_profile_current_push_put) | **PUT** /v1/profile/current/push | 
-[**v1_profile_current_put**](ProfileApi.md#v1_profile_current_put) | **PUT** /v1/profile/current | 
+[**v1_profile_current_avatar_post**](ProfileApi.md#v1_profile_current_avatar_post) | **Post** /v1/profile/current/avatar | 
+[**v1_profile_current_get**](ProfileApi.md#v1_profile_current_get) | **Get** /v1/profile/current | 
+[**v1_profile_current_push_delete**](ProfileApi.md#v1_profile_current_push_delete) | **Delete** /v1/profile/current/push | 
+[**v1_profile_current_push_put**](ProfileApi.md#v1_profile_current_push_put) | **Put** /v1/profile/current/push | 
+[**v1_profile_current_put**](ProfileApi.md#v1_profile_current_put) | **Put** /v1/profile/current | 
 
 
 

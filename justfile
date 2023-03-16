@@ -10,15 +10,14 @@ gen_cargo_dir := gen_dir / "Cargo.toml"
 gen_cargo_lock_dir := gen_dir / "Cargo.lock"
 
 gen:
-  openapi-generator generate -i openapi/swagger_template.yaml -g rust -o {{gen_dir}} --additional-properties packageName=gen,packageVersion=0.1.0,preferUnsignedInt=true,bestFitInt=true
-
-  sed -i -e 's/^features = \[\(.*\)\]/features = \[\1, \"native-tls-vendored\"\]/g' {{gen_cargo_dir}}
+  openapi-generator generate -i openapi/swagger_template.yaml -g rust -o {{gen_dir}} --library hyper --additional-properties=packageName=gen,packageVersion=0.1.0,preferUnsignedInt=true,bestFitInt=true
   
   just format
 
 format:
   cargo sort -w
   cargo fmt
+  cargo clippy --fix --allow-dirty 
   cargo machete --fix || true
 
 build:

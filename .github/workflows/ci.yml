@@ -115,7 +115,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: --all-targets --exclude gen --workspace --all-features -- -D warnings
+          args: --all-targets --workspace --all-features -- -D warnings
       - name: Detect unused dependencies
         uses: actions-rs/cargo@v1
         with:

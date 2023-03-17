@@ -12,7 +12,7 @@ common_infra = { path = "../backend/feature/common/infra", features = [
 create_profile = { path = "../backend/api/lambda/profile/create_profile" }
 futures = { workspace = true }
 get_profile_v1 = { path = "../backend/api/lambda/profile/get_profile_v1" }
-lambda_http = { workspace = true, features = ["apigw_rest"] }
+lambda_http = { workspace = true }
 lambda_runtime = { workspace = true }
 lazy_static = { workspace = true }
 serde_json = { workspace = true }

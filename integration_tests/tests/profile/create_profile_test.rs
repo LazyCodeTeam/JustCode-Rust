@@ -1,14 +1,17 @@
 use std::{collections::HashMap, env};
 
 use crate::common::dynamodb::with_table;
-use aws_lambda_events::cognito::{
-    CognitoEventUserPoolsPostConfirmationRequest, CognitoEventUserPoolsPostConfirmationResponse,
+use aws_lambda_events::{
+    apigw::{
+        ApiGatewayV2httpRequestContext, ApiGatewayV2httpRequestContextAuthorizerDescription,
+        ApiGatewayV2httpRequestContextAuthorizerJwtDescription,
+    },
+    cognito::{
+        CognitoEventUserPoolsPostConfirmationRequest, CognitoEventUserPoolsPostConfirmationResponse,
+    },
 };
 use common_infra::dynamodb_client::get_dynamodb_client;
-use lambda_http::{
-    aws_lambda_events::apigw::ApiGatewayProxyRequestContext, request::RequestContext, Body,
-    Context, Response,
-};
+use lambda_http::{request::RequestContext, Body, Context, Response};
 use serde_json::Value;
 
 #[tokio::test]
@@ -71,14 +74,15 @@ async fn get_user(id: &str) -> Result<Response<Body>, lambda_http::Error> {
     let request = lambda_http::http::Request::builder()
         .method("GET")
         .uri("/user")
-        .extension(RequestContext::ApiGatewayV1(
-            ApiGatewayProxyRequestContext {
-                authorizer: HashMap::from([(
-                    "claims".to_string(),
-                    serde_json::json!({
-                        "sub": id,
+        .extension(RequestContext::ApiGatewayV2(
+            ApiGatewayV2httpRequestContext {
+                authorizer: Some(ApiGatewayV2httpRequestContextAuthorizerDescription {
+                    jwt: Some(ApiGatewayV2httpRequestContextAuthorizerJwtDescription {
+                        claims: HashMap::from([("sub".to_owned(), id.to_owned())]),
+                        ..Default::default()
                     }),
-                )]),
+                    ..Default::default()
+                }),
 
                 ..Default::default()
             },

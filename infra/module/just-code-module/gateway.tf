@@ -4,15 +4,18 @@ locals {
     cognito_issuer    = "https://${aws_cognito_user_pool.pool.endpoint}"
     cognito_base_url  = "https://${aws_cognito_user_pool_domain.domain.domain}.auth.${var.region}.amazoncognito.com"
 
-    get_profile_v1              = module.get_profile_v1_lambda.invoke_arn
-    update_push_data_v1         = module.update_push_data_v1_lambda.invoke_arn
-    remove_push_data_v1         = module.remove_push_data_v1_lambda.invoke_arn
-    get_public_tasks_v1         = module.get_public_tasks_v1_lambda.invoke_arn
-    get_public_technologies_v1  = module.get_public_technologies_v1_lambda.invoke_arn
-    get_public_sections_v1      = module.get_public_sections_v1_lambda.invoke_arn
-    update_profile_v1           = module.update_profile_v1_lambda.invoke_arn
-    request_avatar_upload_v1    = module.request_avatar_upload_v1_lambda.invoke_arn
-    load_content_v1             = module.load_content_v1_lambda.invoke_arn
+    get_profile_v1           = module.get_profile_v1_lambda.invoke_arn
+    update_profile_v1        = module.update_profile_v1_lambda.invoke_arn
+    update_push_data_v1      = module.update_push_data_v1_lambda.invoke_arn
+    remove_push_data_v1      = module.remove_push_data_v1_lambda.invoke_arn
+    request_avatar_upload_v1 = module.request_avatar_upload_v1_lambda.invoke_arn
+
+    get_public_technologies_v1 = module.get_public_technologies_v1_lambda.invoke_arn
+    get_public_sections_v1     = module.get_public_sections_v1_lambda.invoke_arn
+    get_public_tasks_v1        = module.get_public_tasks_v1_lambda.invoke_arn
+    load_content_v1            = module.load_content_v1_lambda.invoke_arn
+    load_content_dry_run_v1    = module.load_content_dry_run_v1_lambda.invoke_arn
+
     app_api_key_validator       = module.app_api_key_validator.invoke_arn
     moderator_api_key_validator = module.moderator_api_key_validator.invoke_arn
   })

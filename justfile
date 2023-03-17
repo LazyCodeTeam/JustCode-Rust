@@ -15,9 +15,9 @@ gen:
   just format
 
 format:
-  cargo sort -w
-  cargo fmt
   cargo clippy --fix --allow-dirty 
+  cargo fmt
+  cargo sort -w
   cargo machete --fix || true
 
 build:
@@ -27,8 +27,9 @@ build:
 infra_dir := justfile_directory() / "infra"
 
 publish env: 
+  terraform -chdir={{infra_dir / env}} init
   terraform -chdir={{infra_dir / env}} apply -auto-approve -var-file {{infra_dir / env / "secret.tfvars"}}
 
 bap env:
   just build
-  just publish env
+  just publish {{env}}

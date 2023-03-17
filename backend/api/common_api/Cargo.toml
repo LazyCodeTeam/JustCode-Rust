@@ -9,7 +9,7 @@ chrono = { workspace = true }
 common_domain = { path = "../../feature/common/domain" }
 gen = { path = "../gen" }
 http = { workspace = true }
-lambda_http = { workspace = true, features = ["apigw_rest"], optional = true }
+lambda_http = { workspace = true, optional = true }
 lambda_runtime = { workspace = true, optional = true }
 mime = { workspace = true }
 serde = { workspace = true, features = ["derive"] }

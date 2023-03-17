@@ -37,7 +37,7 @@ paths:
         - just-code-dev-auth:
             - email
       x-amazon-apigateway-integration:
-        payloadFormatVersion: "1.0"
+        payloadFormatVersion: "2.0"
         type: "aws_proxy"
         httpMethod: "POST"
         uri: ${get_profile_v1}
@@ -64,7 +64,7 @@ paths:
             schema:
               $ref: "#/components/schemas/UpdateProfileDto"
       x-amazon-apigateway-integration:
-        payloadFormatVersion: "1.0"
+        payloadFormatVersion: "2.0"
         type: "aws_proxy"
         httpMethod: "POST"
         uri: ${update_profile_v1}
@@ -90,7 +90,7 @@ paths:
         - just-code-dev-auth:
             - email
       x-amazon-apigateway-integration:
-        payloadFormatVersion: "1.0"
+        payloadFormatVersion: "2.0"
         type: "aws_proxy"
         httpMethod: "POST"
         uri: ${request_avatar_upload_v1}
@@ -124,7 +124,7 @@ paths:
         - just-code-dev-auth:
             - email
       x-amazon-apigateway-integration:
-        payloadFormatVersion: "1.0"
+        payloadFormatVersion: "2.0"
         type: "aws_proxy"
         httpMethod: "POST"
         uri: ${update_push_data_v1}
@@ -145,7 +145,7 @@ paths:
         - just-code-dev-auth:
             - email
       x-amazon-apigateway-integration:
-        payloadFormatVersion: "1.0"
+        payloadFormatVersion: "2.0"
         type: "aws_proxy"
         httpMethod: "POST"
         uri: ${remove_push_data_v1}
@@ -175,7 +175,7 @@ paths:
       security:
         - just-code-dev-app-authorizer: []
       x-amazon-apigateway-integration:
-        payloadFormatVersion: "1.0"
+        payloadFormatVersion: "2.0"
         type: "aws_proxy"
         httpMethod: "POST"
         uri: ${get_public_technologies_v1}
@@ -208,7 +208,7 @@ paths:
       security:
         - just-code-dev-app-authorizer: []
       x-amazon-apigateway-integration:
-        payloadFormatVersion: "1.0"
+        payloadFormatVersion: "2.0"
         type: "aws_proxy"
         httpMethod: "POST"
         uri: ${get_public_sections_v1}
@@ -248,7 +248,7 @@ paths:
       security:
         - just-code-dev-app-authorizer: []
       x-amazon-apigateway-integration:
-        payloadFormatVersion: "1.0"
+        payloadFormatVersion: "2.0"
         type: "aws_proxy"
         httpMethod: "POST"
         uri: ${get_public_tasks_v1}
@@ -298,10 +298,47 @@ paths:
       security:
         - just-code-dev-moderator-authorizer: []
       x-amazon-apigateway-integration:
-        payloadFormatVersion: "1.0"
+        payloadFormatVersion: "2.0"
         type: "aws_proxy"
         httpMethod: "POST"
         uri: ${load_content_v1}
+        connectionType: "INTERNET"
+  /v1/content/load/dry-run:
+    put:
+      tags:
+        - content
+      responses:
+        "202":
+          description: Accepted
+        "304":
+          description: Content on server is the same
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/ExpectedTechnologyDto"
+      security:
+        - just-code-dev-moderator-authorizer: []
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "2.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${load_content_dry_run_v1}
         connectionType: "INTERNET"
 components:
   securitySchemes:

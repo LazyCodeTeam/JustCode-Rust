@@ -15,6 +15,7 @@ locals {
     get_public_tasks_v1        = module.get_public_tasks_v1_lambda.invoke_arn
     load_content_v1            = module.load_content_v1_lambda.invoke_arn
     load_content_dry_run_v1    = module.load_content_dry_run_v1_lambda.invoke_arn
+    request_assets_upload_v1   = module.request_assets_upload_v1_lambda.invoke_arn
 
     app_api_key_validator       = module.app_api_key_validator.invoke_arn
     moderator_api_key_validator = module.moderator_api_key_validator.invoke_arn

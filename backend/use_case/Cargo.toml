@@ -8,10 +8,12 @@ bucket_domain = { path = "../feature/bucket/domain", optional = true }
 chrono = { workspace = true }
 common_domain = { path = "../feature/common/domain" }
 content_domain = { path = "../feature/content/domain", optional = true }
+futures = { workspace = true }
 log = { workspace = true }
 mockall = { workspace = true }
 profile_domain = { path = "../feature/profile/domain", optional = true }
 tokio = { workspace = true }
+uuid = { workspace = true, features = ["v4"] }
 
 [features]
 create_profile = ["profile_domain"]
@@ -26,3 +28,4 @@ on_modification_batch = ["content_domain"]
 get_public_technologies = ["content_domain"]
 get_public_sections = ["content_domain"]
 get_public_tasks = ["content_domain"]
+request_assets_upload = ["content_domain", "bucket_domain"]

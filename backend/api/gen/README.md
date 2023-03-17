@@ -25,20 +25,24 @@ All URIs are relative to *https://ux55hiuu9e.execute-api.eu-central-1.amazonaws.
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*ContentApi* | [**v1_content_load_dry_run_put**](docs/ContentApi.md#v1_content_load_dry_run_put) | **Put** /v1/content/load/dry-run | 
-*ContentApi* | [**v1_content_load_put**](docs/ContentApi.md#v1_content_load_put) | **Put** /v1/content/load | 
+*ContentApi* | [**v1_content_dry_run_put**](docs/ContentApi.md#v1_content_dry_run_put) | **Put** /v1/content/dry-run | 
 *ContentApi* | [**v1_content_public_section_section_id_tasks_get**](docs/ContentApi.md#v1_content_public_section_section_id_tasks_get) | **Get** /v1/content/public/section/{section_id}/tasks | 
 *ContentApi* | [**v1_content_public_technologies_get**](docs/ContentApi.md#v1_content_public_technologies_get) | **Get** /v1/content/public/technologies | 
 *ContentApi* | [**v1_content_public_technology_technology_id_sections_get**](docs/ContentApi.md#v1_content_public_technology_technology_id_sections_get) | **Get** /v1/content/public/technology/{technology_id}/sections | 
-*ProfileApi* | [**v1_profile_current_avatar_post**](docs/ProfileApi.md#v1_profile_current_avatar_post) | **Post** /v1/profile/current/avatar | 
+*ContentApi* | [**v1_content_put**](docs/ContentApi.md#v1_content_put) | **Put** /v1/content | 
+*ProfileApi* | [**v1_profile_current_avatar_upload_url_get**](docs/ProfileApi.md#v1_profile_current_avatar_upload_url_get) | **Get** /v1/profile/current/avatar/upload-url | 
 *ProfileApi* | [**v1_profile_current_get**](docs/ProfileApi.md#v1_profile_current_get) | **Get** /v1/profile/current | 
 *ProfileApi* | [**v1_profile_current_push_delete**](docs/ProfileApi.md#v1_profile_current_push_delete) | **Delete** /v1/profile/current/push | 
 *ProfileApi* | [**v1_profile_current_push_put**](docs/ProfileApi.md#v1_profile_current_push_put) | **Put** /v1/profile/current/push | 
 *ProfileApi* | [**v1_profile_current_put**](docs/ProfileApi.md#v1_profile_current_put) | **Put** /v1/profile/current | 
+*TodoApi* | [**v1_content_asset_upload_url_get**](docs/TodoApi.md#v1_content_asset_upload_url_get) | **Get** /v1/content/asset/upload-url | 
+*TodoApi* | [**v1_content_assets_delete**](docs/TodoApi.md#v1_content_assets_delete) | **Delete** /v1/content/assets | 
+*TodoApi* | [**v1_content_assets_get**](docs/TodoApi.md#v1_content_assets_get) | **Get** /v1/content/assets | 
 
 
 ## Documentation For Models
 
+ - [ContentAssetDto](docs/ContentAssetDto.md)
  - [ErrorDto](docs/ErrorDto.md)
  - [ExpectedKeywordDto](docs/ExpectedKeywordDto.md)
  - [ExpectedOptionDto](docs/ExpectedOptionDto.md)

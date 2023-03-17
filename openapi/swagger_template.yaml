@@ -3,15 +3,14 @@ info:
   title: "just-code-dev"
   version: "2023-03-10 06:01:08UTC"
 servers:
-  - url: "https://ux55hiuu9e.execute-api.eu-central-1.amazonaws.com/{basePath}"
-    variables:
-      basePath:
-        default: "api"
+  - url: "https://ux55hiuu9e.execute-api.eu-central-1.amazonaws.com/api"
 tags:
   - name: profile
     description: Profile
   - name: content
     description: Content
+  - name: todo 
+    description: Work in progress - nie dotykać
 paths:
   ###########################################################
   # Profile
@@ -69,8 +68,8 @@ paths:
         httpMethod: "POST"
         uri: ${update_profile_v1}
         connectionType: "INTERNET"
-  /v1/profile/current/avatar:
-    post:
+  /v1/profile/current/avatar/upload-url:
+    get:
       tags:
         - profile
       responses:
@@ -260,7 +259,7 @@ paths:
         required: true
         schema:
           type: "string"
-  /v1/content/load:
+  /v1/content:
     put:
       tags:
         - content
@@ -303,7 +302,7 @@ paths:
         httpMethod: "POST"
         uri: ${load_content_v1}
         connectionType: "INTERNET"
-  /v1/content/load/dry-run:
+  /v1/content/dry-run:
     put:
       tags:
         - content
@@ -340,6 +339,84 @@ paths:
         httpMethod: "POST"
         uri: ${load_content_dry_run_v1}
         connectionType: "INTERNET"
+  /v1/content/asset/upload-url:
+    get:
+      tags:
+        - todo
+      parameters:
+        - in: query
+          name: count
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "200":
+          description: Ok
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PresignedUrlDto"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+      security:
+        - just-code-dev-moderator-authorizer: []
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "2.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${request_assets_upload_v1}
+        connectionType: "INTERNET"
+  /v1/content/assets:
+    get:
+      tags:
+        - todo
+      responses:
+        "200":
+          description: Ok
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ContentAssetDto"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+      security:
+        - just-code-dev-moderator-authorizer: []
+    delete:
+      tags:
+        - todo
+      responses:
+        "200":
+          description: Ok
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      security:
+        - just-code-dev-moderator-authorizer: []
+                  
+
 components:
   securitySchemes:
     just-code-dev-app-authorizer:
@@ -1010,6 +1087,23 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ExpectedSectionDto"
+    ContentAssetDto:
+      type: object
+      required:
+        - id
+        - url
+        - mime
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+          format: uri
+        mime:
+          type: string
+    ###########################################################
+    # Error
+    ###########################################################
     ErrorDto:
       type: object
       required:

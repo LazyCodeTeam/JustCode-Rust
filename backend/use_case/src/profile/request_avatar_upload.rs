@@ -11,7 +11,7 @@ const UPLOAD_AVATAR_VALID_FOR: u64 = 60; // sec
 define_repo! {
     pub struct RequestAvatarUploadRepository<A, B> {
         pub get_profile_by_id: Fn<'a>(id: &'a str) -> Result<Option<Profile>> as A,
-        pub get_avatar_upload_url: FnOnce<'a>(key: &'a str, valid_fro: u64) -> Result<PresignedUrl> as B,
+        pub get_avatar_upload_url: Fn(key: String, valid_fro: u64) -> Result<PresignedUrl> as B,
     }
 }
 
@@ -30,7 +30,7 @@ where
     }
 
     (repo.get_avatar_upload_url)(
-        &format!("{AVATAR_IMAGE_PREFIX}{profile_id}"),
+        format!("{AVATAR_IMAGE_PREFIX}{profile_id}"),
         UPLOAD_AVATAR_VALID_FOR,
     )
     .await

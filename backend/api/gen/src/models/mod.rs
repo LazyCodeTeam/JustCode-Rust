@@ -1,3 +1,5 @@
+pub mod content_asset_dto;
+pub use self::content_asset_dto::ContentAssetDto;
 pub mod error_dto;
 pub use self::error_dto::ErrorDto;
 pub mod expected_keyword_dto;

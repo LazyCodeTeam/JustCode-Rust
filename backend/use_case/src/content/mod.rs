@@ -8,3 +8,5 @@ pub mod get_public_technologies;
 pub mod load_content;
 #[cfg(feature = "on_modification_batch")]
 pub mod on_modification_batch;
+#[cfg(feature = "request_assets_upload")]
+pub mod request_assets_upload;

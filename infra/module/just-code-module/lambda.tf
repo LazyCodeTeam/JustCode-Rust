@@ -382,3 +382,29 @@ resource "aws_lambda_permission" "load_content_dry_run_v1_lambda_gateway" {
   qualifier     = var.env
   source_arn    = "${aws_apigatewayv2_api.just_code.execution_arn}/*/*"
 }
+
+
+module "request_assets_upload_v1_lambda" {
+  source = "../lambda-module"
+
+  env         = var.env
+  name        = "request-assets-upload-v1"
+  app_name    = local.app_name
+  memory_size = 128
+  zip_path    = "${path.module}/../../../target/lambdas/request_assets_upload_v1.zip"
+  env_variables = {
+    S3_BUCKET = aws_s3_bucket.images.id
+  }
+  policies = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+  ]
+}
+
+resource "aws_lambda_permission" "request_assets_upload_v1_lambda_gateway" {
+  action        = "lambda:InvokeFunction"
+  function_name = module.request_assets_upload_v1_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  qualifier     = var.env
+  source_arn    = "${aws_apigatewayv2_api.just_code.execution_arn}/*/*"
+}

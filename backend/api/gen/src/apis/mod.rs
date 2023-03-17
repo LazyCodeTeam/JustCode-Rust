@@ -51,6 +51,8 @@ mod content_api;
 pub use self::content_api::{ContentApi, ContentApiClient};
 mod profile_api;
 pub use self::profile_api::{ProfileApi, ProfileApiClient};
+mod todo_api;
+pub use self::todo_api::{TodoApi, TodoApiClient};
 
 pub mod client;
 pub mod configuration;

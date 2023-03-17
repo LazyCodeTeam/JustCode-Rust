@@ -4,7 +4,7 @@ All URIs are relative to *https://ux55hiuu9e.execute-api.eu-central-1.amazonaws.
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**v1_profile_current_avatar_post**](ProfileApi.md#v1_profile_current_avatar_post) | **Post** /v1/profile/current/avatar | 
+[**v1_profile_current_avatar_upload_url_get**](ProfileApi.md#v1_profile_current_avatar_upload_url_get) | **Get** /v1/profile/current/avatar/upload-url | 
 [**v1_profile_current_get**](ProfileApi.md#v1_profile_current_get) | **Get** /v1/profile/current | 
 [**v1_profile_current_push_delete**](ProfileApi.md#v1_profile_current_push_delete) | **Delete** /v1/profile/current/push | 
 [**v1_profile_current_push_put**](ProfileApi.md#v1_profile_current_push_put) | **Put** /v1/profile/current/push | 
@@ -12,9 +12,9 @@ Method | HTTP request | Description
 
 
 
-## v1_profile_current_avatar_post
+## v1_profile_current_avatar_upload_url_get
 
-> crate::models::PresignedUrlDto v1_profile_current_avatar_post()
+> crate::models::PresignedUrlDto v1_profile_current_avatar_upload_url_get()
 
 
 ### Parameters

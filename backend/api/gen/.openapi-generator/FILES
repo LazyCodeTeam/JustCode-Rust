@@ -3,6 +3,7 @@
 Cargo.toml
 README.md
 docs/ContentApi.md
+docs/ContentAssetDto.md
 docs/ErrorDto.md
 docs/ExpectedKeywordDto.md
 docs/ExpectedOptionDto.md
@@ -41,6 +42,7 @@ docs/TaskContentPlaygroundDto.md
 docs/TaskContentSingleSelectionDto.md
 docs/TaskPreviewDto.md
 docs/TechnologyDto.md
+docs/TodoApi.md
 docs/UpdateProfileDto.md
 git_push.sh
 src/apis/client.rs
@@ -49,7 +51,9 @@ src/apis/content_api.rs
 src/apis/mod.rs
 src/apis/profile_api.rs
 src/apis/request.rs
+src/apis/todo_api.rs
 src/lib.rs
+src/models/content_asset_dto.rs
 src/models/error_dto.rs
 src/models/expected_keyword_dto.rs
 src/models/expected_option_dto.rs

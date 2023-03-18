@@ -37,7 +37,7 @@ where
 }
 
 pub trait ProfileApi {
-    fn v1_profile_current_avatar_post(
+    fn v1_profile_current_avatar_upload_url_get(
         &self,
     ) -> Pin<Box<dyn Future<Output = Result<crate::models::PresignedUrlDto, Error>>>>;
     fn v1_profile_current_get(
@@ -59,12 +59,12 @@ where
     C: Clone + std::marker::Send + Sync,
 {
     #[allow(unused_mut)]
-    fn v1_profile_current_avatar_post(
+    fn v1_profile_current_avatar_upload_url_get(
         &self,
     ) -> Pin<Box<dyn Future<Output = Result<crate::models::PresignedUrlDto, Error>>>> {
         let mut req = __internal_request::Request::new(
-            hyper::Method::POST,
-            "/v1/profile/current/avatar".to_string(),
+            hyper::Method::GET,
+            "/v1/profile/current/avatar/upload-url".to_string(),
         )
         .with_auth(__internal_request::Auth::Oauth);
 

@@ -1,0 +1,13 @@
+[package]
+name = "request_assets_upload_v1"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bucket_infra = { path = "../../../../feature/bucket/infra" }
+common_api = { path = "../../../common_api", features = ["lambda"] }
+lambda_http = { workspace = true }
+tokio = { workspace = true }
+use_case = { path = "../../../../use_case", features = [
+  "request_assets_upload",
+] }

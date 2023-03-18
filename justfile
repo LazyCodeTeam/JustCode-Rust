@@ -21,7 +21,6 @@ format:
   cargo machete --fix || true
 
 build:
-  just gen
   cargo xtask build-lambda --use-cross --target aarch64-unknown-linux-gnu
 
 infra_dir := justfile_directory() / "infra"

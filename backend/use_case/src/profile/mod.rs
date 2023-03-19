@@ -2,8 +2,8 @@
 pub mod create_profile;
 #[cfg(feature = "get_profile_by_id")]
 pub mod get_profile_by_id;
-#[cfg(feature = "on_avatar_created")]
-pub mod on_avatar_created;
+#[cfg(feature = "on_avatars_created")]
+pub mod on_avatars_created;
 #[cfg(feature = "request_avatar_upload")]
 pub mod request_avatar_upload;
 #[cfg(feature = "set_push_data")]

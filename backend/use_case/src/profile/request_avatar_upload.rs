@@ -3,7 +3,6 @@ use common_domain::{
     define_repo,
     error::{Error, ErrorOutput, ErrorType, Result},
 };
-use profile_domain::consts::AVATAR_IMAGE_PREFIX;
 use profile_domain::model::profile::Profile;
 
 const UPLOAD_AVATAR_VALID_FOR: u64 = 60; // sec
@@ -29,11 +28,7 @@ where
         return Err(profile_not_created(&profile_id));
     }
 
-    (repo.get_avatar_upload_url)(
-        format!("{AVATAR_IMAGE_PREFIX}{profile_id}"),
-        UPLOAD_AVATAR_VALID_FOR,
-    )
-    .await
+    (repo.get_avatar_upload_url)(profile_id, UPLOAD_AVATAR_VALID_FOR).await
 }
 
 fn profile_not_created(profile_id: &str) -> Error {
@@ -95,7 +90,7 @@ mod test {
 
         let (ctx, _get_avatar_upload_url_lock) = mock_get_avatar_upload_url::ctx().await;
         ctx.expect()
-            .withf(move |id, _| id == "profile/avatar/id")
+            .withf(move |id, _| id == "id")
             .times(1)
             .returning(move |_, _| {
                 Ok(PresignedUrl {

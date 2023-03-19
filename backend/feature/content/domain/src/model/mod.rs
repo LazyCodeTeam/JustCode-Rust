@@ -1,3 +1,5 @@
+pub mod content_asset;
+pub mod content_asset_creation_data;
 pub mod expected_section_data;
 pub mod expected_task_data;
 pub mod expected_technology_data;

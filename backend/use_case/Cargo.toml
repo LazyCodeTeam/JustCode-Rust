@@ -13,19 +13,21 @@ log = { workspace = true }
 mockall = { workspace = true }
 profile_domain = { path = "../feature/profile/domain", optional = true }
 tokio = { workspace = true }
-uuid = { workspace = true, features = ["v4"] }
 
 [features]
+validate_secret_key = []
+
 create_profile = ["profile_domain"]
 update_profile = ["profile_domain"]
 get_profile_by_id = ["profile_domain"]
 request_avatar_upload = ["profile_domain", "bucket_domain"]
-on_avatar_created = ["profile_domain", "bucket_domain"]
+on_avatars_created = ["profile_domain", "bucket_domain"]
 set_push_data = ["profile_domain"]
-validate_secret_key = []
+
 load_content = ["content_domain"]
 on_modification_batch = ["content_domain"]
 get_public_technologies = ["content_domain"]
 get_public_sections = ["content_domain"]
 get_public_tasks = ["content_domain"]
 request_assets_upload = ["content_domain", "bucket_domain"]
+on_assets_uploaded = ["content_domain", "bucket_domain"]

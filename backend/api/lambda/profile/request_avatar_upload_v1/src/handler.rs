@@ -1,3 +1,4 @@
+use bucket_infra::consts::PROFILE_AVATARS_PREFIX;
 use common_api::{
     dto::PresignedUrlDto,
     lambda::{into_response::IntoResponse, user_context::UserContext},
@@ -19,7 +20,13 @@ pub async fn handle_request(event: Request) -> Result<Response<Body>, Error> {
                 id,
                 RequestAvatarUploadRepository {
                     get_profile_by_id: profile_infra::repository::get_profile_by_id,
-                    get_avatar_upload_url: bucket_infra::repository::get_upload_url,
+                    get_avatar_upload_url: |id, valid_for| {
+                        bucket_infra::repository::get_upload_url(
+                            PROFILE_AVATARS_PREFIX,
+                            Some(id),
+                            valid_for,
+                        )
+                    },
                 },
             )
         })

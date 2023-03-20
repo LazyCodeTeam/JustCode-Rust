@@ -25,6 +25,7 @@ All URIs are relative to *https://ux55hiuu9e.execute-api.eu-central-1.amazonaws.
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*ContentApi* | [**v1_content_assets_upload_url_get**](docs/ContentApi.md#v1_content_assets_upload_url_get) | **Get** /v1/content/assets/upload-url | 
 *ContentApi* | [**v1_content_dry_run_put**](docs/ContentApi.md#v1_content_dry_run_put) | **Put** /v1/content/dry-run | 
 *ContentApi* | [**v1_content_public_section_section_id_tasks_get**](docs/ContentApi.md#v1_content_public_section_section_id_tasks_get) | **Get** /v1/content/public/section/{section_id}/tasks | 
 *ContentApi* | [**v1_content_public_technologies_get**](docs/ContentApi.md#v1_content_public_technologies_get) | **Get** /v1/content/public/technologies | 
@@ -35,9 +36,8 @@ Class | Method | HTTP request | Description
 *ProfileApi* | [**v1_profile_current_push_delete**](docs/ProfileApi.md#v1_profile_current_push_delete) | **Delete** /v1/profile/current/push | 
 *ProfileApi* | [**v1_profile_current_push_put**](docs/ProfileApi.md#v1_profile_current_push_put) | **Put** /v1/profile/current/push | 
 *ProfileApi* | [**v1_profile_current_put**](docs/ProfileApi.md#v1_profile_current_put) | **Put** /v1/profile/current | 
-*TodoApi* | [**v1_content_asset_upload_url_get**](docs/TodoApi.md#v1_content_asset_upload_url_get) | **Get** /v1/content/asset/upload-url | 
-*TodoApi* | [**v1_content_assets_delete**](docs/TodoApi.md#v1_content_assets_delete) | **Delete** /v1/content/assets | 
-*TodoApi* | [**v1_content_assets_get**](docs/TodoApi.md#v1_content_assets_get) | **Get** /v1/content/assets | 
+*WipApi* | [**v1_content_assets_delete**](docs/WipApi.md#v1_content_assets_delete) | **Delete** /v1/content/assets | 
+*WipApi* | [**v1_content_assets_get**](docs/WipApi.md#v1_content_assets_get) | **Get** /v1/content/assets | 
 
 
 ## Documentation For Models

@@ -375,7 +375,7 @@ paths:
   /v1/content/assets:
     get:
       tags:
-        - wip
+        - content
       responses:
         "200":
           description: Ok
@@ -393,6 +393,12 @@ paths:
                 $ref: "#/components/schemas/ErrorDto"
       security:
         - just-code-dev-moderator-authorizer: []
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "2.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${get_content_assets_v1}
+        connectionType: "INTERNET"
     delete:
       tags:
         - wip
@@ -1093,6 +1099,7 @@ components:
         - id
         - url
         - mime
+        - created_at
       properties:
         id:
           type: string
@@ -1101,6 +1108,9 @@ components:
           format: uri
         mime:
           type: string
+        created_at:
+          type: string
+          format: date-time
     ###########################################################
     # Error
     ###########################################################

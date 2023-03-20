@@ -6,7 +6,7 @@ use hyper;
 pub struct APIClient {
     content_api: Box<dyn crate::apis::ContentApi>,
     profile_api: Box<dyn crate::apis::ProfileApi>,
-    todo_api: Box<dyn crate::apis::TodoApi>,
+    wip_api: Box<dyn crate::apis::WipApi>,
 }
 
 impl APIClient {
@@ -19,7 +19,7 @@ impl APIClient {
         APIClient {
             content_api: Box::new(crate::apis::ContentApiClient::new(rc.clone())),
             profile_api: Box::new(crate::apis::ProfileApiClient::new(rc.clone())),
-            todo_api: Box::new(crate::apis::TodoApiClient::new(rc)),
+            wip_api: Box::new(crate::apis::WipApiClient::new(rc)),
         }
     }
 
@@ -31,7 +31,7 @@ impl APIClient {
         self.profile_api.as_ref()
     }
 
-    pub fn todo_api(&self) -> &dyn crate::apis::TodoApi {
-        self.todo_api.as_ref()
+    pub fn wip_api(&self) -> &dyn crate::apis::WipApi {
+        self.wip_api.as_ref()
     }
 }

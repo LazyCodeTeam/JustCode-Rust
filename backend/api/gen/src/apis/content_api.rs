@@ -37,6 +37,10 @@ where
 }
 
 pub trait ContentApi {
+    fn v1_content_assets_upload_url_get(
+        &self,
+        count: Option<u32>,
+    ) -> Pin<Box<dyn Future<Output = Result<Vec<crate::models::PresignedUrlDto>, Error>>>>;
     fn v1_content_dry_run_put(
         &self,
         expected_technology_dto: Vec<crate::models::ExpectedTechnologyDto>,
@@ -62,6 +66,30 @@ impl<C: hyper::client::connect::Connect> ContentApi for ContentApiClient<C>
 where
     C: Clone + std::marker::Send + Sync,
 {
+    #[allow(unused_mut)]
+    fn v1_content_assets_upload_url_get(
+        &self,
+        count: Option<u32>,
+    ) -> Pin<Box<dyn Future<Output = Result<Vec<crate::models::PresignedUrlDto>, Error>>>> {
+        let mut req = __internal_request::Request::new(
+            hyper::Method::GET,
+            "/v1/content/assets/upload-url".to_string(),
+        )
+        .with_auth(__internal_request::Auth::ApiKey(
+            __internal_request::ApiKey {
+                in_header: true,
+                in_query: false,
+                param_name: "X-Api-Key".to_owned(),
+            },
+        ));
+        if let Some(ref s) = count {
+            let query_value = s.to_string();
+            req = req.with_query_param("count".to_string(), query_value);
+        }
+
+        req.execute(self.configuration.borrow())
+    }
+
     #[allow(unused_mut)]
     fn v1_content_dry_run_put(
         &self,

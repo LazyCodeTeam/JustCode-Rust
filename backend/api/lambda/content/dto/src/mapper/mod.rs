@@ -1,3 +1,4 @@
+mod content_asset_dto;
 mod expected_keyword_dto;
 mod expected_options_dto;
 mod expected_section_dto;

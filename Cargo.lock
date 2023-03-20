@@ -751,6 +751,7 @@ dependencies = [
 name = "content_dto"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "common_domain",
  "content_domain",
  "gen",
@@ -1167,6 +1168,18 @@ checksum = "bff49e947297f3312447abdca79f45f4738097cc82b06e72054d2223f601f1b9"
 dependencies = [
  "typenum",
  "version_check",
+]
+
+[[package]]
+name = "get_content_assets_v1"
+version = "0.1.0"
+dependencies = [
+ "common_api",
+ "content_dto",
+ "content_infra",
+ "lambda_http",
+ "tokio",
+ "use_case",
 ]
 
 [[package]]

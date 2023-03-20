@@ -1,5 +1,7 @@
 use chrono::{DateTime, Utc};
-use content_domain::model::content_asset_creation_data::ContentAssetCreationData;
+use content_domain::model::{
+    content_asset::ContentAsset, content_asset_creation_data::ContentAssetCreationData,
+};
 use serde::{Deserialize, Serialize};
 
 use crate::CONTENT_ASSET_PK;
@@ -17,12 +19,24 @@ pub struct ContentAssetDto {
 
 impl From<ContentAssetCreationData> for ContentAssetDto {
     fn from(value: ContentAssetCreationData) -> Self {
+        let now = Utc::now();
         Self {
             pk: CONTENT_ASSET_PK.to_owned(),
+            id: format!("{}-{}", now.to_rfc3339(), value.id),
+            content_type: value.content_type,
+            url: value.url,
+            created_at: now,
+        }
+    }
+}
+
+impl From<ContentAssetDto> for ContentAsset {
+    fn from(value: ContentAssetDto) -> Self {
+        Self {
             id: value.id,
             content_type: value.content_type,
             url: value.url,
-            created_at: Utc::now(),
+            created_at: value.created_at,
         }
     }
 }
@@ -46,10 +60,31 @@ mod test {
         let after = Utc::now();
 
         assert_eq!(content_asset_dto.pk, CONTENT_ASSET_PK);
-        assert_eq!(content_asset_dto.id, "id");
+        assert_eq!(
+            content_asset_dto.id,
+            format!("{}-{}", content_asset_dto.created_at.to_rfc3339(), "id")
+        );
         assert_eq!(content_asset_dto.content_type, "content_type");
         assert_eq!(content_asset_dto.url, "url");
         assert!(content_asset_dto.created_at >= before);
         assert!(content_asset_dto.created_at <= after);
+    }
+
+    #[test]
+    fn from_content_asset_dto() {
+        let content_asset_dto = ContentAssetDto {
+            pk: CONTENT_ASSET_PK.to_owned(),
+            id: "id".to_owned(),
+            content_type: "content_type".to_owned(),
+            url: "url".to_owned(),
+            created_at: Utc::now(),
+        };
+
+        let content_asset = ContentAsset::from(content_asset_dto.clone());
+
+        assert_eq!(content_asset.id, content_asset_dto.id);
+        assert_eq!(content_asset.content_type, content_asset_dto.content_type);
+        assert_eq!(content_asset.url, content_asset_dto.url);
+        assert_eq!(content_asset.created_at, content_asset_dto.created_at);
     }
 }

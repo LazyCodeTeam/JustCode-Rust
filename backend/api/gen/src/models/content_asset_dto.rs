@@ -16,10 +16,17 @@ pub struct ContentAssetDto {
     pub url: String,
     #[serde(rename = "mime")]
     pub mime: String,
+    #[serde(rename = "created_at")]
+    pub created_at: String,
 }
 
 impl ContentAssetDto {
-    pub fn new(id: String, url: String, mime: String) -> ContentAssetDto {
-        ContentAssetDto { id, url, mime }
+    pub fn new(id: String, url: String, mime: String, created_at: String) -> ContentAssetDto {
+        ContentAssetDto {
+            id,
+            url,
+            mime,
+            created_at,
+        }
     }
 }

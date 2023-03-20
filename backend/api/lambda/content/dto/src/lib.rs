@@ -1,5 +1,6 @@
 mod mapper;
 
+pub use gen::models::content_asset_dto::ContentAssetDto;
 pub use gen::models::expected_keyword_dto::ExpectedKeywordDto;
 pub use gen::models::expected_option_dto::ExpectedOptionDto;
 pub use gen::models::expected_section_dto::ExpectedSectionDto;

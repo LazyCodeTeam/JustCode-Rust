@@ -1,3 +1,5 @@
+#[cfg(feature = "get_content_assets")]
+pub mod get_content_assets;
 #[cfg(feature = "get_public_sections")]
 pub mod get_public_sections;
 #[cfg(feature = "get_public_tasks")]

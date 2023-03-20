@@ -435,3 +435,29 @@ resource "aws_lambda_permission" "on_assets_uploaded_s3" {
   qualifier     = var.env
   source_arn    = aws_s3_bucket.images.arn
 }
+
+module "get_content_assets_v1_lambda" {
+  source = "../lambda-module"
+
+  env         = var.env
+  name        = "get-content-assets-v1"
+  app_name    = local.app_name
+  memory_size = 128
+  zip_path    = "${path.module}/../../../target/lambdas/get_content_assets_v1.zip"
+  env_variables = {
+    DYNAMODB_TABLE = aws_dynamodb_table.main.name
+    S3_BUCKET      = aws_s3_bucket.images.id
+  }
+  policies = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+  ]
+}
+
+resource "aws_lambda_permission" "get_content_assets_v1_lambda_gateway" {
+  action        = "lambda:InvokeFunction"
+  function_name = module.get_content_assets_v1_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  qualifier     = var.env
+  source_arn    = "${aws_apigatewayv2_api.just_code.execution_arn}/*/*"
+}

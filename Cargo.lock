@@ -584,6 +584,7 @@ dependencies = [
  "common_domain",
  "common_infra",
  "lazy_static",
+ "uuid",
 ]
 
 [[package]]
@@ -742,6 +743,7 @@ dependencies = [
 name = "content_domain"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "common_domain",
 ]
 
@@ -761,6 +763,7 @@ version = "0.1.0"
 dependencies = [
  "aws-sdk-dynamodb",
  "aws-sdk-sqs",
+ "chrono",
  "common_domain",
  "common_infra",
  "content_domain",
@@ -1758,16 +1761,26 @@ dependencies = [
 ]
 
 [[package]]
-name = "on_avatar_created"
+name = "on_assets_uploaded"
 version = "0.1.0"
 dependencies = [
  "aws_lambda_events",
  "bucket_infra",
  "common_api",
- "common_domain",
- "futures-util",
+ "content_infra",
  "lambda_runtime",
- "log",
+ "tokio",
+ "use_case",
+]
+
+[[package]]
+name = "on_avatars_created"
+version = "0.1.0"
+dependencies = [
+ "aws_lambda_events",
+ "bucket_infra",
+ "common_api",
+ "lambda_runtime",
  "profile_infra",
  "tokio",
  "use_case",
@@ -2841,7 +2854,6 @@ dependencies = [
  "mockall",
  "profile_domain",
  "tokio",
- "uuid",
 ]
 
 [[package]]

@@ -17,3 +17,5 @@ const POSITIONED_ID_LENGTH: usize = 32;
 
 const TASKS_TRANSACTION_PK: &str = "transaction";
 const TASKS_TRANSACTION_SK: &str = "tasks";
+
+const CONTENT_ASSET_PK: &str = "content_asset";

@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 aws-sdk-dynamodb = { workspace = true }
 aws-sdk-sqs = { workspace = true }
+chrono = { workspace = true }
 common_domain = { path = "../../common/domain" }
 common_infra = { path = "../../common/infra", features = ["sqs", "dynamodb"] }
 content_domain = { path = "../../content/domain" }

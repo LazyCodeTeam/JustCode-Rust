@@ -9,7 +9,7 @@ tags:
     description: Profile
   - name: content
     description: Content
-  - name: todo 
+  - name: wip 
     description: Work in progress - nie dotykać
 paths:
   ###########################################################
@@ -339,10 +339,10 @@ paths:
         httpMethod: "POST"
         uri: ${load_content_dry_run_v1}
         connectionType: "INTERNET"
-  /v1/content/asset/upload-url:
+  /v1/content/assets/upload-url:
     get:
       tags:
-        - todo
+        - content
       parameters:
         - in: query
           name: count
@@ -375,7 +375,7 @@ paths:
   /v1/content/assets:
     get:
       tags:
-        - todo
+        - wip
       responses:
         "200":
           description: Ok
@@ -395,7 +395,7 @@ paths:
         - just-code-dev-moderator-authorizer: []
     delete:
       tags:
-        - todo
+        - wip
       responses:
         "200":
           description: Ok

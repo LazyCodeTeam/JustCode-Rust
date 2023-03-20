@@ -6,6 +6,8 @@ pub mod get_public_tasks;
 pub mod get_public_technologies;
 #[cfg(feature = "load_content")]
 pub mod load_content;
+#[cfg(feature = "on_assets_uploaded")]
+pub mod on_assets_uploaded;
 #[cfg(feature = "on_modification_batch")]
 pub mod on_modification_batch;
 #[cfg(feature = "request_assets_upload")]

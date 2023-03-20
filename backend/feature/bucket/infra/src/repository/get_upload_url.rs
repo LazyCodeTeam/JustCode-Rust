@@ -7,13 +7,26 @@ use chrono::Utc;
 use common_domain::error::{Error, Result};
 use common_infra::s3_client::get_s3_client;
 
-pub async fn get_upload_url(key: impl Into<String>, valid_for: u64) -> Result<PresignedUrl> {
+pub async fn get_upload_url<S, S2>(
+    prefix: S,
+    name: Option<S2>,
+    valid_for: u64,
+) -> Result<PresignedUrl>
+where
+    S: Into<String>,
+    S2: Into<String>,
+{
     let client = get_s3_client().await;
 
     client
         .put_object()
         .bucket(&CONFIG.s3_bucket)
-        .key(key)
+        .key(format!(
+            "{}{}",
+            prefix.into(),
+            name.map::<String, _>(Into::into)
+                .unwrap_or_else(|| uuid::Uuid::new_v4().simple().to_string())
+        ))
         .acl(ObjectCannedAcl::PublicRead)
         .presigned(presigned_config(valid_for)?)
         .await

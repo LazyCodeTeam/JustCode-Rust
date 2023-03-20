@@ -1,5 +1,5 @@
 [package]
-name = "on_avatar_created"
+name = "on_assets_uploaded"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,10 +7,7 @@ edition = "2021"
 aws_lambda_events = { workspace = true, features = ["s3"] }
 bucket_infra = { path = "../../../../feature/bucket/infra" }
 common_api = { path = "../../../common_api", features = ["lambda"] }
-common_domain = { path = "../../../../feature/common/domain" }
-futures-util = { workspace = true }
+content_infra = { path = "../../../../feature/content/infra" }
 lambda_runtime = { workspace = true }
-log = { workspace = true }
-profile_infra = { path = "../../../../feature/profile/infra" }
 tokio = { workspace = true }
-use_case = { path = "../../../../use_case", features = ["on_avatar_created"] }
+use_case = { path = "../../../../use_case", features = ["on_assets_uploaded"] }

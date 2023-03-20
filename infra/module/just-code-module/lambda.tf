@@ -152,14 +152,14 @@ resource "aws_lambda_permission" "request_avatar_upload_v1_lambda_gateway" {
   source_arn    = "${aws_apigatewayv2_api.just_code.execution_arn}/*/*"
 }
 
-module "on_avatar_created" {
+module "on_avatars_created" {
   source = "../lambda-module"
 
   env         = var.env
-  name        = "on-avatar-created"
+  name        = "on-avatars-created"
   app_name    = local.app_name
   memory_size = 128
-  zip_path    = "${path.module}/../../../target/lambdas/on_avatar_created.zip"
+  zip_path    = "${path.module}/../../../target/lambdas/on_avatars_created.zip"
   env_variables = {
     DYNAMODB_TABLE = aws_dynamodb_table.main.name
     S3_BUCKET      = aws_s3_bucket.images.id
@@ -171,9 +171,9 @@ module "on_avatar_created" {
   ]
 }
 
-resource "aws_lambda_permission" "on_avatar_created_s3" {
+resource "aws_lambda_permission" "on_avatars_created_s3" {
   action        = "lambda:InvokeFunction"
-  function_name = module.on_avatar_created.function_name
+  function_name = module.on_avatars_created.function_name
   principal     = "s3.amazonaws.com"
   qualifier     = var.env
   source_arn    = aws_s3_bucket.images.arn
@@ -407,4 +407,31 @@ resource "aws_lambda_permission" "request_assets_upload_v1_lambda_gateway" {
   principal     = "apigateway.amazonaws.com"
   qualifier     = var.env
   source_arn    = "${aws_apigatewayv2_api.just_code.execution_arn}/*/*"
+}
+
+module "on_assets_uploaded_lambda" {
+  source = "../lambda-module"
+
+  env         = var.env
+  name        = "on-assets-uploaded"
+  app_name    = local.app_name
+  memory_size = 128
+  zip_path    = "${path.module}/../../../target/lambdas/on_assets_uploaded.zip"
+  env_variables = {
+    DYNAMODB_TABLE = aws_dynamodb_table.main.name
+    S3_BUCKET      = aws_s3_bucket.images.id
+  }
+  policies = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+    "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+  ]
+}
+
+resource "aws_lambda_permission" "on_assets_uploaded_s3" {
+  action        = "lambda:InvokeFunction"
+  function_name = module.on_assets_uploaded_lambda.function_name
+  principal     = "s3.amazonaws.com"
+  qualifier     = var.env
+  source_arn    = aws_s3_bucket.images.arn
 }

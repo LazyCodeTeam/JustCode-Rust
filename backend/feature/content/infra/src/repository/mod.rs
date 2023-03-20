@@ -8,6 +8,7 @@ mod get_technologies;
 mod increase_queue_items_count;
 mod increment_transaction_counter;
 mod is_transaction_in_progress;
+mod save_content_asset;
 mod write_modifications;
 
 pub use add_modifications_to_queue::add_modifications_to_queue;
@@ -20,4 +21,5 @@ pub use get_technologies::get_ordered_technologies;
 pub use increase_queue_items_count::increase_queue_items_count;
 pub use increment_transaction_counter::increment_transaction_counter;
 pub use is_transaction_in_progress::is_transaction_in_progress;
+pub use save_content_asset::save_content_asset;
 pub use write_modifications::write_modifications;

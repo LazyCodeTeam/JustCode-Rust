@@ -22,7 +22,7 @@ impl From<ContentAssetCreationData> for ContentAssetDto {
         let now = Utc::now();
         Self {
             pk: CONTENT_ASSET_PK.to_owned(),
-            id: format!("{}-{}", now.to_rfc3339(), value.id),
+            id: value.id,
             content_type: value.content_type,
             url: value.url,
             created_at: now,
@@ -60,10 +60,7 @@ mod test {
         let after = Utc::now();
 
         assert_eq!(content_asset_dto.pk, CONTENT_ASSET_PK);
-        assert_eq!(
-            content_asset_dto.id,
-            format!("{}-{}", content_asset_dto.created_at.to_rfc3339(), "id")
-        );
+        assert_eq!(content_asset_dto.id, "id");
         assert_eq!(content_asset_dto.content_type, "content_type");
         assert_eq!(content_asset_dto.url, "url");
         assert!(content_asset_dto.created_at >= before);

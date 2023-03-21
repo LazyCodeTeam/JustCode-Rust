@@ -10,6 +10,7 @@ chrono = { workspace = true }
 common_domain = { path = "../../common/domain" }
 common_infra = { path = "../../common/infra", features = ["sqs", "dynamodb"] }
 content_domain = { path = "../../content/domain" }
+futures = { workspace = true }
 lazy_static = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 serde_dynamo = { workspace = true }

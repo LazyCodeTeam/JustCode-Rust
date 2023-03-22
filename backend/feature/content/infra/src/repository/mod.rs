@@ -1,5 +1,6 @@
 mod add_modifications_to_queue;
 mod begin_transaction;
+mod delete_assets_data;
 mod finish_transaction_if_ready;
 mod get_content_assets;
 mod get_full_content;
@@ -14,6 +15,7 @@ mod write_modifications;
 
 pub use add_modifications_to_queue::add_modifications_to_queue;
 pub use begin_transaction::begin_transaction;
+pub use delete_assets_data::delete_assets_data;
 pub use finish_transaction_if_ready::finish_transaction_if_ready;
 pub use get_content_assets::get_content_assets;
 pub use get_full_content::get_full_content;

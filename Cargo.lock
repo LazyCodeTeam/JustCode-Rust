@@ -758,6 +758,7 @@ dependencies = [
  "common_domain",
  "common_infra",
  "content_domain",
+ "futures",
  "lazy_static",
  "serde",
  "serde_dynamo",
@@ -928,6 +929,20 @@ dependencies = [
  "darling_core",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "delete_content_assets_v1"
+version = "0.1.0"
+dependencies = [
+ "bucket_infra",
+ "common_api",
+ "common_domain",
+ "content_infra",
+ "futures",
+ "lambda_http",
+ "tokio",
+ "use_case",
 ]
 
 [[package]]

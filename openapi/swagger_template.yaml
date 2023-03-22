@@ -401,7 +401,7 @@ paths:
         connectionType: "INTERNET"
     delete:
       tags:
-        - wip
+        - content
       responses:
         "200":
           description: Ok
@@ -421,6 +421,12 @@ paths:
                 type: string
       security:
         - just-code-dev-moderator-authorizer: []
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "2.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${delete_content_assets_v1}
+        connectionType: "INTERNET"
                   
 
 components:

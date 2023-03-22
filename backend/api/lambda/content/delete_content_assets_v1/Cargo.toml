@@ -1,0 +1,16 @@
+[package]
+name = "delete_content_assets_v1"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bucket_infra = { path = "../../../../feature/bucket/infra" }
+common_api = { path = "../../../common_api", features = ["lambda"] }
+common_domain = { path = "../../../../feature/common/domain" }
+content_infra = { path = "../../../../feature/content/infra" }
+futures = { workspace = true }
+lambda_http = { workspace = true }
+tokio = { workspace = true }
+use_case = { path = "../../../../use_case", features = [
+  "delete_content_assets",
+] }

@@ -1,6 +1,8 @@
-check:
-  cargo clippy --all-targets --exclude gen --workspace --all-features -- -D warnings
+test:
   cargo nextest run
+  
+check: test
+  cargo clippy --all-targets --exclude gen --workspace --all-features -- -D warnings
   cargo fmt --check
   cargo sort -w -c
   cargo machete

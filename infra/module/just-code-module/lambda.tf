@@ -446,7 +446,6 @@ module "get_content_assets_v1_lambda" {
   zip_path    = "${path.module}/../../../target/lambdas/get_content_assets_v1.zip"
   env_variables = {
     DYNAMODB_TABLE = aws_dynamodb_table.main.name
-    S3_BUCKET      = aws_s3_bucket.images.id
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -457,6 +456,33 @@ module "get_content_assets_v1_lambda" {
 resource "aws_lambda_permission" "get_content_assets_v1_lambda_gateway" {
   action        = "lambda:InvokeFunction"
   function_name = module.get_content_assets_v1_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  qualifier     = var.env
+  source_arn    = "${aws_apigatewayv2_api.just_code.execution_arn}/*/*"
+}
+
+module "delete_content_assets_v1_lambda" {
+  source = "../lambda-module"
+
+  env         = var.env
+  name        = "delete-content-assets-v1"
+  app_name    = local.app_name
+  memory_size = 128
+  zip_path    = "${path.module}/../../../target/lambdas/delete_content_assets_v1.zip"
+  env_variables = {
+    DYNAMODB_TABLE = aws_dynamodb_table.main.name
+    S3_BUCKET      = aws_s3_bucket.images.id
+  }
+  policies = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+    "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+  ]
+}
+
+resource "aws_lambda_permission" "delete_content_assets_v1_lambda_gateway" {
+  action        = "lambda:InvokeFunction"
+  function_name = module.delete_content_assets_v1_lambda.function_name
   principal     = "apigateway.amazonaws.com"
   qualifier     = var.env
   source_arn    = "${aws_apigatewayv2_api.just_code.execution_arn}/*/*"

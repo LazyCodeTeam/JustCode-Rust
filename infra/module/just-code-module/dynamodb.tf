@@ -41,6 +41,16 @@ resource "aws_dynamodb_table" "main" {
     type = "N"
   }
 
+  attribute {
+    name = "GSI_1_PK"
+    type = "S"
+  }
+
+  attribute {
+    name = "GSI_1_SK"
+    type = "S"
+  }
+
   local_secondary_index {
     name            = "LSI_1"
     range_key       = "LSI_1"
@@ -71,9 +81,22 @@ resource "aws_dynamodb_table" "main" {
     projection_type = "ALL"
   }
 
+  global_secondary_index {
+    name            = "GSI_1"
+    hash_key        = "GSI_1_PK"
+    range_key       = "GSI_1_SK"
+    projection_type = "ALL"
+    read_capacity   = var.profile_table_config.read_capacity
+    write_capacity  = var.profile_table_config.write_capacity
+  }
+
   ttl {
     attribute_name = "TTL"
     enabled        = true
+  }
+
+  point_in_time_recovery {
+    enabled = true
   }
 
   tags = {

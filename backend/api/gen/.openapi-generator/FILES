@@ -2,8 +2,13 @@
 .travis.yml
 Cargo.toml
 README.md
+docs/AnswerDto.md
+docs/AnswerKindDto.md
+docs/AnswerValidationResultDto.md
+docs/CmsApi.md
 docs/ContentApi.md
 docs/ContentAssetDto.md
+docs/EmptyAnswerDto.md
 docs/ErrorDto.md
 docs/ExpectedKeywordDto.md
 docs/ExpectedOptionDto.md
@@ -15,9 +20,11 @@ docs/ExpectedTaskContentMultipleSelectionDto.md
 docs/ExpectedTaskContentSingleSelectionDto.md
 docs/ExpectedTaskDto.md
 docs/ExpectedTechnologyDto.md
+docs/HashMapAnswersDto.md
 docs/HintDto.md
 docs/KeywordDto.md
 docs/KeywordModifierDto.md
+docs/MultiAnswersDto.md
 docs/OptionDto.md
 docs/PlatformDto.md
 docs/PlaygroundVariationDto.md
@@ -31,6 +38,7 @@ docs/PublicTaskNotAvailableDto.md
 docs/PushDataDto.md
 docs/SectionDto.md
 docs/SectionPreviewDto.md
+docs/SingleAnswerDto.md
 docs/TaskContentDto.md
 docs/TaskContentKeywordsArrangementDto.md
 docs/TaskContentKindDto.md
@@ -46,6 +54,7 @@ docs/UpdateProfileDto.md
 docs/WipApi.md
 git_push.sh
 src/apis/client.rs
+src/apis/cms_api.rs
 src/apis/configuration.rs
 src/apis/content_api.rs
 src/apis/mod.rs
@@ -53,7 +62,11 @@ src/apis/profile_api.rs
 src/apis/request.rs
 src/apis/wip_api.rs
 src/lib.rs
+src/models/answer_dto.rs
+src/models/answer_kind_dto.rs
+src/models/answer_validation_result_dto.rs
 src/models/content_asset_dto.rs
+src/models/empty_answer_dto.rs
 src/models/error_dto.rs
 src/models/expected_keyword_dto.rs
 src/models/expected_option_dto.rs
@@ -65,10 +78,12 @@ src/models/expected_task_content_multiple_selection_dto.rs
 src/models/expected_task_content_single_selection_dto.rs
 src/models/expected_task_dto.rs
 src/models/expected_technology_dto.rs
+src/models/hash_map_answers_dto.rs
 src/models/hint_dto.rs
 src/models/keyword_dto.rs
 src/models/keyword_modifier_dto.rs
 src/models/mod.rs
+src/models/multi_answers_dto.rs
 src/models/option_dto.rs
 src/models/platform_dto.rs
 src/models/playground_variation_dto.rs
@@ -81,6 +96,7 @@ src/models/public_task_not_available_dto.rs
 src/models/push_data_dto.rs
 src/models/section_dto.rs
 src/models/section_preview_dto.rs
+src/models/single_answer_dto.rs
 src/models/task_content_dto.rs
 src/models/task_content_keywords_arrangement_dto.rs
 src/models/task_content_kind_dto.rs

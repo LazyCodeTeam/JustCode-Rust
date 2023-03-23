@@ -21,6 +21,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "answer_v1"
+version = "0.1.0"
+dependencies = [
+ "common_api",
+ "common_domain",
+ "content_domain",
+ "content_dto",
+ "content_infra",
+ "futures",
+ "lambda_http",
+ "tokio",
+ "use_case",
+]
+
+[[package]]
 name = "api_key_validator"
 version = "0.1.0"
 dependencies = [
@@ -763,6 +778,7 @@ dependencies = [
  "serde",
  "serde_dynamo",
  "serde_json",
+ "uuid",
 ]
 
 [[package]]
@@ -1155,6 +1171,7 @@ name = "gen"
 version = "0.1.0"
 dependencies = [
  "serde",
+ "serde_json",
  "uuid",
 ]
 

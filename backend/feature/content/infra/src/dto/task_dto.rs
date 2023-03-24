@@ -2,7 +2,9 @@ use common_infra::dynamodb_identifiable::DynamoDbIdentifiable;
 use content_domain::model::task::Task;
 use serde::{Deserialize, Serialize};
 
-use crate::{DYNAMIC_TASK_ID_PREFIX, POSITIONED_ID_LENGTH, SECTION_ID_PREFIX, TASK_ID_PREFIX};
+use crate::{
+    DYNAMIC_TASK_ID_PREFIX, POSITIONED_ID_LENGTH, SECTION_ID_PREFIX, TASK_GSI_PK, TASK_ID_PREFIX,
+};
 
 use super::task_content_dto::TaskContentDto;
 
@@ -18,6 +20,10 @@ pub struct TaskDto {
     pub difficulty: u8,
     pub for_anonymous: bool,
     pub content: TaskContentDto,
+    #[serde(rename = "GSI_1_PK")]
+    pub gsi_pk: String,
+    #[serde(rename = "GSI_1_SK")]
+    pub gsi_sk: String,
 }
 
 impl DynamoDbIdentifiable for TaskDto {
@@ -50,6 +56,8 @@ impl From<Task> for TaskDto {
             difficulty: task.difficulty,
             for_anonymous: task.for_anonymous,
             content: task.content.into(),
+            gsi_pk: TASK_GSI_PK.to_string(),
+            gsi_sk: format!("{}{}", TASK_ID_PREFIX, task.id),
         }
     }
 }
@@ -99,6 +107,8 @@ mod tests {
                 difficulty: 1,
                 for_anonymous: true,
                 content: content.into(),
+                gsi_pk: TASK_GSI_PK.to_string(),
+                gsi_sk: "task-id".to_string(),
             }
         );
     }
@@ -128,6 +138,8 @@ mod tests {
                 difficulty: 1,
                 for_anonymous: true,
                 content: content.into(),
+                gsi_pk: TASK_GSI_PK.to_string(),
+                gsi_sk: "task-id".to_string(),
             }
         );
     }
@@ -143,6 +155,8 @@ mod tests {
             difficulty: 1,
             for_anonymous: true,
             content: content.clone().into(),
+            gsi_pk: TASK_GSI_PK.to_string(),
+            gsi_sk: "task-id".to_string(),
         };
 
         let task = Task::from(task_dto);
@@ -172,6 +186,8 @@ mod tests {
             difficulty: 1,
             for_anonymous: true,
             content: content.clone().into(),
+            gsi_pk: TASK_GSI_PK.to_string(),
+            gsi_sk: "task-id".to_string(),
         };
 
         let task = Task::from(task_dto);

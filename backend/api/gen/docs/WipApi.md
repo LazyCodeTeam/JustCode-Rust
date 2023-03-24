@@ -4,13 +4,13 @@ All URIs are relative to *https://ux55hiuu9e.execute-api.eu-central-1.amazonaws.
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**v1_content_assets_delete**](WipApi.md#v1_content_assets_delete) | **Delete** /v1/content/assets | 
+[**v1_content_task_task_id_answer_post**](WipApi.md#v1_content_task_task_id_answer_post) | **Post** /v1/content/task/{task_id}/answer | 
 
 
 
-## v1_content_assets_delete
+## v1_content_task_task_id_answer_post
 
-> v1_content_assets_delete(request_body)
+> Vec<crate::models::AnswerValidationResultDto> v1_content_task_task_id_answer_post(task_id, answer_dto)
 
 
 ### Parameters
@@ -18,11 +18,12 @@ Method | HTTP request | Description
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**request_body** | [**Vec<String>**](String.md) |  | [required] |
+**task_id** | **String** |  | [required] |
+**answer_dto** | [**AnswerDto**](AnswerDto.md) |  | [required] |
 
 ### Return type
 
- (empty response body)
+[**Vec<crate::models::AnswerValidationResultDto>**](AnswerValidationResultDto.md)
 
 ### Authorization
 

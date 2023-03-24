@@ -1,5 +1,6 @@
 pub mod content_asset_dto;
 pub mod hint_dto;
+pub mod historical_answer_dto;
 pub mod keyword_dto;
 pub mod modification_dto;
 pub mod option_dto;

@@ -1,0 +1,15 @@
+[package]
+name = "answer_v1"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+common_api = { path = "../../../common_api", features = ["lambda"] }
+common_domain = { path = "../../../../feature/common/domain" }
+content_domain = { path = "../../../../feature/content/domain" }
+content_dto = { path = "../dto" }
+content_infra = { path = "../../../../feature/content/infra" }
+futures = { workspace = true }
+lambda_http = { workspace = true }
+tokio = { workspace = true }
+use_case = { path = "../../../../use_case", features = ["load_content"] }

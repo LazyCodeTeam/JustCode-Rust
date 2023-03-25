@@ -12,10 +12,10 @@ pub async fn get_task_by_id(task_id: impl Into<String>) -> Result<Option<Task>> 
         .query()
         .table_name(&CONFIG.dynamodb_table)
         .index_name("GSI_1")
-        .key_condition_expression("GSI_1_PK = :GSI_1_PK and GSI_1_SK = :GSI_1_SK")
-        .expression_attribute_values("GSI_1_PK", AttributeValue::S(TASK_GSI_PK.to_owned()))
+        .key_condition_expression("GSI_1_PK = :gsi_1_pk and GSI_1_SK = :gsi_1_sk")
+        .expression_attribute_values(":gsi_1_pk", AttributeValue::S(TASK_GSI_PK.to_owned()))
         .expression_attribute_values(
-            "GSI_1_SK",
+            ":gsi_1_sk",
             AttributeValue::S(format!("{}{}", TASK_ID_PREFIX, task_id.into())),
         )
         .send()

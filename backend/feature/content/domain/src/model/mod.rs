@@ -1,5 +1,6 @@
 pub mod answer;
 pub mod answer_content;
+pub mod answer_result;
 pub mod answer_to_save;
 pub mod answer_validation_result;
 pub mod content_asset;

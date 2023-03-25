@@ -1,3 +1,4 @@
+pub mod answer_result_dto;
 pub mod content_asset_dto;
 pub mod hint_dto;
 pub mod historical_answer_dto;

@@ -18,6 +18,7 @@ locals {
     request_assets_upload_v1   = module.request_assets_upload_v1_lambda.invoke_arn
     get_content_assets_v1      = module.get_content_assets_v1_lambda.invoke_arn
     delete_content_assets_v1   = module.delete_content_assets_v1_lambda.invoke_arn
+    answer_v1                  = module.answer_v1_lambda.invoke_arn
 
     app_api_key_validator       = module.app_api_key_validator.invoke_arn
     moderator_api_key_validator = module.moderator_api_key_validator.invoke_arn

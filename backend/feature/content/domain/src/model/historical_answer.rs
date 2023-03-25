@@ -1,12 +1,13 @@
 use chrono::{DateTime, Utc};
 
+use super::answer_result::AnswerResult;
+
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct HistoricalAnswer {
-    pub id: String,
     pub user_id: String,
     pub task_id: String,
-    pub was_valid: bool,
-    pub date: DateTime<Utc>,
+    pub result: AnswerResult,
+    pub created_at: DateTime<Utc>,
 }
 
 pub trait VecHistoricalAnswerExt {
@@ -15,7 +16,7 @@ pub trait VecHistoricalAnswerExt {
 
 impl VecHistoricalAnswerExt for Vec<HistoricalAnswer> {
     fn had_valid_answer(&self) -> bool {
-        self.iter().any(|answer| answer.was_valid)
+        self.iter().any(|answer| answer.result.is_valid())
     }
 }
 
@@ -27,18 +28,16 @@ mod tests {
     fn had_valid_answer() {
         let answers = vec![
             HistoricalAnswer {
-                id: "id".to_string(),
                 user_id: "user_id".to_string(),
                 task_id: "task_id".to_string(),
-                was_valid: false,
-                date: Utc::now(),
+                result: AnswerResult::Invalid,
+                created_at: Utc::now(),
             },
             HistoricalAnswer {
-                id: "id".to_string(),
                 user_id: "user_id".to_string(),
                 task_id: "task_id".to_string(),
-                was_valid: true,
-                date: Utc::now(),
+                result: AnswerResult::Valid,
+                created_at: Utc::now(),
             },
         ];
 
@@ -56,18 +55,16 @@ mod tests {
     fn no_valid_answer() {
         let answers = vec![
             HistoricalAnswer {
-                id: "id".to_string(),
                 user_id: "user_id".to_string(),
                 task_id: "task_id".to_string(),
-                was_valid: false,
-                date: Utc::now(),
+                result: AnswerResult::Invalid,
+                created_at: Utc::now(),
             },
             HistoricalAnswer {
-                id: "id".to_string(),
                 user_id: "user_id".to_string(),
                 task_id: "task_id".to_string(),
-                was_valid: false,
-                date: Utc::now(),
+                result: AnswerResult::Invalid,
+                created_at: Utc::now(),
             },
         ];
 

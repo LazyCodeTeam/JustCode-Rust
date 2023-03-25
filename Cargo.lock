@@ -778,7 +778,6 @@ dependencies = [
  "serde",
  "serde_dynamo",
  "serde_json",
- "uuid",
 ]
 
 [[package]]

@@ -6,6 +6,7 @@ use common_domain::{
 };
 use content_domain::model::{
     answer::Answer,
+    answer_result::AnswerResult,
     answer_to_save::AnswerToSave,
     answer_validation_result::AnswerValidationResult,
     historical_answer::{HistoricalAnswer, VecHistoricalAnswerExt},
@@ -42,19 +43,16 @@ where
     let previous_answers = previous_answers?;
     let is_valid = answer.is_valid_for(&task)?;
     let had_valid_answer_before = previous_answers.had_valid_answer();
+    let result = AnswerResult::new(is_valid, had_valid_answer_before);
 
     (repo.save_answer)(AnswerToSave {
         user_id,
-        is_valid,
-        had_valid_answer_before,
+        result,
         answer,
     })
     .await?;
 
-    Ok(AnswerValidationResult {
-        is_valid,
-        had_valid_answer_before,
-    })
+    Ok(AnswerValidationResult { result })
 }
 
 fn task_not_found_error() -> Error {
@@ -141,8 +139,7 @@ mod tests {
         ctx.expect()
             .with(predicate::eq(AnswerToSave {
                 user_id: "user_id".to_owned(),
-                had_valid_answer_before: false,
-                is_valid: true,
+                result: AnswerResult::new(true, false),
                 answer: Answer {
                     task_id: "task_id".to_owned(),
                     ..Default::default()
@@ -170,8 +167,7 @@ mod tests {
         assert_eq!(
             result,
             Ok(AnswerValidationResult {
-                is_valid: true,
-                had_valid_answer_before: false,
+                result: AnswerResult::Valid,
             })
         );
     }
@@ -199,7 +195,7 @@ mod tests {
             )
             .returning(|_, _| {
                 Ok(vec![HistoricalAnswer {
-                    was_valid: true,
+                    result: AnswerResult::Valid,
                     ..Default::default()
                 }])
             })
@@ -208,8 +204,7 @@ mod tests {
         ctx.expect()
             .with(predicate::eq(AnswerToSave {
                 user_id: "user_id".to_owned(),
-                had_valid_answer_before: true,
-                is_valid: true,
+                result: AnswerResult::new(true, true),
                 answer: Answer {
                     task_id: "task_id".to_owned(),
                     ..Default::default()
@@ -237,8 +232,7 @@ mod tests {
         assert_eq!(
             result,
             Ok(AnswerValidationResult {
-                is_valid: true,
-                had_valid_answer_before: true,
+                result: AnswerResult::AgainValid,
             })
         );
     }
@@ -273,8 +267,7 @@ mod tests {
         ctx.expect()
             .with(predicate::eq(AnswerToSave {
                 user_id: "user_id".to_owned(),
-                had_valid_answer_before: false,
-                is_valid: false,
+                result: AnswerResult::new(false, false),
                 answer: Answer {
                     task_id: "task_id".to_owned(),
                     content: AnswerContent::SingleAnswer { answer: 2 },
@@ -302,8 +295,7 @@ mod tests {
         assert_eq!(
             result,
             Ok(AnswerValidationResult {
-                is_valid: false,
-                had_valid_answer_before: false,
+                result: AnswerResult::Invalid,
             })
         );
     }

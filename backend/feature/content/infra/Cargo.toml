@@ -15,7 +15,6 @@ lazy_static = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 serde_dynamo = { workspace = true }
 serde_json = { workspace = true }
-uuid = { workspace = true, features = ["v4"] }
 
 [features]
 dto = []

@@ -4,6 +4,7 @@ Cargo.toml
 README.md
 docs/AnswerDto.md
 docs/AnswerKindDto.md
+docs/AnswerResultDto.md
 docs/AnswerValidationResultDto.md
 docs/CmsApi.md
 docs/ContentApi.md
@@ -51,7 +52,6 @@ docs/TaskContentSingleSelectionDto.md
 docs/TaskPreviewDto.md
 docs/TechnologyDto.md
 docs/UpdateProfileDto.md
-docs/WipApi.md
 git_push.sh
 src/apis/client.rs
 src/apis/cms_api.rs
@@ -60,10 +60,10 @@ src/apis/content_api.rs
 src/apis/mod.rs
 src/apis/profile_api.rs
 src/apis/request.rs
-src/apis/wip_api.rs
 src/lib.rs
 src/models/answer_dto.rs
 src/models/answer_kind_dto.rs
+src/models/answer_result_dto.rs
 src/models/answer_validation_result_dto.rs
 src/models/content_asset_dto.rs
 src/models/empty_answer_dto.rs

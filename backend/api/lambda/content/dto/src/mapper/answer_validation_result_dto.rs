@@ -1,31 +1,29 @@
 use content_domain::model::answer_validation_result::AnswerValidationResult;
 use gen::models::AnswerValidationResultDto;
 
-use crate::FromModel;
+use crate::{FromModel, IntoDto};
 
 impl FromModel<AnswerValidationResult> for AnswerValidationResultDto {
     fn from_model(model: AnswerValidationResult) -> Self {
         AnswerValidationResultDto {
-            is_valid: model.is_valid,
-            had_valid_answer_before: model.had_valid_answer_before,
+            result: model.result.into_dto(),
         }
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use content_domain::model::answer_result::AnswerResult;
+
     use super::*;
 
     #[test]
     fn from_model() {
-        let model = AnswerValidationResult {
-            is_valid: true,
-            had_valid_answer_before: false,
-        };
+        let result = AnswerResult::Valid;
+        let model = AnswerValidationResult { result };
 
         let dto = AnswerValidationResultDto::from_model(model);
 
-        assert!(dto.is_valid);
-        assert!(!dto.had_valid_answer_before);
+        assert_eq!(dto.result, result.into_dto());
     }
 }

@@ -10,17 +10,12 @@
 
 #[derive(Clone, Debug, PartialEq, Default, Serialize, Deserialize)]
 pub struct AnswerValidationResultDto {
-    #[serde(rename = "is_valid")]
-    pub is_valid: bool,
-    #[serde(rename = "had_valid_answer_before")]
-    pub had_valid_answer_before: bool,
+    #[serde(rename = "result")]
+    pub result: crate::models::AnswerResultDto,
 }
 
 impl AnswerValidationResultDto {
-    pub fn new(is_valid: bool, had_valid_answer_before: bool) -> AnswerValidationResultDto {
-        AnswerValidationResultDto {
-            is_valid,
-            had_valid_answer_before,
-        }
+    pub fn new(result: crate::models::AnswerResultDto) -> AnswerValidationResultDto {
+        AnswerValidationResultDto { result }
     }
 }

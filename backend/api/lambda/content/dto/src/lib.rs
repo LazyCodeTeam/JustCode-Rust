@@ -1,6 +1,7 @@
 mod mapper;
 
 pub use gen::models::answer_dto::AnswerDto;
+pub use gen::models::answer_result_dto::AnswerResultDto;
 pub use gen::models::answer_validation_result_dto::AnswerValidationResultDto;
 pub use gen::models::content_asset_dto::ContentAssetDto;
 pub use gen::models::expected_keyword_dto::ExpectedKeywordDto;

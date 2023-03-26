@@ -2,6 +2,8 @@ pub mod answer_dto;
 pub use self::answer_dto::AnswerDto;
 pub mod answer_kind_dto;
 pub use self::answer_kind_dto::AnswerKindDto;
+pub mod answer_result_dto;
+pub use self::answer_result_dto::AnswerResultDto;
 pub mod answer_validation_result_dto;
 pub use self::answer_validation_result_dto::AnswerValidationResultDto;
 pub mod content_asset_dto;

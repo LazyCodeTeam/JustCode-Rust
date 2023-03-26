@@ -22,4 +22,3 @@ const TASKS_TRANSACTION_SK: &str = "tasks";
 const CONTENT_ASSET_PK: &str = "content_asset";
 
 const USER_ANSWER_ID_PREFIX: &str = "user_answer-";
-const ANSWER_ID_PREFIX: &str = "answer-";

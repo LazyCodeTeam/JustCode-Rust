@@ -261,6 +261,46 @@ paths:
         required: true
         schema:
           type: "string"
+  /v1/content/task/{task_id}/answer:
+    post:
+      tags:
+        - content
+      responses:
+        "200":
+          description: Ok
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AnswerValidationResultDto"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnswerDto"
+      security:
+        - just-code-dev-auth:
+            - email
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "2.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${answer_v1}
+        connectionType: "INTERNET"
+    parameters:
+      - name: "task_id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
   ###########################################################
   # CMS
   ###########################################################
@@ -432,39 +472,6 @@ paths:
         httpMethod: "POST"
         uri: ${delete_content_assets_v1}
         connectionType: "INTERNET"
-  /v1/content/task/{task_id}/answer:
-    post:
-      tags:
-        - wip
-      responses:
-        "200":
-          description: Ok
-          content: 
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/AnswerValidationResultDto"
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorDto"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AnswerDto"
-      security:
-        - just-code-dev-moderator-authorizer: []
-    parameters:
-      - name: "task_id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
 components:
   securitySchemes:
     just-code-dev-app-authorizer:
@@ -1223,13 +1230,16 @@ components:
     AnswerValidationResultDto:
       type: object
       required:
-        - is_valid
-        - had_valid_answer_before
+        - result
       properties:
-        is_valid:
-          type: boolean
-        had_valid_answer_before:
-          type: boolean
+        result:
+          $ref: "#/components/schemas/AnswerResultDto"
+    AnswerResultDto:
+      type: string
+      enum:
+        - FIRST_VALID
+        - VALID
+        - INVALID
     ###########################################################
     # Error
     ###########################################################

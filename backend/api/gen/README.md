@@ -33,18 +33,19 @@ Class | Method | HTTP request | Description
 *ContentApi* | [**v1_content_public_section_section_id_tasks_get**](docs/ContentApi.md#v1_content_public_section_section_id_tasks_get) | **Get** /v1/content/public/section/{section_id}/tasks | 
 *ContentApi* | [**v1_content_public_technologies_get**](docs/ContentApi.md#v1_content_public_technologies_get) | **Get** /v1/content/public/technologies | 
 *ContentApi* | [**v1_content_public_technology_technology_id_sections_get**](docs/ContentApi.md#v1_content_public_technology_technology_id_sections_get) | **Get** /v1/content/public/technology/{technology_id}/sections | 
+*ContentApi* | [**v1_content_task_task_id_answer_post**](docs/ContentApi.md#v1_content_task_task_id_answer_post) | **Post** /v1/content/task/{task_id}/answer | 
 *ProfileApi* | [**v1_profile_current_avatar_upload_url_get**](docs/ProfileApi.md#v1_profile_current_avatar_upload_url_get) | **Get** /v1/profile/current/avatar/upload-url | 
 *ProfileApi* | [**v1_profile_current_get**](docs/ProfileApi.md#v1_profile_current_get) | **Get** /v1/profile/current | 
 *ProfileApi* | [**v1_profile_current_push_delete**](docs/ProfileApi.md#v1_profile_current_push_delete) | **Delete** /v1/profile/current/push | 
 *ProfileApi* | [**v1_profile_current_push_put**](docs/ProfileApi.md#v1_profile_current_push_put) | **Put** /v1/profile/current/push | 
 *ProfileApi* | [**v1_profile_current_put**](docs/ProfileApi.md#v1_profile_current_put) | **Put** /v1/profile/current | 
-*WipApi* | [**v1_content_task_task_id_answer_post**](docs/WipApi.md#v1_content_task_task_id_answer_post) | **Post** /v1/content/task/{task_id}/answer | 
 
 
 ## Documentation For Models
 
  - [AnswerDto](docs/AnswerDto.md)
  - [AnswerKindDto](docs/AnswerKindDto.md)
+ - [AnswerResultDto](docs/AnswerResultDto.md)
  - [AnswerValidationResultDto](docs/AnswerValidationResultDto.md)
  - [ContentAssetDto](docs/ContentAssetDto.md)
  - [EmptyAnswerDto](docs/EmptyAnswerDto.md)

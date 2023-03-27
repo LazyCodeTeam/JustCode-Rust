@@ -1,8 +1,7 @@
 use aws_sdk_dynamodb::model::AttributeValue;
-use common_domain::error::{Error, Result};
-use common_infra::dynamodb_client::get_dynamodb_client;
+use common_domain::error::Result;
+use common_infra::dynamodb_client::{get_dynamodb_client, QueryOutputExt};
 use content_domain::model::task::Task;
-use serde_dynamo::from_items;
 
 use crate::{config::CONFIG, task_dto::TaskDto, TASK_GSI_PK, TASK_ID_PREFIX};
 
@@ -20,16 +19,6 @@ pub async fn get_task_by_id(task_id: impl Into<String>) -> Result<Option<Task>> 
         )
         .send()
         .await
-        .map_err(|e| Error::unknown(format!("Failed to get task by id: {e:?}")))
-        .and_then(|r| {
-            r.items
-                .ok_or_else(|| {
-                    Error::unknown("Failed to get task by id - option is empty".to_owned())
-                })
-                .and_then(|items| {
-                    from_items::<_, TaskDto>(items)
-                        .map_err(|e| Error::unknown(format!("Failed to parse tasks: {e:?}")))
-                        .map(|dtos| dtos.into_iter().map(Into::into).next())
-                })
-        })
+        .parse_one::<TaskDto>()
+        .map(|o| o.map(Into::into))
 }

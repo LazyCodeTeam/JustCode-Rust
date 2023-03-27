@@ -1,8 +1,7 @@
 use aws_sdk_dynamodb::model::AttributeValue;
-use common_domain::error::{Error, Result};
-use common_infra::dynamodb_client::get_dynamodb_client;
+use common_domain::error::Result;
+use common_infra::dynamodb_client::{get_dynamodb_client, QueryOutputExt};
 use content_domain::model::technology::Technology;
-use serde_dynamo::from_items;
 
 use crate::{
     config::CONFIG, dto::technology_dto::TechnologyDto, TECHNOLOGY_ID_PREFIX, TECHNOLOGY_PK,
@@ -18,17 +17,11 @@ pub async fn get_all_technologies() -> Result<Vec<Technology>> {
         .expression_attribute_values(":sk", AttributeValue::S(TECHNOLOGY_ID_PREFIX.to_string()))
         .send()
         .await
-        .map_err(|e| Error::unknown(format!("Failed to get technologies: {e:?}")))
-        .and_then(|r| {
-            r.items
-                .ok_or_else(|| {
-                    Error::unknown("Failed to get technologies - option is empty".to_owned())
-                })
-                .and_then(|items| {
-                    from_items::<_, TechnologyDto>(items)
-                        .map_err(|e| Error::unknown(format!("Failed to parse technologies: {e:?}")))
-                        .map(|dtos| dtos.into_iter().map(Into::into).collect())
-                })
+        .parse::<TechnologyDto>()
+        .map(|dtos| {
+            dtos.into_iter()
+                .map(|dto| dto.into())
+                .collect::<Vec<Technology>>()
         })
 }
 
@@ -46,16 +39,10 @@ pub async fn get_ordered_technologies() -> Result<Vec<Technology>> {
         )
         .send()
         .await
-        .map_err(|e| Error::unknown(format!("Failed to get technologies: {e:?}")))
-        .and_then(|r| {
-            r.items
-                .ok_or_else(|| {
-                    Error::unknown("Failed to get technologies - option is empty".to_owned())
-                })
-                .and_then(|items| {
-                    from_items::<_, TechnologyDto>(items)
-                        .map_err(|e| Error::unknown(format!("Failed to parse technologies: {e:?}")))
-                        .map(|dtos| dtos.into_iter().map(Into::into).collect())
-                })
+        .parse::<TechnologyDto>()
+        .map(|dtos| {
+            dtos.into_iter()
+                .map(|dto| dto.into())
+                .collect::<Vec<Technology>>()
         })
 }

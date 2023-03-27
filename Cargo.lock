@@ -739,6 +739,8 @@ dependencies = [
  "common_domain",
  "log",
  "nanoid",
+ "serde",
+ "serde_dynamo",
  "tokio",
  "walkdir",
  "zip",

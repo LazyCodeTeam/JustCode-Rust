@@ -11,6 +11,8 @@ aws-sdk-sqs = { workspace = true, optional = true }
 common_domain = { path = "../domain" }
 log = { workspace = true }
 nanoid = { workspace = true }
+serde = { workspace = true }
+serde_dynamo = { workspace = true }
 tokio = { workspace = true, features = ["sync", "parking_lot"] }
 walkdir = { workspace = true }
 zip = { workspace = true }

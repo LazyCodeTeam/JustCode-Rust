@@ -1,8 +1,7 @@
 use aws_sdk_dynamodb::model::AttributeValue;
-use common_domain::error::{Error, Result};
-use common_infra::dynamodb_client::get_dynamodb_client;
+use common_domain::error::Result;
+use common_infra::dynamodb_client::{get_dynamodb_client, QueryOutputExt};
 use content_domain::model::historical_answer::HistoricalAnswer;
-use serde_dynamo::from_items;
 
 use crate::{
     answer_result_dto::AnswerResultDto, config::CONFIG, historical_answer_dto::HistoricalAnswerDto,
@@ -26,22 +25,6 @@ pub async fn get_first_valid_answers(user_id: String) -> Result<Vec<HistoricalAn
         )
         .send()
         .await
-        .map_err(|e| Error::unknown(format!("Failed to get previous answers: {e:?}")))
-        .and_then(|r| {
-            r.items
-                .ok_or_else(|| {
-                    Error::unknown("Failed to get previous answers - option is empty".to_owned())
-                })
-                .and_then(|items| {
-                    from_items::<_, HistoricalAnswerDto>(items)
-                        .map_err(|e| {
-                            Error::unknown(format!("Failed to parse historical answers: {e:?}"))
-                        })
-                        .map(|dtos| {
-                            dtos.into_iter()
-                                .map(HistoricalAnswer::from)
-                                .collect::<Vec<_>>()
-                        })
-                })
-        })
+        .parse::<HistoricalAnswerDto>()
+        .map(|o| o.into_iter().map(Into::into).collect())
 }

@@ -1,3 +1,5 @@
+use std::collections::{HashMap, HashSet};
+
 use chrono::{DateTime, Utc};
 
 use super::answer_result::AnswerResult;
@@ -12,17 +14,83 @@ pub struct HistoricalAnswer {
 
 pub trait VecHistoricalAnswerExt {
     fn had_valid_answer(&self) -> bool;
+
+    fn into_tasks_ids(self) -> HashSet<String>;
+
+    fn into_answer_per_task_id(self) -> HashMap<String, HistoricalAnswer>;
 }
 
 impl VecHistoricalAnswerExt for Vec<HistoricalAnswer> {
     fn had_valid_answer(&self) -> bool {
         self.iter().any(|answer| answer.result.is_valid())
     }
+
+    fn into_tasks_ids(self) -> HashSet<String> {
+        self.into_iter().map(|answer| answer.task_id).collect()
+    }
+
+    fn into_answer_per_task_id(self) -> HashMap<String, HistoricalAnswer> {
+        self.into_iter()
+            .map(|answer| (answer.task_id.clone(), answer))
+            .collect()
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn into_answer_per_task_id() {
+        let answers = vec![
+            HistoricalAnswer {
+                task_id: "task_id".to_string(),
+                ..Default::default()
+            },
+            HistoricalAnswer {
+                task_id: "task_id_2".to_string(),
+                ..Default::default()
+            },
+        ];
+
+        let answers_per_task_id = answers.into_answer_per_task_id();
+
+        assert_eq!(answers_per_task_id.len(), 2);
+        assert_eq!(
+            answers_per_task_id.get("task_id"),
+            Some(&HistoricalAnswer {
+                task_id: "task_id".to_string(),
+                ..Default::default()
+            })
+        );
+        assert_eq!(
+            answers_per_task_id.get("task_id_2"),
+            Some(&HistoricalAnswer {
+                task_id: "task_id_2".to_string(),
+                ..Default::default()
+            })
+        );
+    }
+
+    #[test]
+    fn into_ids() {
+        let answers = vec![
+            HistoricalAnswer {
+                task_id: "task_id".to_string(),
+                ..Default::default()
+            },
+            HistoricalAnswer {
+                task_id: "task_id_2".to_string(),
+                ..Default::default()
+            },
+        ];
+
+        let ids = answers.into_tasks_ids();
+
+        assert_eq!(ids.len(), 2);
+        assert!(ids.contains("task_id"));
+        assert!(ids.contains("task_id_2"));
+    }
 
     #[test]
     fn had_valid_answer() {

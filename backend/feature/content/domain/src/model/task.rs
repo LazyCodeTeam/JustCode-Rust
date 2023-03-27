@@ -1,8 +1,13 @@
+use std::collections::HashMap;
+
 use common_domain::identifiable::Identifiable;
 
 use crate::into_modification::IntoModification;
 
-use super::{modification::Modification, task_content::TaskContent};
+use super::{
+    historical_answer::HistoricalAnswer, modification::Modification,
+    personalized_task::PersonalizedTask, task_content::TaskContent,
+};
 
 #[derive(Debug, PartialEq, Eq, Clone, Default)]
 pub struct Task {
@@ -13,6 +18,28 @@ pub struct Task {
     pub difficulty: u8,
     pub for_anonymous: bool,
     pub content: TaskContent,
+}
+
+impl Task {
+    pub fn personalize(
+        self,
+        correct_historical_answers: &mut HashMap<String, HistoricalAnswer>,
+    ) -> PersonalizedTask {
+        let done_at = correct_historical_answers
+            .remove(&self.id)
+            .map(|answer| answer.created_at);
+
+        PersonalizedTask {
+            id: self.id,
+            section_id: self.section_id,
+            position: self.position,
+            title: self.title,
+            difficulty: self.difficulty,
+            for_anonymous: self.for_anonymous,
+            done_at,
+            content: self.content,
+        }
+    }
 }
 
 impl IntoModification for Task {
@@ -37,9 +64,116 @@ impl Identifiable for Task {
     }
 }
 
+pub trait VecTaskExt {
+    fn personalize(
+        self,
+        correct_historical_answers: HashMap<String, HistoricalAnswer>,
+    ) -> Vec<PersonalizedTask>;
+}
+
+impl VecTaskExt for Vec<Task> {
+    fn personalize(
+        self,
+        mut correct_historical_answers: HashMap<String, HistoricalAnswer>,
+    ) -> Vec<PersonalizedTask> {
+        self.into_iter()
+            .map(|task| task.personalize(&mut correct_historical_answers))
+            .collect()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn vec_personalize() {
+        let now = chrono::Utc::now();
+        let mut correct_historical_answers = HashMap::new();
+        correct_historical_answers.insert(
+            "id".to_owned(),
+            HistoricalAnswer {
+                task_id: "id".to_owned(),
+                created_at: now,
+                ..Default::default()
+            },
+        );
+
+        let tasks = vec![
+            Task {
+                id: "id".to_owned(),
+                ..Default::default()
+            },
+            Task {
+                id: "id_2".to_owned(),
+                ..Default::default()
+            },
+        ];
+
+        let personalized_tasks = tasks.personalize(correct_historical_answers);
+
+        assert_eq!(
+            personalized_tasks,
+            vec![
+                PersonalizedTask {
+                    id: "id".to_owned(),
+                    done_at: Some(now),
+                    ..Default::default()
+                },
+                PersonalizedTask {
+                    id: "id_2".to_owned(),
+                    done_at: None,
+                    ..Default::default()
+                },
+            ]
+        );
+    }
+
+    #[test]
+    fn personalized_answered_before() {
+        let mut correct_historical_answers = HashMap::new();
+        correct_historical_answers.insert(
+            "id".to_owned(),
+            HistoricalAnswer {
+                task_id: "id".to_owned(),
+                created_at: chrono::Utc::now(),
+                ..Default::default()
+            },
+        );
+
+        let task = Task {
+            id: "id".to_owned(),
+            ..Default::default()
+        };
+
+        let personalized_task = task.personalize(&mut correct_historical_answers);
+
+        assert!(personalized_task.done_at.is_some());
+        assert!(correct_historical_answers.is_empty());
+    }
+
+    #[test]
+    fn personalized_answered_after() {
+        let mut correct_historical_answers = HashMap::new();
+        correct_historical_answers.insert(
+            "id".to_owned(),
+            HistoricalAnswer {
+                task_id: "id".to_owned(),
+                created_at: chrono::Utc::now(),
+                ..Default::default()
+            },
+        );
+
+        let task = Task {
+            id: "id2".to_owned(),
+            ..Default::default()
+        };
+
+        let personalized_task = task.personalize(&mut correct_historical_answers);
+
+        assert!(personalized_task.done_at.is_none());
+        assert!(!correct_historical_answers.is_empty());
+    }
 
     #[test]
     fn test_into_modification() {

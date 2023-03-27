@@ -42,7 +42,7 @@ pub async fn get_all_section_tasks(section_id: &str) -> Result<Vec<Task>> {
         })
 }
 
-pub async fn get_ordered_section_tasks(section_id: &str) -> Result<Vec<Task>> {
+pub async fn get_ordered_section_tasks(section_id: String) -> Result<Vec<Task>> {
     get_dynamodb_client()
         .await
         .query()

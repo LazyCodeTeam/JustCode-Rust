@@ -512,3 +512,28 @@ resource "aws_lambda_permission" "answer_v1_lambda_gateway" {
   qualifier     = var.env
   source_arn    = "${aws_apigatewayv2_api.just_code.execution_arn}/*/*"
 }
+
+module "get_tasks_v1_lambda" {
+  source = "../lambda-module"
+
+  env         = var.env
+  name        = "get-tasks-v1"
+  app_name    = local.app_name
+  memory_size = 128
+  zip_path    = "${path.module}/../../../target/lambdas/get_tasks_v1.zip"
+  env_variables = {
+    DYNAMODB_TABLE = aws_dynamodb_table.main.name
+  }
+  policies = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+  ]
+}
+
+resource "aws_lambda_permission" "get_tasks_v1_lambda_gateway" {
+  action        = "lambda:InvokeFunction"
+  function_name = module.get_tasks_v1_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  qualifier     = var.env
+  source_arn    = "${aws_apigatewayv2_api.just_code.execution_arn}/*/*"
+}

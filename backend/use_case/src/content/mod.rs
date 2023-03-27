@@ -1,3 +1,4 @@
+#[cfg(feature = "answer")]
 pub mod answer;
 #[cfg(feature = "delete_content_assets")]
 pub mod delete_content_assets;
@@ -9,6 +10,8 @@ pub mod get_public_sections;
 pub mod get_public_tasks;
 #[cfg(feature = "get_public_technologies")]
 pub mod get_public_technologies;
+#[cfg(feature = "get_tasks")]
+pub mod get_tasks;
 #[cfg(feature = "load_content")]
 pub mod load_content;
 #[cfg(feature = "on_assets_uploaded")]

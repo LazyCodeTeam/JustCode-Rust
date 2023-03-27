@@ -27,6 +27,7 @@ docs/KeywordDto.md
 docs/KeywordModifierDto.md
 docs/MultiAnswersDto.md
 docs/OptionDto.md
+docs/PersonalizedTaskDto.md
 docs/PlatformDto.md
 docs/PlaygroundVariationDto.md
 docs/PresignedUrlDto.md
@@ -52,6 +53,7 @@ docs/TaskContentSingleSelectionDto.md
 docs/TaskPreviewDto.md
 docs/TechnologyDto.md
 docs/UpdateProfileDto.md
+docs/WipApi.md
 git_push.sh
 src/apis/client.rs
 src/apis/cms_api.rs
@@ -60,6 +62,7 @@ src/apis/content_api.rs
 src/apis/mod.rs
 src/apis/profile_api.rs
 src/apis/request.rs
+src/apis/wip_api.rs
 src/lib.rs
 src/models/answer_dto.rs
 src/models/answer_kind_dto.rs
@@ -85,6 +88,7 @@ src/models/keyword_modifier_dto.rs
 src/models/mod.rs
 src/models/multi_answers_dto.rs
 src/models/option_dto.rs
+src/models/personalized_task_dto.rs
 src/models/platform_dto.rs
 src/models/playground_variation_dto.rs
 src/models/presigned_url_dto.rs

@@ -20,6 +20,16 @@ impl From<AnswerResult> for AnswerResultDto {
     }
 }
 
+impl ToString for AnswerResultDto {
+    fn to_string(&self) -> String {
+        match self {
+            Self::Invalid => "INVALID".to_owned(),
+            Self::Valid => "VALID".to_owned(),
+            Self::AgainValid => "AGAIN_VALID".to_owned(),
+        }
+    }
+}
+
 impl From<AnswerResultDto> for AnswerResult {
     fn from(value: AnswerResultDto) -> Self {
         match value {
@@ -34,6 +44,13 @@ impl From<AnswerResultDto> for AnswerResult {
 mod tests {
     use super::*;
     use content_domain::model::answer_result::AnswerResult;
+
+    #[test]
+    fn to_string() {
+        assert_eq!(AnswerResultDto::Invalid.to_string(), "INVALID");
+        assert_eq!(AnswerResultDto::Valid.to_string(), "VALID");
+        assert_eq!(AnswerResultDto::AgainValid.to_string(), "AGAIN_VALID");
+    }
 
     #[test]
     fn from_historical_answer_result() {

@@ -12,6 +12,7 @@ mod hint_dto;
 mod keyword_dto;
 mod keyword_modifier_dto;
 mod option_dto;
+mod personalized_task_dto;
 mod playground_variant_dto;
 mod public_task_dto;
 mod section_dto;

@@ -39,6 +39,7 @@ Class | Method | HTTP request | Description
 *ProfileApi* | [**v1_profile_current_push_delete**](docs/ProfileApi.md#v1_profile_current_push_delete) | **Delete** /v1/profile/current/push | 
 *ProfileApi* | [**v1_profile_current_push_put**](docs/ProfileApi.md#v1_profile_current_push_put) | **Put** /v1/profile/current/push | 
 *ProfileApi* | [**v1_profile_current_put**](docs/ProfileApi.md#v1_profile_current_put) | **Put** /v1/profile/current | 
+*WipApi* | [**v1_content_section_section_id_tasks_get**](docs/WipApi.md#v1_content_section_section_id_tasks_get) | **Get** /v1/content/section/{section_id}/tasks | 
 
 
 ## Documentation For Models
@@ -66,6 +67,7 @@ Class | Method | HTTP request | Description
  - [KeywordModifierDto](docs/KeywordModifierDto.md)
  - [MultiAnswersDto](docs/MultiAnswersDto.md)
  - [OptionDto](docs/OptionDto.md)
+ - [PersonalizedTaskDto](docs/PersonalizedTaskDto.md)
  - [PlatformDto](docs/PlatformDto.md)
  - [PlaygroundVariationDto](docs/PlaygroundVariationDto.md)
  - [PresignedUrlDto](docs/PresignedUrlDto.md)

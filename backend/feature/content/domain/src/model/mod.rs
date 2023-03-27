@@ -14,6 +14,7 @@ pub mod historical_answer;
 pub mod keyword;
 pub mod modification;
 pub mod option_data;
+pub mod personalized_task;
 pub mod playground_variation;
 pub mod section;
 pub mod section_preview;

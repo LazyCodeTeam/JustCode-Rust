@@ -6,7 +6,7 @@ use content_domain::model::task::Task;
 
 define_repo! {
     pub struct GetPublicTasksRepo<A> {
-        pub get_tasks: Fn<'a>(section_id: &'a str) -> Result<Vec<content_domain::model::task::Task>> as A,
+        pub get_tasks: Fn(section_id: String) -> Result<Vec<content_domain::model::task::Task>> as A,
     }
 }
 
@@ -17,7 +17,7 @@ pub async fn get_public_tasks<A>(
 where
     A: GetTasksType,
 {
-    let tasks = (repo.get_tasks)(&section_id).await?;
+    let tasks = (repo.get_tasks)(section_id).await?;
 
     if tasks.is_empty() {
         return Err(Error::not_found());

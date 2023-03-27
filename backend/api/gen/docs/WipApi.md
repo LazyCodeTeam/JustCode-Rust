@@ -4,13 +4,13 @@ All URIs are relative to *https://ux55hiuu9e.execute-api.eu-central-1.amazonaws.
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**v1_content_task_task_id_answer_post**](WipApi.md#v1_content_task_task_id_answer_post) | **Post** /v1/content/task/{task_id}/answer | 
+[**v1_content_section_section_id_tasks_get**](WipApi.md#v1_content_section_section_id_tasks_get) | **Get** /v1/content/section/{section_id}/tasks | 
 
 
 
-## v1_content_task_task_id_answer_post
+## v1_content_section_section_id_tasks_get
 
-> Vec<crate::models::AnswerValidationResultDto> v1_content_task_task_id_answer_post(task_id, answer_dto)
+> Vec<crate::models::PersonalizedTaskDto> v1_content_section_section_id_tasks_get(section_id)
 
 
 ### Parameters
@@ -18,20 +18,19 @@ Method | HTTP request | Description
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**task_id** | **String** |  | [required] |
-**answer_dto** | [**AnswerDto**](AnswerDto.md) |  | [required] |
+**section_id** | **String** |  | [required] |
 
 ### Return type
 
-[**Vec<crate::models::AnswerValidationResultDto>**](AnswerValidationResultDto.md)
+[**Vec<crate::models::PersonalizedTaskDto>**](PersonalizedTaskDto.md)
 
 ### Authorization
 
-[just-code-dev-moderator-authorizer](../README.md#just-code-dev-moderator-authorizer)
+[just-code-dev-auth](../README.md#just-code-dev-auth)
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
+- **Content-Type**: Not defined
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

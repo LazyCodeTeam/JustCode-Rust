@@ -44,6 +44,8 @@ pub mod multi_answers_dto;
 pub use self::multi_answers_dto::MultiAnswersDto;
 pub mod option_dto;
 pub use self::option_dto::OptionDto;
+pub mod personalized_task_dto;
+pub use self::personalized_task_dto::PersonalizedTaskDto;
 pub mod platform_dto;
 pub use self::platform_dto::PlatformDto;
 pub mod playground_variation_dto;

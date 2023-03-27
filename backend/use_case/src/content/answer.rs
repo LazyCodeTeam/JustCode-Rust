@@ -1,8 +1,6 @@
-use std::collections::HashMap;
-
 use common_domain::{
     define_repo,
-    error::{Error, ErrorOutput, ErrorType, Result},
+    error::{Error, Result},
 };
 use content_domain::model::{
     answer::Answer,
@@ -38,7 +36,7 @@ where
         (repo.get_previous_answers)(user_id.clone(), answer.task_id.clone())
     );
     let Some(task) = task? else {
-        return Err(task_not_found_error());
+        return Err(Error::not_found());
     };
     let previous_answers = previous_answers?;
     let is_valid = answer.is_valid_for(&task)?;
@@ -53,18 +51,6 @@ where
     .await?;
 
     Ok(AnswerValidationResult { result })
-}
-
-fn task_not_found_error() -> Error {
-    Error {
-        debug_message: "Task not found".to_string(),
-        error_type: ErrorType::NotFound,
-        output: Box::new(ErrorOutput {
-            message: "Task not found".to_string(),
-            code: "not_found".to_owned(),
-            args: HashMap::new(),
-        }),
-    }
 }
 
 #[cfg(test)]
@@ -109,7 +95,7 @@ mod tests {
         )
         .await;
 
-        assert_eq!(result, Err(task_not_found_error()));
+        assert_eq!(result, Err(Error::not_found()));
     }
 
     #[tokio::test]

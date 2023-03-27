@@ -1,13 +1,7 @@
-use crate::{ContentAssetDto, IntoDto};
+use crate::ContentAssetDto;
 use content_domain::model::content_asset::ContentAsset;
 
 use crate::FromModel;
-
-impl FromModel<Vec<ContentAsset>> for Vec<ContentAssetDto> {
-    fn from_model(models: Vec<ContentAsset>) -> Self {
-        models.into_iter().map(IntoDto::into_dto).collect()
-    }
-}
 
 impl FromModel<ContentAsset> for ContentAssetDto {
     fn from_model(model: ContentAsset) -> Self {

@@ -2,15 +2,6 @@ use crate::{FromModel, PersonalizedTaskDto};
 use content_domain::model::personalized_task::PersonalizedTask;
 use gen::models::TaskContentDto;
 
-impl FromModel<Vec<PersonalizedTask>> for Vec<PersonalizedTaskDto> {
-    fn from_model(models: Vec<PersonalizedTask>) -> Self {
-        models
-            .into_iter()
-            .map(PersonalizedTaskDto::from_model)
-            .collect()
-    }
-}
-
 impl FromModel<PersonalizedTask> for PersonalizedTaskDto {
     fn from_model(model: PersonalizedTask) -> Self {
         Self {

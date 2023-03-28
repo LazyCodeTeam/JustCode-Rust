@@ -5,6 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **valid_until** | **String** |  | 
+**presigned_url** | **String** |  | 
 **url** | **String** |  | 
 **headers** | **::std::collections::HashMap<String, String>** |  | 
 

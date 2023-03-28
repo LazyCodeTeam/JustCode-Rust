@@ -95,6 +95,7 @@ mod test {
             .returning(move |_, _| {
                 Ok(PresignedUrl {
                     url: "url".to_owned(),
+                    presigned_url: "url".to_owned(),
                     valid_until: date_time,
                     headers: HashMap::new(),
                 })
@@ -114,6 +115,7 @@ mod test {
             result.unwrap(),
             PresignedUrl {
                 url: "url".to_owned(),
+                presigned_url: "url".to_owned(),
                 valid_until: date_time,
                 headers: HashMap::new(),
             }

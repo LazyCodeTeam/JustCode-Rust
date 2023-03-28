@@ -12,6 +12,8 @@
 pub struct PresignedUrlDto {
     #[serde(rename = "valid_until")]
     pub valid_until: String,
+    #[serde(rename = "presigned_url")]
+    pub presigned_url: String,
     #[serde(rename = "url")]
     pub url: String,
     #[serde(rename = "headers")]
@@ -21,11 +23,13 @@ pub struct PresignedUrlDto {
 impl PresignedUrlDto {
     pub fn new(
         valid_until: String,
+        presigned_url: String,
         url: String,
         headers: ::std::collections::HashMap<String, String>,
     ) -> PresignedUrlDto {
         PresignedUrlDto {
             valid_until,
+            presigned_url,
             url,
             headers,
         }

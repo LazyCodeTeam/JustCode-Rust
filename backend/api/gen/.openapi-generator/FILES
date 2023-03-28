@@ -53,7 +53,6 @@ docs/TaskContentSingleSelectionDto.md
 docs/TaskPreviewDto.md
 docs/TechnologyDto.md
 docs/UpdateProfileDto.md
-docs/WipApi.md
 git_push.sh
 src/apis/client.rs
 src/apis/cms_api.rs
@@ -62,7 +61,6 @@ src/apis/content_api.rs
 src/apis/mod.rs
 src/apis/profile_api.rs
 src/apis/request.rs
-src/apis/wip_api.rs
 src/lib.rs
 src/models/answer_dto.rs
 src/models/answer_kind_dto.rs

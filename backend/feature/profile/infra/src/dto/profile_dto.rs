@@ -2,7 +2,7 @@ use chrono::{DateTime, Utc};
 use profile_domain::model::{create_profile_params::CreateProfileParams, profile::Profile};
 use serde::{Deserialize, Serialize};
 
-use crate::{PROFILE_ID_PREFIX, PROFILE_SORT_KEY};
+use crate::{FromDto, FromModel, IntoDto, IntoModel, PROFILE_ID_PREFIX, PROFILE_SORT_KEY};
 
 use super::profile_role_dto::ProfileRoleDto;
 
@@ -21,8 +21,8 @@ pub struct ProfileDto {
     pub created_at: DateTime<Utc>,
 }
 
-impl From<ProfileDto> for Profile {
-    fn from(dto: ProfileDto) -> Self {
+impl FromDto<ProfileDto> for Profile {
+    fn from_dto(dto: ProfileDto) -> Self {
         Profile {
             id: dto.id.replace(PROFILE_ID_PREFIX, ""),
             name: dto.name,
@@ -30,19 +30,19 @@ impl From<ProfileDto> for Profile {
             avatar_url: dto.avatar_url,
             first_name: dto.first_name,
             last_name: dto.last_name,
-            role: dto.role.map(|r| r.into()).unwrap_or_default(),
+            role: dto.role.map(IntoModel::into_model).unwrap_or_default(),
             created_at: dto.created_at,
         }
     }
 }
 
-impl From<CreateProfileParams> for ProfileDto {
-    fn from(params: CreateProfileParams) -> Self {
+impl FromModel<CreateProfileParams> for ProfileDto {
+    fn from_model(model: CreateProfileParams) -> Self {
         ProfileDto {
-            id: format!("{}{}", PROFILE_ID_PREFIX, params.id),
+            id: format!("{}{}", PROFILE_ID_PREFIX, model.id),
             sk: PROFILE_SORT_KEY.to_string(),
-            name: params.name,
-            email: params.email,
+            name: model.name,
+            email: model.email,
             avatar_url: None,
             first_name: None,
             last_name: None,
@@ -52,18 +52,18 @@ impl From<CreateProfileParams> for ProfileDto {
     }
 }
 
-impl From<Profile> for ProfileDto {
-    fn from(value: Profile) -> Self {
+impl FromModel<Profile> for ProfileDto {
+    fn from_model(model: Profile) -> Self {
         ProfileDto {
-            id: format!("{}{}", PROFILE_ID_PREFIX, value.id),
+            id: format!("{}{}", PROFILE_ID_PREFIX, model.id),
             sk: PROFILE_SORT_KEY.to_string(),
-            name: value.name,
-            email: value.email,
-            avatar_url: value.avatar_url,
-            first_name: value.first_name,
-            last_name: value.last_name,
-            role: Some(value.role.into()),
-            created_at: value.created_at,
+            name: model.name,
+            email: model.email,
+            avatar_url: model.avatar_url,
+            first_name: model.first_name,
+            last_name: model.last_name,
+            role: Some(model.role.into_dto()),
+            created_at: model.created_at,
         }
     }
 }
@@ -82,7 +82,7 @@ mod tests {
             email: "email".to_string(),
         };
 
-        let result = ProfileDto::from(params);
+        let result = ProfileDto::from_model(params);
 
         assert_eq!(result.id, format!("{PROFILE_ID_PREFIX}id"));
         assert_eq!(result.name, "name");
@@ -110,7 +110,7 @@ mod tests {
         };
 
         assert_eq!(
-            Profile::from(dto),
+            Profile::from_dto(dto),
             Profile {
                 id: "id".to_string(),
                 name: "name".to_string(),
@@ -139,7 +139,7 @@ mod tests {
         };
 
         assert_eq!(
-            ProfileDto::from(profile),
+            ProfileDto::from_model(profile),
             ProfileDto {
                 id: format!("{PROFILE_ID_PREFIX}id"),
                 sk: PROFILE_SORT_KEY.to_string(),

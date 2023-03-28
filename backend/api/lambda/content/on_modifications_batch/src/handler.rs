@@ -4,7 +4,7 @@ use aws_lambda_events::{
 };
 use common_domain::into_future::IntoFuture;
 use content_domain::model::modification::Modification;
-use content_infra::{modification_dto::ModificationDto, repository};
+use content_infra::{modification_dto::ModificationDto, repository, IntoModel};
 use futures::TryFutureExt;
 use lambda_runtime::{Error, LambdaEvent};
 use use_case::content::on_modification_batch::{
@@ -25,7 +25,7 @@ pub async fn handle_event(event: LambdaEvent<SqsEvent>) -> Result<SqsBatchRespon
                         common_domain::error::Error::unknown(format!("Invalid event body: {}", e))
                     })
                 })
-                .map(Into::into)
+                .map(IntoModel::into_model)
         })
         .collect::<common_domain::error::Result<Vec<Modification>>>()
         .into_future()

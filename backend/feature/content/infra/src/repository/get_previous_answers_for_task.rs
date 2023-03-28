@@ -4,7 +4,7 @@ use common_infra::dynamodb_client::{get_dynamodb_client, QueryOutputExt};
 use content_domain::model::historical_answer::HistoricalAnswer;
 
 use crate::{
-    config::CONFIG, historical_answer_dto::HistoricalAnswerDto, TASK_ID_PREFIX,
+    config::CONFIG, historical_answer_dto::HistoricalAnswerDto, IntoModel, TASK_ID_PREFIX,
     USER_ANSWER_ID_PREFIX,
 };
 
@@ -29,9 +29,5 @@ pub async fn get_previous_answers_for_task(
         .send()
         .await
         .parse::<HistoricalAnswerDto>()
-        .map(|dtos| {
-            dtos.into_iter()
-                .map(|dto| dto.into())
-                .collect::<Vec<HistoricalAnswer>>()
-        })
+        .map(IntoModel::into_model)
 }

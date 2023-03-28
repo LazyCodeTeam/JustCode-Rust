@@ -5,7 +5,7 @@ use content_domain::model::historical_answer::HistoricalAnswer;
 
 use crate::{
     answer_result_dto::AnswerResultDto, config::CONFIG, historical_answer_dto::HistoricalAnswerDto,
-    USER_ANSWER_ID_PREFIX,
+    IntoModel, USER_ANSWER_ID_PREFIX,
 };
 
 pub async fn get_first_valid_answers(user_id: String) -> Result<Vec<HistoricalAnswer>> {
@@ -26,5 +26,5 @@ pub async fn get_first_valid_answers(user_id: String) -> Result<Vec<HistoricalAn
         .send()
         .await
         .parse::<HistoricalAnswerDto>()
-        .map(|o| o.into_iter().map(Into::into).collect())
+        .map(IntoModel::into_model)
 }

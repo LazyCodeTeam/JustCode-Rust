@@ -1,7 +1,7 @@
 use content_domain::model::tasks_transaction_state::TasksTransactionState;
 use serde::{Deserialize, Serialize};
 
-use crate::{TASKS_TRANSACTION_PK, TASKS_TRANSACTION_SK};
+use crate::{FromDto, TASKS_TRANSACTION_PK, TASKS_TRANSACTION_SK};
 
 #[derive(Debug, PartialEq, Eq, Clone, Deserialize, Serialize)]
 pub struct TasksTransactionDto {
@@ -26,21 +26,16 @@ impl TasksTransactionDto {
     }
 }
 
-impl From<TasksTransactionDto> for TasksTransactionState {
-    fn from(value: TasksTransactionDto) -> Self {
-        match (
-            value.items_passed_to_queue_count,
-            value.processed_items_count,
-        ) {
+impl FromDto<TasksTransactionDto> for TasksTransactionState {
+    fn from_dto(dto: TasksTransactionDto) -> Self {
+        match (dto.items_passed_to_queue_count, dto.processed_items_count) {
             (0, 0) => TasksTransactionState::PopulatingQueue,
-            (items_passed_to_queue_count, 0)
-                if items_passed_to_queue_count <= value.items_count =>
-            {
+            (items_passed_to_queue_count, 0) if items_passed_to_queue_count <= dto.items_count => {
                 TasksTransactionState::QueuePopulated
             }
             (items_passed_to_queue_count, processed_items_count)
-                if items_passed_to_queue_count == value.items_count
-                    && processed_items_count <= value.items_count =>
+                if items_passed_to_queue_count == dto.items_count
+                    && processed_items_count <= dto.items_count =>
             {
                 TasksTransactionState::ProcessingQueue
             }
@@ -77,7 +72,7 @@ mod test {
             processed_items_count: 0,
         };
 
-        let actual = TasksTransactionState::from(dto);
+        let actual = TasksTransactionState::from_dto(dto);
 
         assert_eq!(TasksTransactionState::PopulatingQueue, actual);
     }
@@ -92,7 +87,7 @@ mod test {
             processed_items_count: 0,
         };
 
-        let actual = TasksTransactionState::from(dto);
+        let actual = TasksTransactionState::from_dto(dto);
 
         assert_eq!(TasksTransactionState::QueuePopulated, actual);
     }
@@ -107,7 +102,7 @@ mod test {
             processed_items_count: 5,
         };
 
-        let actual = TasksTransactionState::from(dto);
+        let actual = TasksTransactionState::from_dto(dto);
 
         assert_eq!(TasksTransactionState::ProcessingQueue, actual);
     }
@@ -122,7 +117,7 @@ mod test {
             processed_items_count: 11,
         };
 
-        let actual = TasksTransactionState::from(dto);
+        let actual = TasksTransactionState::from_dto(dto);
 
         assert_eq!(TasksTransactionState::Invalid, actual);
     }

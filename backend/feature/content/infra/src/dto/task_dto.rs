@@ -3,7 +3,8 @@ use content_domain::model::task::Task;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    DYNAMIC_TASK_ID_PREFIX, POSITIONED_ID_LENGTH, SECTION_ID_PREFIX, TASK_GSI_PK, TASK_ID_PREFIX,
+    FromDto, FromModel, DYNAMIC_TASK_ID_PREFIX, POSITIONED_ID_LENGTH, SECTION_ID_PREFIX,
+    TASK_GSI_PK, TASK_ID_PREFIX,
 };
 
 use super::task_content_dto::TaskContentDto;
@@ -36,10 +37,10 @@ impl DynamoDbIdentifiable for TaskDto {
     }
 }
 
-impl From<Task> for TaskDto {
-    fn from(task: Task) -> Self {
-        let lsi = match task.position {
-            None => format!("{}{}", DYNAMIC_TASK_ID_PREFIX, task.id),
+impl FromModel<Task> for TaskDto {
+    fn from_model(model: Task) -> Self {
+        let lsi = match model.position {
+            None => format!("{}{}", DYNAMIC_TASK_ID_PREFIX, model.id),
             Some(position) => format!(
                 "{}{:0>len$}",
                 TASK_ID_PREFIX,
@@ -49,29 +50,29 @@ impl From<Task> for TaskDto {
         };
 
         Self {
-            id: format!("{}{}", TASK_ID_PREFIX, task.id),
-            section_id: format!("{}{}", SECTION_ID_PREFIX, task.section_id),
+            id: format!("{}{}", TASK_ID_PREFIX, model.id),
+            section_id: format!("{}{}", SECTION_ID_PREFIX, model.section_id),
             lsi,
-            title: task.title,
-            difficulty: task.difficulty,
-            for_anonymous: task.for_anonymous,
-            content: task.content.into(),
+            title: model.title,
+            difficulty: model.difficulty,
+            for_anonymous: model.for_anonymous,
+            content: model.content.into(),
             gsi_pk: TASK_GSI_PK.to_string(),
-            gsi_sk: format!("{}{}", TASK_ID_PREFIX, task.id),
+            gsi_sk: format!("{}{}", TASK_ID_PREFIX, model.id),
         }
     }
 }
 
-impl From<TaskDto> for Task {
-    fn from(task_dto: TaskDto) -> Self {
+impl FromDto<TaskDto> for Task {
+    fn from_dto(dto: TaskDto) -> Self {
         Self {
-            id: task_dto.id.replace(TASK_ID_PREFIX, ""),
-            section_id: task_dto.section_id.replace(SECTION_ID_PREFIX, ""),
-            title: task_dto.title,
-            position: task_dto.lsi.replace(TASK_ID_PREFIX, "").parse::<u64>().ok(),
-            difficulty: task_dto.difficulty,
-            for_anonymous: task_dto.for_anonymous,
-            content: task_dto.content.into(),
+            id: dto.id.replace(TASK_ID_PREFIX, ""),
+            section_id: dto.section_id.replace(SECTION_ID_PREFIX, ""),
+            title: dto.title,
+            position: dto.lsi.replace(TASK_ID_PREFIX, "").parse::<u64>().ok(),
+            difficulty: dto.difficulty,
+            for_anonymous: dto.for_anonymous,
+            content: dto.content.into(),
         }
     }
 }
@@ -95,7 +96,7 @@ mod tests {
             content: content.clone(),
         };
 
-        let task_dto = TaskDto::from(task);
+        let task_dto = TaskDto::from_model(task);
 
         assert_eq!(
             task_dto,
@@ -126,7 +127,7 @@ mod tests {
             content: content.clone(),
         };
 
-        let task_dto = TaskDto::from(task);
+        let task_dto = TaskDto::from_model(task);
 
         assert_eq!(
             task_dto,
@@ -159,7 +160,7 @@ mod tests {
             gsi_sk: "task-id".to_string(),
         };
 
-        let task = Task::from(task_dto);
+        let task = Task::from_dto(task_dto);
 
         assert_eq!(
             task,
@@ -190,7 +191,7 @@ mod tests {
             gsi_sk: "task-id".to_string(),
         };
 
-        let task = Task::from(task_dto);
+        let task = Task::from_dto(task_dto);
 
         assert_eq!(
             task,

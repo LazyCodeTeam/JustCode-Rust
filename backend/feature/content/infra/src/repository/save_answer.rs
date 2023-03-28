@@ -3,10 +3,10 @@ use common_infra::dynamodb_client::get_dynamodb_client;
 use content_domain::model::answer_to_save::AnswerToSave;
 use serde_dynamo::to_item;
 
-use crate::{config::CONFIG, historical_answer_dto::HistoricalAnswerDto};
+use crate::{config::CONFIG, historical_answer_dto::HistoricalAnswerDto, FromModel};
 
 pub async fn save_answer(answer: AnswerToSave) -> Result<()> {
-    let item = to_item(HistoricalAnswerDto::from(answer))
+    let item = to_item(HistoricalAnswerDto::from_model(answer))
         .map_err(|e| Error::unknown(format!("Failed to serialize answer ({e:?})")))?;
 
     get_dynamodb_client()

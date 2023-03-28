@@ -3,10 +3,10 @@ use common_infra::dynamodb_client::get_dynamodb_client;
 use content_domain::model::content_asset_creation_data::ContentAssetCreationData;
 use serde_dynamo::to_item;
 
-use crate::{config::CONFIG, content_asset_dto::ContentAssetDto};
+use crate::{config::CONFIG, content_asset_dto::ContentAssetDto, FromModel};
 
 pub async fn save_content_asset(content_asset: ContentAssetCreationData) -> Result<()> {
-    let item = to_item(ContentAssetDto::from(content_asset))
+    let item = to_item(ContentAssetDto::from_model(content_asset))
         .map_err(|e| Error::unknown(format!("Failed to serialize asset ({e:?})")))?;
 
     get_dynamodb_client()

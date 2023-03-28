@@ -3,12 +3,12 @@ use common_domain::error::Result;
 use common_infra::dynamodb_client::get_dynamodb_client;
 use content_domain::model::modification::Modification;
 
-use crate::{config::CONFIG, modification_dto::ModificationDto};
+use crate::{config::CONFIG, modification_dto::ModificationDto, FromModel};
 
 pub async fn write_modifications(modifications: Vec<Modification>) -> Result<()> {
     let items = modifications
         .into_iter()
-        .map(ModificationDto::from)
+        .map(ModificationDto::from_model)
         .map(WriteRequest::try_from)
         .collect::<Result<Vec<WriteRequest>>>()?;
 

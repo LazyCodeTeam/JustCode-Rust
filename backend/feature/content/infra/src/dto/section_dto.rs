@@ -2,7 +2,10 @@ use common_infra::dynamodb_identifiable::DynamoDbIdentifiable;
 use content_domain::model::section::Section;
 use serde::{Deserialize, Serialize};
 
-use crate::{POSITIONED_ID_LENGTH, SECTION_ID_PREFIX, TECHNOLOGY_ID_PREFIX};
+use crate::{
+    FromDto, FromModel, IntoDto, IntoModel, POSITIONED_ID_LENGTH, SECTION_ID_PREFIX,
+    TECHNOLOGY_ID_PREFIX,
+};
 
 use super::task_preview_dto::TaskPreviewDto;
 
@@ -30,43 +33,39 @@ impl DynamoDbIdentifiable for SectionDto {
     }
 }
 
-impl From<Section> for SectionDto {
-    fn from(section: Section) -> Self {
+impl FromModel<Section> for SectionDto {
+    fn from_model(model: Section) -> Self {
         Self {
-            id: format!("{}{}", SECTION_ID_PREFIX, section.id),
-            technology_id: format!("{}{}", TECHNOLOGY_ID_PREFIX, section.technology_id),
+            id: format!("{}{}", SECTION_ID_PREFIX, model.id),
+            technology_id: format!("{}{}", TECHNOLOGY_ID_PREFIX, model.technology_id),
             positioned_id: format!(
                 "{}{:0>len$}",
                 SECTION_ID_PREFIX,
-                section.position,
+                model.position,
                 len = POSITIONED_ID_LENGTH
             ),
-            title: section.title,
-            description: section.description,
-            image: section.image,
-            tasks_preview: section.tasks_preview.into_iter().map(Into::into).collect(),
+            title: model.title,
+            description: model.description,
+            image: model.image,
+            tasks_preview: model.tasks_preview.into_dto(),
         }
     }
 }
 
-impl From<SectionDto> for Section {
-    fn from(section_dto: SectionDto) -> Self {
+impl FromDto<SectionDto> for Section {
+    fn from_dto(dto: SectionDto) -> Self {
         Self {
-            id: section_dto.id.replace(SECTION_ID_PREFIX, ""),
-            technology_id: section_dto.technology_id.replace(TECHNOLOGY_ID_PREFIX, ""),
-            title: section_dto.title,
-            position: section_dto
+            id: dto.id.replace(SECTION_ID_PREFIX, ""),
+            technology_id: dto.technology_id.replace(TECHNOLOGY_ID_PREFIX, ""),
+            title: dto.title,
+            position: dto
                 .positioned_id
                 .replace(SECTION_ID_PREFIX, "")
                 .parse()
                 .unwrap_or_default(),
-            description: section_dto.description,
-            image: section_dto.image,
-            tasks_preview: section_dto
-                .tasks_preview
-                .into_iter()
-                .map(Into::into)
-                .collect(),
+            description: dto.description,
+            image: dto.image,
+            tasks_preview: dto.tasks_preview.into_model(),
         }
     }
 }
@@ -91,7 +90,7 @@ mod tests {
             tasks_preview: tasks_preview.clone(),
         };
 
-        let section_dto = SectionDto::from(section);
+        let section_dto = SectionDto::from_model(section);
 
         assert_eq!(
             section_dto,
@@ -102,14 +101,18 @@ mod tests {
                 title: "title".to_string(),
                 description: Some("description".to_string()),
                 image: Some("image".to_string()),
-                tasks_preview: tasks_preview.into_iter().map(Into::into).collect(),
+                tasks_preview: tasks_preview.into_dto(),
             }
         );
     }
 
     #[test]
     fn from_section_dto() {
-        let tasks_preview = vec![TaskPreview::default()];
+        let tasks_preview = vec![TaskPreviewDto {
+            id: "task-id".to_string(),
+            title: "title".to_string(),
+            for_anonymous: true,
+        }];
 
         let section_dto = SectionDto {
             id: "section-id".to_string(),
@@ -118,10 +121,10 @@ mod tests {
             title: "title".to_string(),
             description: Some("description".to_string()),
             image: Some("image".to_string()),
-            tasks_preview: tasks_preview.clone().into_iter().map(Into::into).collect(),
+            tasks_preview: tasks_preview.clone(),
         };
 
-        let section = Section::from(section_dto);
+        let section = Section::from_dto(section_dto);
 
         assert_eq!(
             section,
@@ -132,7 +135,7 @@ mod tests {
                 position: 1,
                 description: Some("description".to_string()),
                 image: Some("image".to_string()),
-                tasks_preview: tasks_preview.into_iter().map(Into::into).collect(),
+                tasks_preview: tasks_preview.into_model(),
             }
         );
     }

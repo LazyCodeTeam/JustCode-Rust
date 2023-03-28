@@ -2,7 +2,10 @@ use chrono::{DateTime, Utc};
 use content_domain::model::{answer_to_save::AnswerToSave, historical_answer::HistoricalAnswer};
 use serde::{Deserialize, Serialize};
 
-use crate::{answer_result_dto::AnswerResultDto, TASK_ID_PREFIX, USER_ANSWER_ID_PREFIX};
+use crate::{
+    answer_result_dto::AnswerResultDto, FromDto, FromModel, IntoDto, IntoModel, TASK_ID_PREFIX,
+    USER_ANSWER_ID_PREFIX,
+};
 
 #[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]
 pub struct HistoricalAnswerDto {
@@ -16,24 +19,24 @@ pub struct HistoricalAnswerDto {
     pub result: AnswerResultDto,
 }
 
-impl From<AnswerToSave> for HistoricalAnswerDto {
-    fn from(value: AnswerToSave) -> Self {
+impl FromModel<AnswerToSave> for HistoricalAnswerDto {
+    fn from_model(model: AnswerToSave) -> Self {
         Self {
-            user_id: format!("{}{}", USER_ANSWER_ID_PREFIX, value.user_id),
-            task_id: format!("{}{}", TASK_ID_PREFIX, value.answer.task_id),
-            result: value.result.into(),
+            user_id: format!("{}{}", USER_ANSWER_ID_PREFIX, model.user_id),
+            task_id: format!("{}{}", TASK_ID_PREFIX, model.answer.task_id),
+            result: model.result.into_dto(),
             created_at: Utc::now(),
         }
     }
 }
 
-impl From<HistoricalAnswerDto> for HistoricalAnswer {
-    fn from(value: HistoricalAnswerDto) -> Self {
+impl FromDto<HistoricalAnswerDto> for HistoricalAnswer {
+    fn from_dto(dto: HistoricalAnswerDto) -> Self {
         Self {
-            user_id: value.user_id.replace(USER_ANSWER_ID_PREFIX, ""),
-            task_id: value.task_id.replace(TASK_ID_PREFIX, ""),
-            result: value.result.into(),
-            created_at: value.created_at,
+            user_id: dto.user_id.replace(USER_ANSWER_ID_PREFIX, ""),
+            task_id: dto.task_id.replace(TASK_ID_PREFIX, ""),
+            result: dto.result.into_model(),
+            created_at: dto.created_at,
         }
     }
 }
@@ -58,7 +61,7 @@ mod tests {
         };
 
         let before = Utc::now();
-        let historical_answer_dto = HistoricalAnswerDto::from(answer_to_save);
+        let historical_answer_dto = HistoricalAnswerDto::from_model(answer_to_save);
         let after = Utc::now();
 
         assert_eq!(
@@ -84,11 +87,14 @@ mod tests {
             created_at: now,
         };
 
-        let historical_answer = HistoricalAnswer::from(historical_answer_dto);
+        let historical_answer = HistoricalAnswer::from_dto(historical_answer_dto);
 
         assert_eq!(historical_answer.user_id, "user_id");
         assert_eq!(historical_answer.task_id, "task_id");
-        assert_eq!(historical_answer.result, AnswerResultDto::Valid.into());
+        assert_eq!(
+            historical_answer.result,
+            AnswerResultDto::Valid.into_model()
+        );
         assert_eq!(historical_answer.created_at, now);
     }
 }

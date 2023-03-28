@@ -4,7 +4,7 @@ use content_domain::model::{
 };
 use serde::{Deserialize, Serialize};
 
-use crate::CONTENT_ASSET_PK;
+use crate::{FromDto, FromModel, CONTENT_ASSET_PK};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ContentAssetDto {
@@ -17,26 +17,26 @@ pub struct ContentAssetDto {
     pub created_at: DateTime<Utc>,
 }
 
-impl From<ContentAssetCreationData> for ContentAssetDto {
-    fn from(value: ContentAssetCreationData) -> Self {
+impl FromModel<ContentAssetCreationData> for ContentAssetDto {
+    fn from_model(model: ContentAssetCreationData) -> Self {
         let now = Utc::now();
         Self {
             pk: CONTENT_ASSET_PK.to_owned(),
-            id: value.id,
-            content_type: value.content_type,
-            url: value.url,
+            id: model.id,
+            content_type: model.content_type,
+            url: model.url,
             created_at: now,
         }
     }
 }
 
-impl From<ContentAssetDto> for ContentAsset {
-    fn from(value: ContentAssetDto) -> Self {
+impl FromDto<ContentAssetDto> for ContentAsset {
+    fn from_dto(dto: ContentAssetDto) -> Self {
         Self {
-            id: value.id,
-            content_type: value.content_type,
-            url: value.url,
-            created_at: value.created_at,
+            id: dto.id,
+            content_type: dto.content_type,
+            url: dto.url,
+            created_at: dto.created_at,
         }
     }
 }
@@ -56,7 +56,7 @@ mod test {
         };
 
         let before = Utc::now();
-        let content_asset_dto = ContentAssetDto::from(content_asset_creation_data);
+        let content_asset_dto = ContentAssetDto::from_model(content_asset_creation_data);
         let after = Utc::now();
 
         assert_eq!(content_asset_dto.pk, CONTENT_ASSET_PK);
@@ -77,7 +77,7 @@ mod test {
             created_at: Utc::now(),
         };
 
-        let content_asset = ContentAsset::from(content_asset_dto.clone());
+        let content_asset = ContentAsset::from_dto(content_asset_dto.clone());
 
         assert_eq!(content_asset.id, content_asset_dto.id);
         assert_eq!(content_asset.content_type, content_asset_dto.content_type);

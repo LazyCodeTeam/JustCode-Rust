@@ -1,11 +1,11 @@
-use crate::{config::CONFIG, dto::profile_dto::ProfileDto};
+use crate::{config::CONFIG, dto::profile_dto::ProfileDto, FromModel};
 use common_domain::error::{Error, Result};
 use common_infra::dynamodb_client::get_dynamodb_client;
 use profile_domain::model::create_profile_params::CreateProfileParams;
 use serde_dynamo::to_item;
 
 pub async fn save_profile(params: CreateProfileParams) -> Result<()> {
-    let dto = ProfileDto::from(params);
+    let dto = ProfileDto::from_model(params);
 
     save_serialized_profile(dto).await
 }

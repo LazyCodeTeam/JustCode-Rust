@@ -1,26 +1,28 @@
 use content_domain::model::playground_variation::PlaygroundVariation;
 use serde::{Deserialize, Serialize};
 
+use crate::{FromDto, FromModel};
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub struct PlaygroundVariationDto {
     pub content: String,
     pub description: String,
 }
 
-impl From<PlaygroundVariation> for PlaygroundVariationDto {
-    fn from(playground_variation: PlaygroundVariation) -> Self {
+impl FromModel<PlaygroundVariation> for PlaygroundVariationDto {
+    fn from_model(model: PlaygroundVariation) -> Self {
         Self {
-            content: playground_variation.content,
-            description: playground_variation.description,
+            content: model.content,
+            description: model.description,
         }
     }
 }
 
-impl From<PlaygroundVariationDto> for PlaygroundVariation {
-    fn from(playground_variation_dto: PlaygroundVariationDto) -> Self {
+impl FromDto<PlaygroundVariationDto> for PlaygroundVariation {
+    fn from_dto(dto: PlaygroundVariationDto) -> Self {
         Self {
-            content: playground_variation_dto.content,
-            description: playground_variation_dto.description,
+            content: dto.content,
+            description: dto.description,
         }
     }
 }
@@ -36,7 +38,7 @@ mod tests {
             content: "content".to_string(),
             description: "description".to_string(),
         };
-        let playground_variation_dto = PlaygroundVariationDto::from(playground_variation);
+        let playground_variation_dto = PlaygroundVariationDto::from_model(playground_variation);
         assert_eq!(playground_variation_dto.content, "content");
         assert_eq!(playground_variation_dto.description, "description");
     }
@@ -47,7 +49,7 @@ mod tests {
             content: "content".to_string(),
             description: "description".to_string(),
         };
-        let playground_variation = PlaygroundVariation::from(playground_variation_dto);
+        let playground_variation = PlaygroundVariation::from_dto(playground_variation_dto);
         assert_eq!(playground_variation.content, "content");
         assert_eq!(playground_variation.description, "description");
     }

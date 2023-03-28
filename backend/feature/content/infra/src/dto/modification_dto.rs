@@ -1,3 +1,5 @@
+use crate::{FromDto, FromModel, IntoDto, IntoModel};
+
 use super::{section_dto::SectionDto, task_dto::TaskDto, technology_dto::TechnologyDto};
 use aws_sdk_dynamodb::model::{AttributeValue, PutRequest, WriteRequest};
 use common_infra::dynamodb_identifiable::DynamoDbIdentifiable;
@@ -19,46 +21,54 @@ pub enum ModificationDto {
     UpdateTask(TaskDto),
 }
 
-impl From<Modification> for ModificationDto {
-    fn from(value: Modification) -> Self {
-        match value {
+impl FromModel<Modification> for ModificationDto {
+    fn from_model(model: Modification) -> Self {
+        match model {
             Modification::AddTechnology(technology) => {
-                ModificationDto::AddTechnology(technology.into())
+                ModificationDto::AddTechnology(technology.into_dto())
             }
-            Modification::AddSection(section) => ModificationDto::AddSection(section.into()),
-            Modification::AddTask(task) => ModificationDto::AddTask(task.into()),
+            Modification::AddSection(section) => ModificationDto::AddSection(section.into_dto()),
+            Modification::AddTask(task) => ModificationDto::AddTask(task.into_dto()),
             Modification::RemoveTechnology(technology) => {
-                ModificationDto::RemoveTechnology(technology.into())
+                ModificationDto::RemoveTechnology(technology.into_dto())
             }
-            Modification::RemoveSection(section) => ModificationDto::RemoveSection(section.into()),
-            Modification::RemoveTask(task) => ModificationDto::RemoveTask(task.into()),
+            Modification::RemoveSection(section) => {
+                ModificationDto::RemoveSection(section.into_dto())
+            }
+            Modification::RemoveTask(task) => ModificationDto::RemoveTask(task.into_dto()),
             Modification::UpdateTechnology(technology) => {
-                ModificationDto::UpdateTechnology(technology.into())
+                ModificationDto::UpdateTechnology(technology.into_dto())
             }
-            Modification::UpdateSection(section) => ModificationDto::UpdateSection(section.into()),
-            Modification::UpdateTask(task) => ModificationDto::UpdateTask(task.into()),
+            Modification::UpdateSection(section) => {
+                ModificationDto::UpdateSection(section.into_dto())
+            }
+            Modification::UpdateTask(task) => ModificationDto::UpdateTask(task.into_dto()),
         }
     }
 }
 
-impl From<ModificationDto> for Modification {
-    fn from(value: ModificationDto) -> Self {
-        match value {
+impl FromDto<ModificationDto> for Modification {
+    fn from_dto(dto: ModificationDto) -> Self {
+        match dto {
             ModificationDto::AddTechnology(technology) => {
-                Modification::AddTechnology(technology.into())
+                Modification::AddTechnology(technology.into_model())
             }
-            ModificationDto::AddSection(section) => Modification::AddSection(section.into()),
-            ModificationDto::AddTask(task) => Modification::AddTask(task.into()),
+            ModificationDto::AddSection(section) => Modification::AddSection(section.into_model()),
+            ModificationDto::AddTask(task) => Modification::AddTask(task.into_model()),
             ModificationDto::RemoveTechnology(technology) => {
-                Modification::RemoveTechnology(technology.into())
+                Modification::RemoveTechnology(technology.into_model())
             }
-            ModificationDto::RemoveSection(section) => Modification::RemoveSection(section.into()),
-            ModificationDto::RemoveTask(task) => Modification::RemoveTask(task.into()),
+            ModificationDto::RemoveSection(section) => {
+                Modification::RemoveSection(section.into_model())
+            }
+            ModificationDto::RemoveTask(task) => Modification::RemoveTask(task.into_model()),
             ModificationDto::UpdateTechnology(technology) => {
-                Modification::UpdateTechnology(technology.into())
+                Modification::UpdateTechnology(technology.into_model())
             }
-            ModificationDto::UpdateSection(section) => Modification::UpdateSection(section.into()),
-            ModificationDto::UpdateTask(task) => Modification::UpdateTask(task.into()),
+            ModificationDto::UpdateSection(section) => {
+                Modification::UpdateSection(section.into_model())
+            }
+            ModificationDto::UpdateTask(task) => Modification::UpdateTask(task.into_model()),
         }
     }
 }
@@ -125,40 +135,40 @@ mod tests {
         let task = Task::default();
 
         assert_eq!(
-            ModificationDto::from(Modification::AddTechnology(technology.clone())),
-            ModificationDto::AddTechnology(technology.clone().into())
+            ModificationDto::from_model(Modification::AddTechnology(technology.clone())),
+            ModificationDto::AddTechnology(technology.clone().into_dto())
         );
         assert_eq!(
-            ModificationDto::from(Modification::AddSection(section.clone())),
-            ModificationDto::AddSection(section.clone().into())
+            ModificationDto::from_model(Modification::AddSection(section.clone())),
+            ModificationDto::AddSection(section.clone().into_dto())
         );
         assert_eq!(
-            ModificationDto::from(Modification::AddTask(task.clone())),
-            ModificationDto::AddTask(task.clone().into())
+            ModificationDto::from_model(Modification::AddTask(task.clone())),
+            ModificationDto::AddTask(task.clone().into_dto())
         );
         assert_eq!(
-            ModificationDto::from(Modification::RemoveTechnology(technology.clone())),
-            ModificationDto::RemoveTechnology(technology.clone().into())
+            ModificationDto::from_model(Modification::RemoveTechnology(technology.clone())),
+            ModificationDto::RemoveTechnology(technology.clone().into_dto())
         );
         assert_eq!(
-            ModificationDto::from(Modification::RemoveSection(section.clone())),
-            ModificationDto::RemoveSection(section.clone().into())
+            ModificationDto::from_model(Modification::RemoveSection(section.clone())),
+            ModificationDto::RemoveSection(section.clone().into_dto())
         );
         assert_eq!(
-            ModificationDto::from(Modification::RemoveTask(task.clone())),
-            ModificationDto::RemoveTask(task.clone().into())
+            ModificationDto::from_model(Modification::RemoveTask(task.clone())),
+            ModificationDto::RemoveTask(task.clone().into_dto())
         );
         assert_eq!(
-            ModificationDto::from(Modification::UpdateTechnology(technology.clone())),
-            ModificationDto::UpdateTechnology(technology.into())
+            ModificationDto::from_model(Modification::UpdateTechnology(technology.clone())),
+            ModificationDto::UpdateTechnology(technology.into_dto())
         );
         assert_eq!(
-            ModificationDto::from(Modification::UpdateSection(section.clone())),
-            ModificationDto::UpdateSection(section.into())
+            ModificationDto::from_model(Modification::UpdateSection(section.clone())),
+            ModificationDto::UpdateSection(section.into_dto())
         );
         assert_eq!(
-            ModificationDto::from(Modification::UpdateTask(task.clone())),
-            ModificationDto::UpdateTask(task.into())
+            ModificationDto::from_model(Modification::UpdateTask(task.clone())),
+            ModificationDto::UpdateTask(task.into_dto())
         );
     }
 
@@ -169,40 +179,40 @@ mod tests {
         let task = TaskDto::default();
 
         assert_eq!(
-            Modification::from(ModificationDto::AddTechnology(technology.clone())),
-            Modification::AddTechnology(technology.clone().into())
+            Modification::from_dto(ModificationDto::AddTechnology(technology.clone())),
+            Modification::AddTechnology(technology.clone().into_model())
         );
         assert_eq!(
-            Modification::from(ModificationDto::AddSection(section.clone())),
-            Modification::AddSection(section.clone().into())
+            Modification::from_dto(ModificationDto::AddSection(section.clone())),
+            Modification::AddSection(section.clone().into_model())
         );
         assert_eq!(
-            Modification::from(ModificationDto::AddTask(task.clone())),
-            Modification::AddTask(task.clone().into())
+            Modification::from_dto(ModificationDto::AddTask(task.clone())),
+            Modification::AddTask(task.clone().into_model())
         );
         assert_eq!(
-            Modification::from(ModificationDto::RemoveTechnology(technology.clone())),
-            Modification::RemoveTechnology(technology.clone().into())
+            Modification::from_dto(ModificationDto::RemoveTechnology(technology.clone())),
+            Modification::RemoveTechnology(technology.clone().into_model())
         );
         assert_eq!(
-            Modification::from(ModificationDto::RemoveSection(section.clone())),
-            Modification::RemoveSection(section.clone().into())
+            Modification::from_dto(ModificationDto::RemoveSection(section.clone())),
+            Modification::RemoveSection(section.clone().into_model())
         );
         assert_eq!(
-            Modification::from(ModificationDto::RemoveTask(task.clone())),
-            Modification::RemoveTask(task.clone().into())
+            Modification::from_dto(ModificationDto::RemoveTask(task.clone())),
+            Modification::RemoveTask(task.clone().into_model())
         );
         assert_eq!(
-            Modification::from(ModificationDto::UpdateTechnology(technology.clone())),
-            Modification::UpdateTechnology(technology.into())
+            Modification::from_dto(ModificationDto::UpdateTechnology(technology.clone())),
+            Modification::UpdateTechnology(technology.into_model())
         );
         assert_eq!(
-            Modification::from(ModificationDto::UpdateSection(section.clone())),
-            Modification::UpdateSection(section.into())
+            Modification::from_dto(ModificationDto::UpdateSection(section.clone())),
+            Modification::UpdateSection(section.into_model())
         );
         assert_eq!(
-            Modification::from(ModificationDto::UpdateTask(task.clone())),
-            Modification::UpdateTask(task.into())
+            Modification::from_dto(ModificationDto::UpdateTask(task.clone())),
+            Modification::UpdateTask(task.into_model())
         );
     }
 }

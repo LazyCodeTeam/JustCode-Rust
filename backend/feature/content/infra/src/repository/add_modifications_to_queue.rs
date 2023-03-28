@@ -3,7 +3,7 @@ use common_domain::error::{Error, Result};
 use common_infra::sqs_client::get_sqs_client;
 use content_domain::model::modification::Modification;
 
-use crate::{config::CONFIG, dto::modification_dto::ModificationDto};
+use crate::{config::CONFIG, dto::modification_dto::ModificationDto, IntoDto};
 
 const BATCH_SIZE: usize = 10;
 
@@ -11,7 +11,7 @@ pub async fn add_modifications_to_queue(modifications: Vec<Modification>) -> Res
     let dtos =
         modifications
             .into_iter()
-            .map::<ModificationDto, _>(Into::into)
+            .map::<ModificationDto, _>(IntoDto::into_dto)
             .enumerate()
             .map(|(index, dto)| -> Result<SendMessageBatchRequestEntry> {
                 Ok(SendMessageBatchRequestEntry::builder()

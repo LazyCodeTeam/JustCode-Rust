@@ -4,7 +4,8 @@ use common_infra::dynamodb_client::{get_dynamodb_client, QueryOutputExt};
 use content_domain::model::technology::Technology;
 
 use crate::{
-    config::CONFIG, dto::technology_dto::TechnologyDto, TECHNOLOGY_ID_PREFIX, TECHNOLOGY_PK,
+    config::CONFIG, dto::technology_dto::TechnologyDto, IntoModel, TECHNOLOGY_ID_PREFIX,
+    TECHNOLOGY_PK,
 };
 
 pub async fn get_all_technologies() -> Result<Vec<Technology>> {
@@ -18,11 +19,7 @@ pub async fn get_all_technologies() -> Result<Vec<Technology>> {
         .send()
         .await
         .parse::<TechnologyDto>()
-        .map(|dtos| {
-            dtos.into_iter()
-                .map(|dto| dto.into())
-                .collect::<Vec<Technology>>()
-        })
+        .map(IntoModel::into_model)
 }
 
 pub async fn get_ordered_technologies() -> Result<Vec<Technology>> {
@@ -40,9 +37,5 @@ pub async fn get_ordered_technologies() -> Result<Vec<Technology>> {
         .send()
         .await
         .parse::<TechnologyDto>()
-        .map(|dtos| {
-            dtos.into_iter()
-                .map(|dto| dto.into())
-                .collect::<Vec<Technology>>()
-        })
+        .map(IntoModel::into_model)
 }

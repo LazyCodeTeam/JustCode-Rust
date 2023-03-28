@@ -1,4 +1,4 @@
-use crate::config::CONFIG;
+use crate::{config::CONFIG, IntoModel};
 use aws_sdk_dynamodb::model::AttributeValue;
 use common_domain::error::Result;
 use common_infra::dynamodb_client::{get_dynamodb_client, GetItemOutputExt};
@@ -16,5 +16,5 @@ pub async fn get_profile_by_id(id: &str) -> Result<Option<Profile>> {
         .send()
         .await
         .parse::<ProfileDto>()
-        .map(|o| o.map(|p| p.into()))
+        .map(|o| o.map(IntoModel::into_model))
 }

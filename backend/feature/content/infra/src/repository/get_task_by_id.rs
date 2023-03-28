@@ -3,7 +3,7 @@ use common_domain::error::Result;
 use common_infra::dynamodb_client::{get_dynamodb_client, QueryOutputExt};
 use content_domain::model::task::Task;
 
-use crate::{config::CONFIG, task_dto::TaskDto, TASK_GSI_PK, TASK_ID_PREFIX};
+use crate::{config::CONFIG, task_dto::TaskDto, IntoModel, TASK_GSI_PK, TASK_ID_PREFIX};
 
 pub async fn get_task_by_id(task_id: impl Into<String>) -> Result<Option<Task>> {
     get_dynamodb_client()
@@ -20,5 +20,5 @@ pub async fn get_task_by_id(task_id: impl Into<String>) -> Result<Option<Task>> 
         .send()
         .await
         .parse_one::<TaskDto>()
-        .map(|o| o.map(Into::into))
+        .map(|o| o.map(IntoModel::into_model))
 }

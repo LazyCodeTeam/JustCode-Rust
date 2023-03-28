@@ -1,6 +1,8 @@
 use content_domain::model::task_preview::TaskPreview;
 use serde::{Deserialize, Serialize};
 
+use crate::{FromDto, FromModel};
+
 #[derive(Debug, PartialEq, Eq, Clone, Deserialize, Serialize)]
 pub struct TaskPreviewDto {
     pub id: String,
@@ -8,22 +10,22 @@ pub struct TaskPreviewDto {
     pub for_anonymous: bool,
 }
 
-impl From<TaskPreview> for TaskPreviewDto {
-    fn from(task_preview: TaskPreview) -> Self {
+impl FromModel<TaskPreview> for TaskPreviewDto {
+    fn from_model(model: TaskPreview) -> Self {
         Self {
-            id: task_preview.id,
-            title: task_preview.title,
-            for_anonymous: task_preview.for_anonymous,
+            id: model.id,
+            title: model.title,
+            for_anonymous: model.for_anonymous,
         }
     }
 }
 
-impl From<TaskPreviewDto> for TaskPreview {
-    fn from(task_preview_dto: TaskPreviewDto) -> Self {
+impl FromDto<TaskPreviewDto> for TaskPreview {
+    fn from_dto(dto: TaskPreviewDto) -> Self {
         Self {
-            id: task_preview_dto.id,
-            title: task_preview_dto.title,
-            for_anonymous: task_preview_dto.for_anonymous,
+            id: dto.id,
+            title: dto.title,
+            for_anonymous: dto.for_anonymous,
         }
     }
 }
@@ -40,7 +42,7 @@ mod tests {
             for_anonymous: false,
         };
 
-        let task_preview_dto = TaskPreviewDto::from(task_preview);
+        let task_preview_dto = TaskPreviewDto::from_model(task_preview);
 
         assert_eq!(
             task_preview_dto,
@@ -60,7 +62,7 @@ mod tests {
             for_anonymous: false,
         };
 
-        let task_preview = TaskPreview::from(task_preview_dto);
+        let task_preview = TaskPreview::from_dto(task_preview_dto);
 
         assert_eq!(
             task_preview,

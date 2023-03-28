@@ -2,7 +2,10 @@ use common_infra::dynamodb_identifiable::DynamoDbIdentifiable;
 use content_domain::model::technology::Technology;
 use serde::{Deserialize, Serialize};
 
-use crate::{POSITIONED_ID_LENGTH, TECHNOLOGY_ID_PREFIX, TECHNOLOGY_PK};
+use crate::{
+    FromDto, FromModel, IntoDto, IntoModel, POSITIONED_ID_LENGTH, TECHNOLOGY_ID_PREFIX,
+    TECHNOLOGY_PK,
+};
 
 use super::section_preview_dto::SectionPreviewDto;
 
@@ -30,46 +33,38 @@ impl DynamoDbIdentifiable for TechnologyDto {
     }
 }
 
-impl From<Technology> for TechnologyDto {
-    fn from(technology: Technology) -> Self {
+impl FromModel<Technology> for TechnologyDto {
+    fn from_model(model: Technology) -> Self {
         Self {
             pk: TECHNOLOGY_PK.to_string(),
-            id: format!("{}{}", TECHNOLOGY_ID_PREFIX, technology.id),
+            id: format!("{}{}", TECHNOLOGY_ID_PREFIX, model.id),
             positioned_id: format!(
                 "{}{:0>len$}",
                 TECHNOLOGY_ID_PREFIX,
-                technology.position,
+                model.position,
                 len = POSITIONED_ID_LENGTH
             ),
-            name: technology.name,
-            description: technology.description,
-            image: technology.image,
-            sections_preview: technology
-                .sections_preview
-                .into_iter()
-                .map(Into::into)
-                .collect(),
+            name: model.name,
+            description: model.description,
+            image: model.image,
+            sections_preview: model.sections_preview.into_dto(),
         }
     }
 }
 
-impl From<TechnologyDto> for Technology {
-    fn from(technology_dto: TechnologyDto) -> Self {
+impl FromDto<TechnologyDto> for Technology {
+    fn from_dto(dto: TechnologyDto) -> Self {
         Self {
-            id: technology_dto.id.replace(TECHNOLOGY_ID_PREFIX, ""),
-            position: technology_dto
+            id: dto.id.replace(TECHNOLOGY_ID_PREFIX, ""),
+            position: dto
                 .positioned_id
                 .replace(TECHNOLOGY_ID_PREFIX, "")
                 .parse()
                 .unwrap_or_default(),
-            name: technology_dto.name,
-            description: technology_dto.description,
-            image: technology_dto.image,
-            sections_preview: technology_dto
-                .sections_preview
-                .into_iter()
-                .map(Into::into)
-                .collect(),
+            name: dto.name,
+            description: dto.description,
+            image: dto.image,
+            sections_preview: dto.sections_preview.into_model(),
         }
     }
 }
@@ -93,7 +88,7 @@ mod tests {
             sections_preview: sections_preview.clone(),
         };
 
-        let technology_dto = TechnologyDto::from(technology);
+        let technology_dto = TechnologyDto::from_model(technology);
 
         assert_eq!(
             technology_dto,
@@ -104,7 +99,7 @@ mod tests {
                 name: "name".to_string(),
                 description: Some("description".to_string()),
                 image: Some("image".to_string()),
-                sections_preview: sections_preview.into_iter().map(Into::into).collect(),
+                sections_preview: sections_preview.into_dto(),
             }
         );
     }
@@ -123,7 +118,7 @@ mod tests {
             sections_preview: sections_preview.clone(),
         };
 
-        let technology = Technology::from(technology_dto);
+        let technology = Technology::from_dto(technology_dto);
 
         assert_eq!(
             technology,
@@ -133,7 +128,7 @@ mod tests {
                 name: "name".to_string(),
                 description: Some("description".to_string()),
                 image: Some("image".to_string()),
-                sections_preview: sections_preview.into_iter().map(Into::into).collect(),
+                sections_preview: sections_preview.into_model(),
             }
         );
     }

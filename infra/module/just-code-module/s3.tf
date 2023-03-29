@@ -1,14 +1,14 @@
-resource "aws_s3_bucket" "images" {
+resource "aws_s3_bucket" "content" {
   bucket = "${local.app_name}-${var.env}"
 }
 
-resource "aws_s3_bucket_acl" "images" {
-  bucket = aws_s3_bucket.images.id
+resource "aws_s3_bucket_acl" "content" {
+  bucket = aws_s3_bucket.content.id
   acl    = "private"
 }
 
-resource "aws_s3_bucket_server_side_encryption_configuration" "images" {
-  bucket = aws_s3_bucket.images.bucket
+resource "aws_s3_bucket_server_side_encryption_configuration" "content" {
+  bucket = aws_s3_bucket.content.bucket
 
   rule {
     apply_server_side_encryption_by_default {
@@ -18,7 +18,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "images" {
 }
 
 resource "aws_s3_bucket_notification" "just_code" {
-  bucket = aws_s3_bucket.images.id
+  bucket = aws_s3_bucket.content.id
 
   lambda_function {
     lambda_function_arn = module.on_avatars_created.arn

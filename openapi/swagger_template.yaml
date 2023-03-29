@@ -602,12 +602,16 @@ components:
       type: object
       required:
         - valid_until
+        - presigned_url
         - url
         - headers
       properties:
         valid_until:
           type: string
           format: date-time
+        presigned_url:
+          type: string
+          format: uri
         url:
           type: string
           format: uri

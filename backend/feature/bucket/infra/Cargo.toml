@@ -4,7 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-aws-config = { workspace = true }
 aws-sdk-s3 = { workspace = true }
 bucket_domain = { path = "../domain" }
 chrono = { workspace = true }

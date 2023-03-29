@@ -134,8 +134,9 @@ module "request_avatar_upload_v1_lambda" {
   memory_size = 128
   zip_path    = "${path.module}/../../../target/lambdas/request_avatar_upload_v1.zip"
   env_variables = {
-    DYNAMODB_TABLE = aws_dynamodb_table.main.name
-    S3_BUCKET      = aws_s3_bucket.images.id
+    DYNAMODB_TABLE  = aws_dynamodb_table.main.name
+    S3_BUCKET       = aws_s3_bucket.content.id
+    BUCKET_BASE_URL = "https://${aws_cloudfront_distribution.content.domain_name}"
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -161,8 +162,9 @@ module "on_avatars_created" {
   memory_size = 128
   zip_path    = "${path.module}/../../../target/lambdas/on_avatars_created.zip"
   env_variables = {
-    DYNAMODB_TABLE = aws_dynamodb_table.main.name
-    S3_BUCKET      = aws_s3_bucket.images.id
+    DYNAMODB_TABLE  = aws_dynamodb_table.main.name
+    S3_BUCKET       = aws_s3_bucket.content.id
+    BUCKET_BASE_URL = "https://${aws_cloudfront_distribution.content.domain_name}"
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -176,7 +178,7 @@ resource "aws_lambda_permission" "on_avatars_created_s3" {
   function_name = module.on_avatars_created.function_name
   principal     = "s3.amazonaws.com"
   qualifier     = var.env
-  source_arn    = aws_s3_bucket.images.arn
+  source_arn    = aws_s3_bucket.content.arn
 }
 
 module "moderator_api_key_validator" {
@@ -393,7 +395,8 @@ module "request_assets_upload_v1_lambda" {
   memory_size = 128
   zip_path    = "${path.module}/../../../target/lambdas/request_assets_upload_v1.zip"
   env_variables = {
-    S3_BUCKET = aws_s3_bucket.images.id
+    S3_BUCKET       = aws_s3_bucket.content.id
+    BUCKET_BASE_URL = "https://${aws_cloudfront_distribution.content.domain_name}"
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -418,8 +421,9 @@ module "on_assets_uploaded_lambda" {
   memory_size = 128
   zip_path    = "${path.module}/../../../target/lambdas/on_assets_uploaded.zip"
   env_variables = {
-    DYNAMODB_TABLE = aws_dynamodb_table.main.name
-    S3_BUCKET      = aws_s3_bucket.images.id
+    DYNAMODB_TABLE  = aws_dynamodb_table.main.name
+    S3_BUCKET       = aws_s3_bucket.content.id
+    BUCKET_BASE_URL = "https://${aws_cloudfront_distribution.content.domain_name}"
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
@@ -433,7 +437,7 @@ resource "aws_lambda_permission" "on_assets_uploaded_s3" {
   function_name = module.on_assets_uploaded_lambda.function_name
   principal     = "s3.amazonaws.com"
   qualifier     = var.env
-  source_arn    = aws_s3_bucket.images.arn
+  source_arn    = aws_s3_bucket.content.arn
 }
 
 module "get_content_assets_v1_lambda" {
@@ -471,7 +475,7 @@ module "delete_content_assets_v1_lambda" {
   zip_path    = "${path.module}/../../../target/lambdas/delete_content_assets_v1.zip"
   env_variables = {
     DYNAMODB_TABLE = aws_dynamodb_table.main.name
-    S3_BUCKET      = aws_s3_bucket.images.id
+    S3_BUCKET      = aws_s3_bucket.content.id
   }
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",

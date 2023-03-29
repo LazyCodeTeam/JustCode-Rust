@@ -6,13 +6,18 @@ lazy_static::lazy_static! {
 
 pub struct Config {
     pub s3_bucket: String,
+    pub bucket_base_url: String,
 }
 
 impl Config {
     pub fn new() -> Self {
         let s3_bucket = env::var("S3_BUCKET").unwrap_or_else(|_| "just-code-dev".to_string());
+        let bucket_base_url = env::var("BUCKET_BASE_URL").unwrap_or_default();
 
-        Self { s3_bucket }
+        Self {
+            s3_bucket,
+            bucket_base_url,
+        }
     }
 }
 

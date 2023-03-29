@@ -7,6 +7,8 @@ use chrono::Utc;
 use common_domain::error::{Error, Result};
 use common_infra::s3_client::get_s3_client;
 
+use super::get_s3_object_url;
+
 pub async fn get_upload_url<S, S2>(
     prefix: S,
     name: Option<S2>,
@@ -17,22 +19,25 @@ where
     S2: Into<String>,
 {
     let client = get_s3_client().await;
+    let key = format!(
+        "{}{}",
+        prefix.into(),
+        name.map::<String, _>(Into::into)
+            .unwrap_or_else(|| uuid::Uuid::new_v4().simple().to_string())
+    );
+    let url = get_s3_object_url(&key).await?;
 
     client
         .put_object()
         .bucket(&CONFIG.s3_bucket)
-        .key(format!(
-            "{}{}",
-            prefix.into(),
-            name.map::<String, _>(Into::into)
-                .unwrap_or_else(|| uuid::Uuid::new_v4().simple().to_string())
-        ))
+        .key(key)
         .acl(ObjectCannedAcl::PublicRead)
         .presigned(presigned_config(valid_for)?)
         .await
         .map_err(|err| Error::unknown(format!("Failed to presign avatar image: {err:?}")))
         .map(|presigned| PresignedUrl {
-            url: presigned.uri().to_string(),
+            presigned_url: presigned.uri().to_string(),
+            url,
             valid_until: Utc::now() + url_chrono_duration(valid_for),
             headers: presigned
                 .headers()

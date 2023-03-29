@@ -5,6 +5,7 @@ use crate::{dto::PresignedUrlDto, FromModel};
 impl FromModel<PresignedUrl> for PresignedUrlDto {
     fn from_model(model: PresignedUrl) -> Self {
         Self {
+            presigned_url: model.presigned_url,
             url: model.url,
             valid_until: model.valid_until.to_rfc3339(),
             headers: model.headers,
@@ -23,11 +24,15 @@ mod tests {
     #[test]
     fn test_from_presigned_url() {
         let presigned_url = PresignedUrl {
-            url: "https://example.com".to_string(),
+            presigned_url: "https://example.com".to_string(),
+            url: "https://example2.com".to_string(),
             valid_until: Utc::now(),
             headers: HashMap::from([("key".to_string(), "value".to_string())]),
         };
+
         let presigned_url_dto = PresignedUrlDto::from_model(presigned_url.clone());
+
+        assert_eq!(presigned_url_dto.presigned_url, presigned_url.presigned_url);
         assert_eq!(presigned_url_dto.url, presigned_url.url);
         assert_eq!(
             presigned_url_dto.valid_until,

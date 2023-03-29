@@ -1,5 +1,8 @@
 locals {
+  gateway_base_url = "${aws_apigatewayv2_api.just_code.api_endpoint}/${aws_apigatewayv2_stage.just_code_api.name}"
   swagger = templatefile("${path.module}/../../../openapi/swagger_template.yaml", {
+    base_url = "$${base_url}" // This will be filled later for swaggerui
+
     cognito_client_id = aws_cognito_user_pool_client.client.id
     cognito_issuer    = "https://${aws_cognito_user_pool.pool.endpoint}"
     cognito_base_url  = "https://${aws_cognito_user_pool_domain.domain.domain}.auth.${var.region}.amazoncognito.com"

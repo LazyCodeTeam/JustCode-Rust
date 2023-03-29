@@ -15,7 +15,3 @@ locals {
   app_name          = "just-code"
   code_service_name = "code-service"
 }
-
-data "aws_ecr_repository" "code_service" {
-  name = "${local.code_service_name}-${var.env}"
-}

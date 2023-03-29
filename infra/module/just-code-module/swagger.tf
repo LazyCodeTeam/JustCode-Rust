@@ -1,5 +1,8 @@
+locals {
+  swaggerui_content = replace(local.swagger, "$${base_url}", local.gateway_base_url)
+}
 resource "local_file" "rendered_swagger" {
-  content  = local.swagger
+  content  = local.swaggerui_content
   filename = "${path.module}/../../../openapi/swagger.yaml"
 }
 
@@ -44,7 +47,7 @@ resource "aws_s3_object" "swaggerui-yaml" {
   key          = "swagger.yaml"
   source       = "${path.module}/../../../openapi/swagger.yaml"
   content_type = "text/yaml"
-  etag         = md5(local.swagger)
+  etag         = md5(local.swaggerui_content)
   depends_on = [
     local_file.rendered_swagger
   ]

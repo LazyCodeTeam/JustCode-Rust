@@ -56,6 +56,10 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
+      - name: Init terraform
+        working-directory: ./infra/uat
+        run: terraform init
+
       - name: Deploy
         working-directory: ./infra/uat
         env:

@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket         = "just-code-state"
-    key            = "dev/terraform.tfstate"
+    key            = "uat/terraform.tfstate"
     region         = "eu-central-1"
     dynamodb_table = "just-code-state-lock"
     encrypt        = true
@@ -23,7 +23,7 @@ module "app" {
   source = "../module/just-code-module"
 
   region            = "eu-central-1"
-  env               = "dev"
+  env               = "uat"
   moderator_api_key = var.moderator_api_key
   app_api_key       = var.app_api_key
 }

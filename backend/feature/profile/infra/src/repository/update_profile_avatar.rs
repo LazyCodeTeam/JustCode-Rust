@@ -3,7 +3,7 @@ use aws_sdk_dynamodb::model::AttributeValue;
 use common_domain::error::{Error, Result};
 use common_infra::dynamodb_client::get_dynamodb_client;
 
-use crate::{PROFILE_ID_PREFIX, PROFILE_SORT_KEY};
+use crate::{PROFILE_ID_PREFIX, PROFILE_PRIMARY_KEY};
 
 pub async fn update_profile_avatar<S, S2>(id: S, url: Option<S2>) -> Result<()>
 where
@@ -15,10 +15,10 @@ where
         .update_item()
         .table_name(&CONFIG.dynamodb_table)
         .key(
-            "PK",
+            "SK",
             AttributeValue::S(format!("{PROFILE_ID_PREFIX}{}", id.into())),
         )
-        .key("SK", AttributeValue::S(PROFILE_SORT_KEY.to_owned()));
+        .key("PK", AttributeValue::S(PROFILE_PRIMARY_KEY.to_owned()));
 
     let query = match url {
         Some(url) => query

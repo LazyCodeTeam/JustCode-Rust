@@ -2,16 +2,16 @@ use chrono::{DateTime, Utc};
 use profile_domain::model::{create_profile_params::CreateProfileParams, profile::Profile};
 use serde::{Deserialize, Serialize};
 
-use crate::{FromDto, FromModel, IntoDto, IntoModel, PROFILE_ID_PREFIX, PROFILE_SORT_KEY};
+use crate::{FromDto, FromModel, IntoDto, IntoModel, PROFILE_ID_PREFIX, PROFILE_PRIMARY_KEY};
 
 use super::profile_role_dto::ProfileRoleDto;
 
 #[derive(Deserialize, Serialize, PartialEq, Eq, Debug)]
 pub struct ProfileDto {
-    #[serde(rename = "PK")]
-    pub id: String,
     #[serde(rename = "SK")]
-    pub sk: String,
+    pub id: String,
+    #[serde(rename = "PK")]
+    pub pk: String,
     pub email: String,
     pub name: String,
     pub role: Option<ProfileRoleDto>,
@@ -40,7 +40,7 @@ impl FromModel<CreateProfileParams> for ProfileDto {
     fn from_model(model: CreateProfileParams) -> Self {
         ProfileDto {
             id: format!("{}{}", PROFILE_ID_PREFIX, model.id),
-            sk: PROFILE_SORT_KEY.to_string(),
+            pk: PROFILE_PRIMARY_KEY.to_string(),
             name: model.name,
             email: model.email,
             avatar_url: None,
@@ -56,7 +56,7 @@ impl FromModel<Profile> for ProfileDto {
     fn from_model(model: Profile) -> Self {
         ProfileDto {
             id: format!("{}{}", PROFILE_ID_PREFIX, model.id),
-            sk: PROFILE_SORT_KEY.to_string(),
+            pk: PROFILE_PRIMARY_KEY.to_string(),
             name: model.name,
             email: model.email,
             avatar_url: model.avatar_url,
@@ -99,7 +99,7 @@ mod tests {
         let now = Utc::now();
         let dto = ProfileDto {
             id: format!("{PROFILE_ID_PREFIX}id"),
-            sk: PROFILE_SORT_KEY.to_string(),
+            pk: PROFILE_PRIMARY_KEY.to_string(),
             name: "name".to_string(),
             email: "email".to_string(),
             avatar_url: Some("avatar_url".to_string()),
@@ -142,7 +142,7 @@ mod tests {
             ProfileDto::from_model(profile),
             ProfileDto {
                 id: format!("{PROFILE_ID_PREFIX}id"),
-                sk: PROFILE_SORT_KEY.to_string(),
+                pk: PROFILE_PRIMARY_KEY.to_string(),
                 name: "name".to_string(),
                 email: "email".to_string(),
                 avatar_url: Some("avatar_url".to_string()),

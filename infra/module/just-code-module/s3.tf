@@ -32,5 +32,5 @@ resource "aws_s3_bucket_notification" "just_code" {
     filter_prefix       = "content/assets/"
   }
 
-  depends_on = [aws_lambda_permission.on_avatars_created_s3, aws_lambda_permission.on_assets_uploaded_s3]
+  depends_on = [module.on_avatars_created, module.on_assets_uploaded_lambda]
 }

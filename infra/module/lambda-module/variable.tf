@@ -36,3 +36,21 @@ variable "layers" {
   type    = list(string)
   default = []
 }
+
+variable "invoker" {
+  type = object({
+    arn       = string
+    principal = string
+  })
+  default = null
+}
+
+variable "event_mapping" {
+  type = object({
+    event_source_arn                   = string
+    enabled                            = bool
+    batch_size                         = number
+    maximum_batching_window_in_seconds = number
+  })
+  default = null
+}

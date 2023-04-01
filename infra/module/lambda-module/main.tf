@@ -67,3 +67,24 @@ resource "aws_cloudwatch_log_group" "lambda" {
 
   retention_in_days = 30
 }
+
+resource "aws_lambda_permission" "invoke" {
+  count = var.invoker == null ? 0 : 1
+
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda.function_name
+  principal     = var.invoker.principal
+  qualifier     = var.env
+  source_arn    = var.invoker.arn
+}
+
+
+resource "aws_lambda_event_source_mapping" "event_source_mapping" {
+  count = var.event_mapping == null ? 0 : 1
+
+  event_source_arn                   = var.event_mapping.event_source_arn
+  function_name                      = aws_lambda_function.lambda.arn
+  batch_size                         = var.event_mapping.batch_size
+  enabled                            = var.event_mapping.enabled
+  maximum_batching_window_in_seconds = var.event_mapping.maximum_batching_window_in_seconds
+}

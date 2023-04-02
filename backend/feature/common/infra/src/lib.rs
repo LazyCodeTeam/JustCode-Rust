@@ -1,3 +1,5 @@
+#[cfg(feature = "cognito")]
+pub mod cognito_client;
 #[cfg(feature = "dynamodb")]
 pub mod dynamodb_client;
 #[cfg(feature = "dynamodb")]

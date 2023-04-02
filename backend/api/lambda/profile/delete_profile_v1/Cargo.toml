@@ -1,0 +1,14 @@
+[package]
+name = "delete_profile_v1"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+common_api = { path = "../../../common_api", features = ["lambda"] }
+common_domain = { path = "../../../../feature/common/domain" }
+futures = { workspace = true }
+lambda_http = { workspace = true }
+profile_infra = { path = "../../../../feature/profile/infra" }
+tokio = { workspace = true }
+use_case = { path = "../../../../use_case", features = ["delete_profile"] }
+user_infra = { path = "../../../../feature/user/infra" }

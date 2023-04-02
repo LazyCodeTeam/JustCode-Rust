@@ -1,0 +1,9 @@
+[package]
+name = "user_infra"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+common_domain = { path = "../../common/domain" }
+common_infra = { path = "../../common/infra", features = ["cognito"] }
+lazy_static = { workspace = true }

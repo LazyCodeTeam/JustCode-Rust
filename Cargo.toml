@@ -9,6 +9,7 @@ members = [
   "backend/feature/common/*",
   "backend/feature/content/*",
   "backend/feature/profile/*",
+  "backend/feature/user/*",
   "backend/use_case",
   "integration_tests",
   "xtask",
@@ -16,6 +17,7 @@ members = [
 
 [workspace.dependencies]
 aws-config = { version = "0.54" }
+aws-sdk-cognitoidentityprovider = { version = "0.24" }
 aws-sdk-dynamodb = { version = "0.24" }
 aws-sdk-s3 = { version = "0.24" }
 aws-sdk-sqs = { version = "0.24" }

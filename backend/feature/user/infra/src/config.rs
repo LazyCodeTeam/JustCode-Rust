@@ -28,11 +28,6 @@ mod tests {
     use super::*;
 
     #[test]
-    fn config() {
-        with_set_values();
-        with_no_values();
-    }
-
     fn with_set_values() {
         env::set_var("USER_POOL_ID", "user_pool_id");
 
@@ -41,6 +36,8 @@ mod tests {
         assert_eq!(&config.user_pool_id, "user_pool_id");
     }
 
+    #[test]
+    #[should_panic]
     fn with_no_values() {
         env::remove_var("USER_POOL_ID");
 

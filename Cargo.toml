@@ -47,7 +47,7 @@ quote = { version = "1.0" }
 rand = { version = "0.8" }
 regex = { version = "1.7" }
 serde = { version = "1.0" }
-serde_dynamo = { version = "4.0", features = ["aws-sdk-dynamodb+0_24"] }
+serde_dynamo = { version = "4.2", features = ["aws-sdk-dynamodb+0_24"] }
 serde_json = { version = "1.0" }
 sha3 = { version = "0.10" }
 syn = { version = "1.0" }

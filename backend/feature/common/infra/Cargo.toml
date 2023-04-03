@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 aws-config = { workspace = true, optional = true }
+aws-sdk-cognitoidentityprovider = { workspace = true, optional = true }
 aws-sdk-dynamodb = { workspace = true, optional = true }
 aws-sdk-s3 = { workspace = true, optional = true }
 aws-sdk-sqs = { workspace = true, optional = true }
@@ -18,6 +19,7 @@ walkdir = { workspace = true }
 zip = { workspace = true }
 
 [features]
+cognito = ["aws-sdk-cognitoidentityprovider", "aws-config"]
 dynamodb = ["aws-sdk-dynamodb", "aws-config"]
 s3 = ["aws-sdk-s3", "aws-config"]
 sqs = ["aws-sdk-sqs", "aws-config"]

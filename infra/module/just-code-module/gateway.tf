@@ -3,10 +3,11 @@ locals {
   swagger = templatefile("${path.module}/../../../openapi/swagger_template.yaml", {
     base_url = "$${base_url}" // This will be filled later for swaggerui
 
-    cognito_client_id = aws_cognito_user_pool_client.client.id
+    cognito_client_id = aws_cognito_user_pool_client.client["mobile"].id
     cognito_issuer    = "https://${aws_cognito_user_pool.pool.endpoint}"
     cognito_base_url  = "https://${aws_cognito_user_pool_domain.domain.domain}.auth.${var.region}.amazoncognito.com"
 
+    delete_profile_v1        = module.delete_profile_v1_lambda.invoke_arn
     get_profile_v1           = module.get_profile_v1_lambda.invoke_arn
     update_profile_v1        = module.update_profile_v1_lambda.invoke_arn
     update_push_data_v1      = module.update_push_data_v1_lambda.invoke_arn

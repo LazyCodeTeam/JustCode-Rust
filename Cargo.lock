@@ -162,6 +162,30 @@ dependencies = [
 ]
 
 [[package]]
+name = "aws-sdk-cognitoidentityprovider"
+version = "0.24.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e230ad6009dfa3fc991b32fe32853a06c5efa8bca659a964d868c573d58c5e0f"
+dependencies = [
+ "aws-credential-types",
+ "aws-endpoint",
+ "aws-http",
+ "aws-sig-auth",
+ "aws-smithy-async",
+ "aws-smithy-client",
+ "aws-smithy-http",
+ "aws-smithy-http-tower",
+ "aws-smithy-json",
+ "aws-smithy-types",
+ "aws-types",
+ "bytes",
+ "http",
+ "regex",
+ "tokio-stream",
+ "tower",
+]
+
+[[package]]
 name = "aws-sdk-dynamodb"
 version = "0.24.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -732,6 +756,7 @@ name = "common_infra"
 version = "0.1.0"
 dependencies = [
  "aws-config",
+ "aws-sdk-cognitoidentityprovider",
  "aws-sdk-dynamodb",
  "aws-sdk-s3",
  "aws-sdk-sqs",
@@ -959,6 +984,20 @@ dependencies = [
  "lambda_http",
  "tokio",
  "use_case",
+]
+
+[[package]]
+name = "delete_profile_v1"
+version = "0.1.0"
+dependencies = [
+ "common_api",
+ "common_domain",
+ "futures",
+ "lambda_http",
+ "profile_infra",
+ "tokio",
+ "use_case",
+ "user_infra",
 ]
 
 [[package]]
@@ -2890,6 +2929,15 @@ dependencies = [
  "mockall",
  "profile_domain",
  "tokio",
+]
+
+[[package]]
+name = "user_infra"
+version = "0.1.0"
+dependencies = [
+ "common_domain",
+ "common_infra",
+ "lazy_static",
 ]
 
 [[package]]

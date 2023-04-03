@@ -70,6 +70,27 @@ paths:
         httpMethod: "POST"
         uri: ${update_profile_v1}
         connectionType: "INTERNET"
+    delete:
+      tags:
+        - profile
+      responses:
+        "200":
+          description: Successful operation
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+      security:
+        - just-code-dev-auth:
+            - email
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "2.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${delete_profile_v1}
+        connectionType: "INTERNET"
   /v1/profile/current/avatar/upload-url:
     get:
       tags:

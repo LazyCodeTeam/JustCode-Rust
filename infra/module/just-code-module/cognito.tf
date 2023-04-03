@@ -44,9 +44,11 @@ resource "aws_cognito_user_pool" "pool" {
 }
 
 resource "aws_cognito_user_pool_client" "client" {
-  name                                 = "${local.app_name}-${var.env}-client"
+  for_each = toset(["web", "mobile"])
+
+  name                                 = "${local.app_name}-${var.env}-${each.key}-client"
   user_pool_id                         = aws_cognito_user_pool.pool.id
-  generate_secret                      = true
+  generate_secret                      = each.key != "web"
   allowed_oauth_flows_user_pool_client = true
   prevent_user_existence_errors        = "ENABLED"
   access_token_validity                = 15
@@ -75,6 +77,9 @@ resource "aws_cognito_user_pool_client" "client" {
   explicit_auth_flows = [
     "ALLOW_REFRESH_TOKEN_AUTH",
     "ALLOW_USER_PASSWORD_AUTH",
+    "ALLOW_USER_SRP_AUTH",
+    "ALLOW_CUSTOM_AUTH",
+    "ALLOW_ADMIN_USER_PASSWORD_AUTH"
   ]
 }
 

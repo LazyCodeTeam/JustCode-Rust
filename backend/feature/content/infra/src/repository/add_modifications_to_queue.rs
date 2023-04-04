@@ -1,4 +1,4 @@
-use aws_sdk_sqs::model::SendMessageBatchRequestEntry;
+use aws_sdk_sqs::types::SendMessageBatchRequestEntry;
 use common_domain::error::{Error, Result};
 use common_infra::sqs_client::get_sqs_client;
 use content_domain::model::modification::Modification;

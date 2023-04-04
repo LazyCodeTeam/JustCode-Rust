@@ -1,9 +1,11 @@
 use aws_sdk_dynamodb::{
-    error::{GetItemError, QueryError},
-    output::{GetItemOutput, QueryOutput},
-    types::SdkError,
+    operation::{
+        get_item::{GetItemError, GetItemOutput},
+        query::{QueryError, QueryOutput},
+    },
     Client,
 };
+use aws_smithy_http::result::SdkError;
 use common_domain::error::{Error, Result};
 use serde_dynamo::{from_item, from_items};
 

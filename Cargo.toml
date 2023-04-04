@@ -16,11 +16,12 @@ members = [
 ]
 
 [workspace.dependencies]
-aws-config = { version = "0.54" }
-aws-sdk-cognitoidentityprovider = { version = "0.24" }
-aws-sdk-dynamodb = { version = "0.24" }
-aws-sdk-s3 = { version = "0.24" }
-aws-sdk-sqs = { version = "0.24" }
+aws-config = { version = "0.55" }
+aws-sdk-cognitoidentityprovider = { version = "0.25" }
+aws-sdk-dynamodb = { version = "0.25" }
+aws-sdk-s3 = { version = "0.25" }
+aws-sdk-sqs = { version = "0.25" }
+aws-smithy-http = { version = "0.55" }
 aws_lambda_events = { version = "0.7", default-features = false }
 axum = { version = "0.6" }
 chrono = { version = "0.4" }
@@ -47,7 +48,7 @@ quote = { version = "1.0" }
 rand = { version = "0.8" }
 regex = { version = "1.7" }
 serde = { version = "1.0" }
-serde_dynamo = { version = "4.2", features = ["aws-sdk-dynamodb+0_24"] }
+serde_dynamo = { version = "4.2", features = ["aws-sdk-dynamodb+0_25"] }
 serde_json = { version = "1.0" }
 sha3 = { version = "0.10" }
 syn = { version = "1.0" }

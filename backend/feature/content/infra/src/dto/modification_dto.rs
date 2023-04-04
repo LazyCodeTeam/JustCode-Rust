@@ -1,7 +1,7 @@
 use crate::{FromDto, FromModel, IntoDto, IntoModel};
 
 use super::{section_dto::SectionDto, task_dto::TaskDto, technology_dto::TechnologyDto};
-use aws_sdk_dynamodb::model::{AttributeValue, PutRequest, WriteRequest};
+use aws_sdk_dynamodb::types::{AttributeValue, PutRequest, WriteRequest};
 use common_infra::dynamodb_identifiable::DynamoDbIdentifiable;
 use content_domain::model::modification::Modification;
 use serde::{Deserialize, Serialize};
@@ -96,7 +96,7 @@ impl TryFrom<ModificationDto> for WriteRequest {
 fn get_delete_write_request(item: impl DynamoDbIdentifiable) -> WriteRequest {
     WriteRequest::builder()
         .delete_request(
-            aws_sdk_dynamodb::model::DeleteRequest::builder()
+            aws_sdk_dynamodb::types::DeleteRequest::builder()
                 .key("PK", AttributeValue::S(item.pk()))
                 .key("SK", AttributeValue::S(item.sk()))
                 .build(),

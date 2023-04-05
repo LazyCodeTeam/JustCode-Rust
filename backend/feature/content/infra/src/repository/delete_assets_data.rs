@@ -1,4 +1,4 @@
-use aws_sdk_dynamodb::model::{AttributeValue, DeleteRequest, WriteRequest};
+use aws_sdk_dynamodb::types::{AttributeValue, DeleteRequest, WriteRequest};
 use common_domain::error::Result;
 use common_infra::{dynamodb_client::get_dynamodb_client, DYNAMODB_MAX_BATCH_SIZE};
 use futures::future::join_all;

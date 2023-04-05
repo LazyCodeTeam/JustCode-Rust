@@ -1,4 +1,4 @@
-use aws_sdk_dynamodb::model::WriteRequest;
+use aws_sdk_dynamodb::types::WriteRequest;
 use common_domain::error::Result;
 use common_infra::dynamodb_client::get_dynamodb_client;
 use content_domain::model::modification::Modification;

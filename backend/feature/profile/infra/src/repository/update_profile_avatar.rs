@@ -1,5 +1,5 @@
 use crate::config::CONFIG;
-use aws_sdk_dynamodb::model::AttributeValue;
+use aws_sdk_dynamodb::types::AttributeValue;
 use common_domain::error::{Error, Result};
 use common_infra::dynamodb_client::get_dynamodb_client;
 

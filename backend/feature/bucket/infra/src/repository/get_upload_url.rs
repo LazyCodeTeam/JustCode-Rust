@@ -1,7 +1,7 @@
 use crate::config::CONFIG;
 use std::time::Duration;
 
-use aws_sdk_s3::{model::ObjectCannedAcl, presigning::config::PresigningConfig};
+use aws_sdk_s3::{presigning::PresigningConfig, types::ObjectCannedAcl};
 use bucket_domain::model::presigned_url::PresignedUrl;
 use chrono::Utc;
 use common_domain::error::{Error, Result};

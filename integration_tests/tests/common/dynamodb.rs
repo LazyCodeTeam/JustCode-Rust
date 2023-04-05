@@ -1,7 +1,7 @@
 use std::{env, panic::AssertUnwindSafe};
 
 use aws_sdk_dynamodb::{
-    model::{
+    types::{
         AttributeDefinition, GlobalSecondaryIndex, KeySchemaElement, KeyType, Projection,
         ProvisionedThroughput, ScalarAttributeType, TableStatus,
     },
@@ -54,7 +54,7 @@ pub async fn create_table(client: &Client, table: &str) -> Result<(), Error> {
         .key_schema(gsi_sk_ks)
         .projection(
             Projection::builder()
-                .projection_type(aws_sdk_dynamodb::model::ProjectionType::All)
+                .projection_type(aws_sdk_dynamodb::types::ProjectionType::All)
                 .build(),
         )
         .provisioned_throughput(

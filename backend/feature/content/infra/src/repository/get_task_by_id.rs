@@ -9,7 +9,7 @@ pub async fn get_task_by_id(task_id: impl Into<String>) -> Result<Option<Task>> 
     get_dynamodb_client()
         .await
         .query()
-        .table_name(&CONFIG.dynamodb_table)
+        .table_name(&CONFIG.content_dynamodb_table)
         .index_name("GSI_1")
         .key_condition_expression("GSI_1_PK = :gsi_1_pk and GSI_1_SK = :gsi_1_sk")
         .expression_attribute_values(":gsi_1_pk", AttributeValue::S(TASK_GSI_PK.to_owned()))

@@ -8,7 +8,7 @@ pub async fn increment_transaction_counter(count: u64) -> Result<()> {
     get_dynamodb_client()
         .await
         .update_item()
-        .table_name(&CONFIG.dynamodb_table)
+        .table_name(&CONFIG.content_dynamodb_table)
         .key("PK", AttributeValue::S(TASKS_TRANSACTION_PK.to_owned()))
         .key("SK", AttributeValue::S(TASKS_TRANSACTION_SK.to_owned()))
         .update_expression("set #processed_items_count = #processed_items_count + :count_to_add")

@@ -8,7 +8,7 @@ pub async fn is_transaction_in_progress() -> Result<bool> {
     get_dynamodb_client()
         .await
         .get_item()
-        .table_name(&CONFIG.dynamodb_table)
+        .table_name(&CONFIG.content_dynamodb_table)
         .key("PK", AttributeValue::S(TASKS_TRANSACTION_PK.to_owned()))
         .key("SK", AttributeValue::S(TASKS_TRANSACTION_SK.to_owned()))
         .send()

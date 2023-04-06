@@ -15,7 +15,7 @@ pub async fn write_modifications(modifications: Vec<Modification>) -> Result<()>
     get_dynamodb_client()
         .await
         .batch_write_item()
-        .request_items(&CONFIG.dynamodb_table, items)
+        .request_items(&CONFIG.content_dynamodb_table, items)
         .send()
         .await
         .map(|_| ())

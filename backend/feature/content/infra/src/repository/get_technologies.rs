@@ -12,7 +12,7 @@ pub async fn get_all_technologies() -> Result<Vec<Technology>> {
     get_dynamodb_client()
         .await
         .query()
-        .table_name(&CONFIG.dynamodb_table)
+        .table_name(&CONFIG.content_dynamodb_table)
         .key_condition_expression("PK = :pk and begins_with(SK, :sk)")
         .expression_attribute_values(":pk", AttributeValue::S(TECHNOLOGY_PK.to_string()))
         .expression_attribute_values(":sk", AttributeValue::S(TECHNOLOGY_ID_PREFIX.to_string()))
@@ -26,7 +26,7 @@ pub async fn get_ordered_technologies() -> Result<Vec<Technology>> {
     get_dynamodb_client()
         .await
         .query()
-        .table_name(&CONFIG.dynamodb_table)
+        .table_name(&CONFIG.content_dynamodb_table)
         .index_name("LSI_1")
         .key_condition_expression("PK = :pk and begins_with(LSI_1, :lsi_1)")
         .expression_attribute_values(":pk", AttributeValue::S(TECHNOLOGY_PK.to_string()))

@@ -1,15 +1,12 @@
 module "load_content_v1_lambda" {
   source = "../lambda-module"
 
-  env         = var.env
-  name        = "load-content-v1"
-  app_name    = local.app_name
-  memory_size = 128
-  zip_path    = "${path.module}/../../../target/lambdas/load_content_v1.zip"
-  env_variables = {
-    TASK_MIGRATION_SQS_QUEUE = aws_sqs_queue.tasks_migration.url
-    DYNAMODB_TABLE           = aws_dynamodb_table.main.name
-  }
+  env           = var.env
+  name          = "load-content-v1"
+  app_name      = local.app_name
+  memory_size   = 128
+  zip_path      = "${path.module}/../../../target/lambdas/load_content_v1.zip"
+  env_variables = local.env_vars
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
@@ -24,14 +21,12 @@ module "load_content_v1_lambda" {
 module "on_modifications_batch" {
   source = "../lambda-module"
 
-  env         = var.env
-  name        = "on-modifications-batch"
-  app_name    = local.app_name
-  memory_size = 128
-  zip_path    = "${path.module}/../../../target/lambdas/on_modifications_batch.zip"
-  env_variables = {
-    DYNAMODB_TABLE = aws_dynamodb_table.main.name
-  }
+  env           = var.env
+  name          = "on-modifications-batch"
+  app_name      = local.app_name
+  memory_size   = 128
+  zip_path      = "${path.module}/../../../target/lambdas/on_modifications_batch.zip"
+  env_variables = local.env_vars
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
@@ -48,15 +43,12 @@ module "on_modifications_batch" {
 module "load_content_dry_run_v1_lambda" {
   source = "../lambda-module"
 
-  env         = var.env
-  name        = "load-content-dry-run-v1"
-  app_name    = local.app_name
-  memory_size = 128
-  zip_path    = "${path.module}/../../../target/lambdas/load_content_dry_run_v1.zip"
-  env_variables = {
-    TASK_MIGRATION_SQS_QUEUE = aws_sqs_queue.tasks_migration.url
-    DYNAMODB_TABLE           = aws_dynamodb_table.main.name
-  }
+  env           = var.env
+  name          = "load-content-dry-run-v1"
+  app_name      = local.app_name
+  memory_size   = 128
+  zip_path      = "${path.module}/../../../target/lambdas/load_content_dry_run_v1.zip"
+  env_variables = local.env_vars
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
@@ -70,15 +62,12 @@ module "load_content_dry_run_v1_lambda" {
 module "request_assets_upload_v1_lambda" {
   source = "../lambda-module"
 
-  env         = var.env
-  name        = "request-assets-upload-v1"
-  app_name    = local.app_name
-  memory_size = 128
-  zip_path    = "${path.module}/../../../target/lambdas/request_assets_upload_v1.zip"
-  env_variables = {
-    S3_BUCKET       = aws_s3_bucket.content.id
-    BUCKET_BASE_URL = "https://${aws_cloudfront_distribution.content.domain_name}"
-  }
+  env           = var.env
+  name          = "request-assets-upload-v1"
+  app_name      = local.app_name
+  memory_size   = 128
+  zip_path      = "${path.module}/../../../target/lambdas/request_assets_upload_v1.zip"
+  env_variables = local.env_vars
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonS3FullAccess",
@@ -92,16 +81,12 @@ module "request_assets_upload_v1_lambda" {
 module "on_assets_uploaded_lambda" {
   source = "../lambda-module"
 
-  env         = var.env
-  name        = "on-assets-uploaded"
-  app_name    = local.app_name
-  memory_size = 128
-  zip_path    = "${path.module}/../../../target/lambdas/on_assets_uploaded.zip"
-  env_variables = {
-    DYNAMODB_TABLE  = aws_dynamodb_table.main.name
-    S3_BUCKET       = aws_s3_bucket.content.id
-    BUCKET_BASE_URL = "https://${aws_cloudfront_distribution.content.domain_name}"
-  }
+  env           = var.env
+  name          = "on-assets-uploaded"
+  app_name      = local.app_name
+  memory_size   = 128
+  zip_path      = "${path.module}/../../../target/lambdas/on_assets_uploaded.zip"
+  env_variables = local.env_vars
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
@@ -116,14 +101,12 @@ module "on_assets_uploaded_lambda" {
 module "get_content_assets_v1_lambda" {
   source = "../lambda-module"
 
-  env         = var.env
-  name        = "get-content-assets-v1"
-  app_name    = local.app_name
-  memory_size = 128
-  zip_path    = "${path.module}/../../../target/lambdas/get_content_assets_v1.zip"
-  env_variables = {
-    DYNAMODB_TABLE = aws_dynamodb_table.main.name
-  }
+  env           = var.env
+  name          = "get-content-assets-v1"
+  app_name      = local.app_name
+  memory_size   = 128
+  zip_path      = "${path.module}/../../../target/lambdas/get_content_assets_v1.zip"
+  env_variables = local.env_vars
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
@@ -137,15 +120,12 @@ module "get_content_assets_v1_lambda" {
 module "delete_content_assets_v1_lambda" {
   source = "../lambda-module"
 
-  env         = var.env
-  name        = "delete-content-assets-v1"
-  app_name    = local.app_name
-  memory_size = 128
-  zip_path    = "${path.module}/../../../target/lambdas/delete_content_assets_v1.zip"
-  env_variables = {
-    DYNAMODB_TABLE = aws_dynamodb_table.main.name
-    S3_BUCKET      = aws_s3_bucket.content.id
-  }
+  env           = var.env
+  name          = "delete-content-assets-v1"
+  app_name      = local.app_name
+  memory_size   = 128
+  zip_path      = "${path.module}/../../../target/lambdas/delete_content_assets_v1.zip"
+  env_variables = local.env_vars
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",

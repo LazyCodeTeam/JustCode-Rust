@@ -20,7 +20,7 @@ pub async fn get_all_section_tasks(section_id: &str) -> Result<Vec<Task>> {
     get_dynamodb_client()
         .await
         .query()
-        .table_name(&CONFIG.dynamodb_table)
+        .table_name(&CONFIG.content_dynamodb_table)
         .key_condition_expression("PK = :pk and begins_with(SK, :sk)")
         .expression_attribute_values(
             ":pk",
@@ -38,7 +38,7 @@ pub async fn get_ordered_section_tasks(section_id: String) -> Result<Vec<Task>> 
         .await
         .query()
         .index_name("LSI_1")
-        .table_name(&CONFIG.dynamodb_table)
+        .table_name(&CONFIG.content_dynamodb_table)
         .key_condition_expression("PK = :pk and begins_with(LSI_1, :lsi_1)")
         .expression_attribute_values(
             ":pk",

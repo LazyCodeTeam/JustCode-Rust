@@ -6,9 +6,9 @@ module "moderator_api_key_validator" {
   app_name    = local.app_name
   memory_size = 128
   zip_path    = "${path.module}/../../../target/lambdas/api_key_validator.zip"
-  env_variables = {
+  env_variables = merge(local.env_vars, {
     API_KEY = var.moderator_api_key
-  }
+  })
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
   ]
@@ -26,9 +26,9 @@ module "app_api_key_validator" {
   app_name    = local.app_name
   memory_size = 128
   zip_path    = "${path.module}/../../../target/lambdas/api_key_validator.zip"
-  env_variables = {
+  env_variables = merge(local.env_vars, {
     API_KEY = var.app_api_key
-  }
+  })
   policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
   ]

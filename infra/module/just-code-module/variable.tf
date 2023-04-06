@@ -21,7 +21,7 @@ variable "code_service" {
   }
 }
 
-variable "profile_table_config" {
+variable "main_table_config" {
   type = object({
     billing_mode   = string
     read_capacity  = number
@@ -34,7 +34,7 @@ variable "profile_table_config" {
   }
 }
 
-variable "tasks_table_config" {
+variable "content_table_config" {
   type = object({
     billing_mode   = string
     read_capacity  = number

@@ -7,17 +7,21 @@ lazy_static::lazy_static! {
 pub struct Config {
     pub task_migration_sqs_queue: String,
     pub dynamodb_table: String,
+    pub content_dynamodb_table: String,
 }
 
 impl Config {
     pub fn new() -> Self {
-        let task_migration_sqs_queuq =
+        let task_migration_sqs_queue =
             env::var("TASK_MIGRATION_SQS_QUEUE").unwrap_or_else(|_| "".to_string());
         let dynamodb_table = env::var("DYNAMODB_TABLE").unwrap_or_else(|_| "".to_string());
+        let content_dynamodb_table =
+            env::var("CONTENT_DYNAMODB_TABLE").unwrap_or_else(|_| "".to_string());
 
         Self {
-            task_migration_sqs_queue: task_migration_sqs_queuq,
+            task_migration_sqs_queue,
             dynamodb_table,
+            content_dynamodb_table,
         }
     }
 }

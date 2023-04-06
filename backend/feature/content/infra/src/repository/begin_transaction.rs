@@ -11,7 +11,7 @@ pub async fn begin_transaction(items_count: u64) -> Result<()> {
     get_dynamodb_client()
         .await
         .put_item()
-        .table_name(&CONFIG.dynamodb_table)
+        .table_name(&CONFIG.content_dynamodb_table)
         .set_item(Some(item))
         .send()
         .await

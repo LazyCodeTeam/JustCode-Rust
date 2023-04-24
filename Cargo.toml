@@ -1,17 +1,17 @@
 [workspace]
 members = [
-  "backend/api/common_api",
-  "backend/api/gen",
-  "backend/api/lambda/auth/*",
-  "backend/api/lambda/content/*",
-  "backend/api/lambda/profile/*",
-  "backend/feature/bucket/*",
-  "backend/feature/common/*",
-  "backend/feature/content/*",
-  "backend/feature/profile/*",
-  "backend/feature/user/*",
-  "backend/use_case",
+  "api/common_api",
+  "api/gen",
+  "api/lambda/auth/*",
+  "api/lambda/content/*",
+  "api/lambda/profile/*",
+  "feature/bucket/*",
+  "feature/common/*",
+  "feature/content/*",
+  "feature/profile/*",
+  "feature/user/*",
   "integration_tests",
+  "use_case",
   "xtask",
 ]
 

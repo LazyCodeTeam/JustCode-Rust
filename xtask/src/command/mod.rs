@@ -1,6 +1,6 @@
 use clap::{Args, Parser, Subcommand};
 
-pub mod build_lambda;
+pub mod build_lambdas;
 
 #[derive(Parser)]
 #[clap(author, version, about, long_about = None)]
@@ -12,11 +12,11 @@ pub struct Cli {
 
 #[derive(Subcommand)]
 pub enum Command {
-    BuildLambda(BuildLambdaArgs),
+    BuildLambdas(BuildLambdasArgs),
 }
 
 #[derive(Args, Debug)]
-pub struct BuildLambdaArgs {
+pub struct BuildLambdasArgs {
     #[clap(short, long, default_value_t = String::from("aarch64-unknown-linux-gnu"))]
     pub target: String,
     #[clap(short, long, default_value_t = String::from("bootstrap"))]

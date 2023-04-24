@@ -1,22 +1,13 @@
 use clap::Parser;
-use command::{build_lambda::build_lambda, Cli, Command};
-use model::error::DynError;
+use command::{build_lambdas::build_lambdas, Cli, Command};
 
 mod command;
-mod model;
 mod util;
 
 fn main() {
-    if let Err(e) = try_main() {
-        eprintln!("{e}");
-        std::process::exit(-1);
-    }
-}
-
-fn try_main() -> Result<(), DynError> {
     let cli = Cli::parse();
 
     match &cli.command {
-        Command::BuildLambda(args) => build_lambda(args),
+        Command::BuildLambdas(args) => build_lambdas(args),
     }
 }

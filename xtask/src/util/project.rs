@@ -1,48 +1,96 @@
+use serde::Deserialize;
 use std::path::{Path, PathBuf};
 
-use crate::model::cargo_content::CargoContent;
+use super::path_ext::PathExt;
 
-use super::path::is_dir;
-
-const CARGO_FILE: &str = "Cargo.toml";
-
-pub fn project_root() -> PathBuf {
-    Path::new(&env!("CARGO_MANIFEST_DIR"))
-        .ancestors()
-        .nth(1)
-        .unwrap()
-        .to_path_buf()
+#[derive(Deserialize, PartialEq, Clone, Debug)]
+pub struct CargoContent {
+    pub package: Package,
 }
 
-pub fn get_cargo_content(path: &PathBuf) -> Option<CargoContent> {
-    let content = std::fs::read_to_string(path).ok()?;
-
-    toml::from_str(&content).ok()
+#[derive(Deserialize, PartialEq, Clone, Debug)]
+pub struct Package {
+    pub name: String,
 }
 
-pub fn get_project_names(path: PathBuf) -> Vec<String> {
-    if !is_dir(&path) {
-        return vec![];
+#[derive(Debug)]
+pub struct Project {
+    crates: Vec<Crate>,
+}
+
+#[derive(Debug)]
+pub struct Crate {
+    cargo: CargoContent,
+    is_bin: bool,
+}
+
+impl CargoContent {
+    pub fn read_from(path: &Path) -> Self {
+        let content = std::fs::read_to_string(path).expect("Failed to read Cargo.toml");
+        toml::from_str(&content).unwrap()
     }
-    let cargo_path = path.join(CARGO_FILE);
-    if let Some(cargo) = get_cargo_content(&cargo_path) {
-        if !path.join("src").join("main.rs").exists() {
+}
+
+impl Crate {
+    pub fn new(path: PathBuf) -> Self {
+        let cargo = CargoContent::read_from(&path.join("Cargo.toml"));
+        let is_bin = path.join("src").join("main.rs").is_file();
+
+        Self { cargo, is_bin }
+    }
+}
+
+impl Project {
+    pub fn new() -> Self {
+        let root = Path::project_root_path();
+        let crates = Self::get_crates(&root);
+
+        Self { crates }
+    }
+
+    fn get_crates(path: &Path) -> Vec<Crate> {
+        if !path.is_dir() {
             return vec![];
         }
-        return vec![cargo.package.name];
-    }
+        let cargo_path = path.join("Cargo.toml");
 
-    let mut result = Vec::new();
-
-    let dirs = std::fs::read_dir(&path).unwrap();
-
-    for dir in dirs {
-        let dir = dir.unwrap();
-        let path = dir.path();
-        if is_dir(&path) {
-            result.append(&mut get_project_names(path))
+        if cargo_path.is_file() && path != Path::project_root_path().as_path() {
+            return vec![Crate::new(path.to_path_buf())];
         }
+
+        let mut crates = vec![];
+
+        for dir in std::fs::read_dir(path).expect("Failed to read directory") {
+            let dir = dir.expect("Failed to read directory entry");
+            let dir = dir.path();
+
+            if dir.is_dir() {
+                crates.append(&mut Self::get_crates(&dir));
+            }
+        }
+
+        crates
     }
 
-    result
+    pub fn bin_crates_names(&self) -> Vec<&str> {
+        self.crates
+            .iter()
+            .filter(|c| c.is_bin)
+            .map(|c| c.cargo.package.name.as_str())
+            .filter(|n| !n.contains("xtask"))
+            .collect()
+    }
+}
+
+#[cfg(test)]
+pub mod test {
+    use super::*;
+
+    #[test]
+    fn test_get_bin_names() {
+        let project = Project::new();
+        let bin_names = project.bin_crates_names();
+
+        assert!(!bin_names.is_empty());
+    }
 }

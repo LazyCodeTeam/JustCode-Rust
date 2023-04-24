@@ -1,4 +1,2 @@
-pub mod cargo;
-pub mod hash;
-pub mod path;
+pub mod path_ext;
 pub mod project;

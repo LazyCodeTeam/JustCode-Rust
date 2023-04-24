@@ -1,6 +1,6 @@
 # \CmsApi
 
-All URIs are relative to *https://ux55hiuu9e.execute-api.eu-central-1.amazonaws.com/api*
+All URIs are relative to *http://$*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

@@ -6,12 +6,10 @@ edition = "2021"
 [dependencies]
 aws-sdk-dynamodb = { workspace = true }
 aws_lambda_events = { workspace = true, features = ["cognito"] }
-common_infra = { path = "../backend/feature/common/infra", features = [
-  "dynamodb",
-] }
-create_profile = { path = "../backend/api/lambda/profile/create_profile" }
+common_infra = { path = "../feature/common/infra", features = ["dynamodb"] }
+create_profile = { path = "../api/lambda/profile/create_profile" }
 futures = { workspace = true }
-get_profile_v1 = { path = "../backend/api/lambda/profile/get_profile_v1" }
+get_profile_v1 = { path = "../api/lambda/profile/get_profile_v1" }
 lambda_http = { workspace = true }
 lambda_runtime = { workspace = true }
 lazy_static = { workspace = true }

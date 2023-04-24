@@ -21,7 +21,7 @@ gen = { path = "./gen" }
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *https://ux55hiuu9e.execute-api.eu-central-1.amazonaws.com/api*
+All URIs are relative to *http://$*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -36,6 +36,7 @@ Class | Method | HTTP request | Description
 *ContentApi* | [**v1_content_section_section_id_tasks_get**](docs/ContentApi.md#v1_content_section_section_id_tasks_get) | **Get** /v1/content/section/{section_id}/tasks | 
 *ContentApi* | [**v1_content_task_task_id_answer_post**](docs/ContentApi.md#v1_content_task_task_id_answer_post) | **Post** /v1/content/task/{task_id}/answer | 
 *ProfileApi* | [**v1_profile_current_avatar_upload_url_get**](docs/ProfileApi.md#v1_profile_current_avatar_upload_url_get) | **Get** /v1/profile/current/avatar/upload-url | 
+*ProfileApi* | [**v1_profile_current_delete**](docs/ProfileApi.md#v1_profile_current_delete) | **Delete** /v1/profile/current | 
 *ProfileApi* | [**v1_profile_current_get**](docs/ProfileApi.md#v1_profile_current_get) | **Get** /v1/profile/current | 
 *ProfileApi* | [**v1_profile_current_push_delete**](docs/ProfileApi.md#v1_profile_current_push_delete) | **Delete** /v1/profile/current/push | 
 *ProfileApi* | [**v1_profile_current_push_put**](docs/ProfileApi.md#v1_profile_current_push_put) | **Put** /v1/profile/current/push | 

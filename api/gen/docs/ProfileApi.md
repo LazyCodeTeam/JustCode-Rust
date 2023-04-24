@@ -1,10 +1,11 @@
 # \ProfileApi
 
-All URIs are relative to *https://ux55hiuu9e.execute-api.eu-central-1.amazonaws.com/api*
+All URIs are relative to *http://$*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**v1_profile_current_avatar_upload_url_get**](ProfileApi.md#v1_profile_current_avatar_upload_url_get) | **Get** /v1/profile/current/avatar/upload-url | 
+[**v1_profile_current_delete**](ProfileApi.md#v1_profile_current_delete) | **Delete** /v1/profile/current | 
 [**v1_profile_current_get**](ProfileApi.md#v1_profile_current_get) | **Get** /v1/profile/current | 
 [**v1_profile_current_push_delete**](ProfileApi.md#v1_profile_current_push_delete) | **Delete** /v1/profile/current/push | 
 [**v1_profile_current_push_put**](ProfileApi.md#v1_profile_current_push_put) | **Put** /v1/profile/current/push | 
@@ -24,6 +25,31 @@ This endpoint does not need any parameter.
 ### Return type
 
 [**crate::models::PresignedUrlDto**](PresignedUrlDto.md)
+
+### Authorization
+
+[just-code-dev-auth](../README.md#just-code-dev-auth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## v1_profile_current_delete
+
+> v1_profile_current_delete()
+
+
+### Parameters
+
+This endpoint does not need any parameter.
+
+### Return type
+
+ (empty response body)
 
 ### Authorization
 

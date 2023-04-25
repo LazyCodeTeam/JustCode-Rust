@@ -8,6 +8,6 @@ aws-sdk-s3 = { workspace = true }
 bucket_domain = { path = "../domain" }
 chrono = { workspace = true }
 common_domain = { path = "../../common/domain" }
-common_infra = { path = "../../common/infra", features = ["s3"] }
+common_infra = { path = "../../common/infra" }
 lazy_static = { workspace = true }
-uuid = { workspace = true, features = ["v4"] }
+uuid = { workspace = true }

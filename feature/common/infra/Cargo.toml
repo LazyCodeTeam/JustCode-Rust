@@ -4,23 +4,17 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-aws-config = { workspace = true, optional = true }
-aws-sdk-cognitoidentityprovider = { workspace = true, optional = true }
-aws-sdk-dynamodb = { workspace = true, optional = true }
-aws-sdk-s3 = { workspace = true, optional = true }
-aws-sdk-sqs = { workspace = true, optional = true }
-aws-smithy-http = { workspace = true, optional = true }
+aws-config = { workspace = true }
+aws-sdk-cognitoidentityprovider = { workspace = true }
+aws-sdk-dynamodb = { workspace = true }
+aws-sdk-s3 = { workspace = true }
+aws-sdk-sqs = { workspace = true }
+aws-smithy-http = { workspace = true }
 common_domain = { path = "../domain" }
 log = { workspace = true }
 nanoid = { workspace = true }
 serde = { workspace = true }
 serde_dynamo = { workspace = true }
-tokio = { workspace = true, features = ["sync", "parking_lot"] }
+tokio = { workspace = true }
 walkdir = { workspace = true }
 zip = { workspace = true }
-
-[features]
-dynamodb = ["aws-sdk-dynamodb", "aws-config", "aws-smithy-http"]
-s3 = ["aws-sdk-s3", "aws-config"]
-sqs = ["aws-sdk-sqs", "aws-config"]
-cognito = ["aws-sdk-cognitoidentityprovider", "aws-config"]

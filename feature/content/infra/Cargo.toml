@@ -8,7 +8,7 @@ aws-sdk-dynamodb = { workspace = true }
 aws-sdk-sqs = { workspace = true }
 chrono = { workspace = true }
 common_domain = { path = "../../common/domain" }
-common_infra = { path = "../../common/infra", features = ["sqs", "dynamodb"] }
+common_infra = { path = "../../common/infra" }
 content_domain = { path = "../../content/domain" }
 futures = { workspace = true }
 lazy_static = { workspace = true }

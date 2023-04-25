@@ -1,4 +1,3 @@
-#[cfg(feature = "lambda")]
 pub mod lambda_error_dto;
 
 pub use gen::models::error_dto::ErrorDto;

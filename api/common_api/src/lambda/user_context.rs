@@ -10,7 +10,6 @@ pub trait UserContext {
     fn get_username(&self) -> Result<String>;
 }
 
-#[cfg(feature = "lambda")]
 impl UserContext for Request {
     fn get_user_id(&self) -> Result<String> {
         match self.request_context() {

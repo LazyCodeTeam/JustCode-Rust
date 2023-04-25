@@ -4,15 +4,15 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-aws_lambda_events = { workspace = true, features = ["cognito"] }
-common_api = { path = "../../../common_api", features = ["lambda"] }
+aws_lambda_events = { workspace = true }
+common_api = { path = "../../../common_api" }
 common_domain = { path = "../../../../feature/common/domain" }
 futures = { workspace = true }
 lambda_runtime = { workspace = true }
 profile_domain = { path = "../../../../feature/profile/domain" }
 profile_infra = { path = "../../../../feature/profile/infra" }
 tokio = { workspace = true }
-use_case = { path = "../../../../use_case", features = ["create_profile"] }
+use_case = { path = "../../../../use_case" }
 
 [lib]
 name = "create_profile"

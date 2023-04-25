@@ -10,4 +10,4 @@ gen = { path = "../../../gen" }
 
 [dev-dependencies]
 chrono = { workspace = true }
-uuid = { workspace = true, features = ["v4"] }
+uuid = { workspace = true }

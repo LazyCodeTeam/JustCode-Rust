@@ -6,3 +6,4 @@ edition = "2021"
 [dependencies]
 chrono = { workspace = true }
 common_domain = { path = "../../common/domain" }
+snafu = { workspace = true }

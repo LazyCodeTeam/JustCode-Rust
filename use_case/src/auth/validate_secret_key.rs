@@ -1,30 +1,31 @@
-use std::collections::HashMap;
+use snafu::Snafu;
 
-use common_domain::error::{Error, ErrorOutput, ErrorType, Result};
-
-pub async fn validate_secret_key(key: Option<&str>, expected_key: Option<&str>) -> Result<()> {
+pub async fn validate_secret_key(
+    key: Option<&str>,
+    expected_key: Option<&str>,
+) -> Result<(), ValidateSecretKeyError> {
     match (key, expected_key) {
-        (_, Some(expected_key)) if expected_key.is_empty() => Err(no_expected_key_error()),
-        (Some(key), Some(expected_key)) if key == expected_key => Ok(()),
-        (_, None) => Err(no_expected_key_error()),
-        _ => Err(invalid_key_error()),
+        (_, None) => Err(ValidateSecretKeyError::NoExpectedKey),
+        (_, Some(expected_key)) if expected_key.is_empty() => {
+            Err(ValidateSecretKeyError::NoExpectedKey)
+        }
+        (None, _) => Err(ValidateSecretKeyError::NoKey),
+        (Some(key), _) if key.is_empty() => Err(ValidateSecretKeyError::NoKey),
+        (Some(key), Some(expected_key)) if key != expected_key => {
+            Err(ValidateSecretKeyError::InvalidKey)
+        }
+        _ => Ok(()),
     }
 }
 
-fn no_expected_key_error() -> Error {
-    Error::unknown("Expected key not provided".to_string())
-}
-
-fn invalid_key_error() -> Error {
-    Error {
-        debug_message: "Invalid secret key".to_string(),
-        error_type: ErrorType::Unauthorized,
-        output: Box::new(ErrorOutput {
-            message: "Unauthorized".to_string(),
-            code: "unauthorized".to_string(),
-            args: HashMap::new(),
-        }),
-    }
+#[derive(Debug, PartialEq, Snafu)]
+pub enum ValidateSecretKeyError {
+    #[snafu(display("Invalid secret key"))]
+    InvalidKey,
+    #[snafu(display("Expected key not provided"))]
+    NoExpectedKey,
+    #[snafu(display("No secret key provided"))]
+    NoKey,
 }
 
 #[cfg(test)]
@@ -33,9 +34,9 @@ mod test {
 
     #[tokio::test]
     async fn valid_secret_key() {
-        let result = validate_secret_key(Some("key"), Some("key"));
+        let result = validate_secret_key(Some("key"), Some("key")).await;
 
-        assert!(result.await.is_ok());
+        assert!(result.is_ok());
     }
 
     #[tokio::test]
@@ -43,7 +44,7 @@ mod test {
         let result = validate_secret_key(Some("key"), Some("key2")).await;
 
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err(), invalid_key_error());
+        assert_eq!(result.unwrap_err(), ValidateSecretKeyError::InvalidKey);
     }
 
     #[tokio::test]
@@ -51,7 +52,15 @@ mod test {
         let result = validate_secret_key(None, Some("key2")).await;
 
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err(), invalid_key_error());
+        assert_eq!(result.unwrap_err(), ValidateSecretKeyError::NoKey);
+    }
+
+    #[tokio::test]
+    async fn empty_secret_key() {
+        let result = validate_secret_key(Some(""), Some("key2")).await;
+
+        assert!(result.is_err());
+        assert_eq!(result.unwrap_err(), ValidateSecretKeyError::NoKey);
     }
 
     #[tokio::test]
@@ -59,7 +68,7 @@ mod test {
         let result = validate_secret_key(Some("key"), None).await;
 
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err(), no_expected_key_error());
+        assert_eq!(result.unwrap_err(), ValidateSecretKeyError::NoExpectedKey);
     }
 
     #[tokio::test]
@@ -67,6 +76,6 @@ mod test {
         let result = validate_secret_key(Some("key"), Some("")).await;
 
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err(), no_expected_key_error());
+        assert_eq!(result.unwrap_err(), ValidateSecretKeyError::NoExpectedKey);
     }
 }

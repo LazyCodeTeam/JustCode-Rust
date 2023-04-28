@@ -1,4 +1,8 @@
-use common_domain::{define_repo, error::Result};
+use common_domain::{
+    define_repo,
+    error::{Error, Result},
+};
+use snafu::{ResultExt, Snafu};
 
 define_repo! {
     pub struct DeleteProfileRepository<A, B> {
@@ -7,19 +11,26 @@ define_repo! {
     }
 }
 
-pub async fn delete_profile<A, B>(repo: DeleteProfileRepository<A, B>) -> Result<()>
+#[derive(Debug, Snafu)]
+pub enum DeleteProfileError {
+    Infra { source: Error },
+}
+
+pub async fn delete_profile<A, B>(
+    repo: DeleteProfileRepository<A, B>,
+) -> std::result::Result<(), DeleteProfileError>
 where
     A: DeleteCurrentUserType,
     B: DeleteCurrentProfileType,
 {
-    (repo.delete_current_user)().await?;
+    (repo.delete_current_user)().await.context(InfraSnafu)?;
 
-    (repo.delete_current_profile)().await
+    (repo.delete_current_profile)().await.context(InfraSnafu)
 }
 
 #[cfg(test)]
 mod tests {
-    use common_domain::error::Error;
+    use snafu::whatever;
 
     use super::*;
 
@@ -47,7 +58,7 @@ mod tests {
         ctx.expect().never();
 
         let (ctx, _delete_user_lock) = mock_delete_current_user::ctx().await;
-        ctx.expect().returning(|| Err(Error::default())).once();
+        ctx.expect().returning(|| whatever!("")).once();
 
         let repo = DeleteProfileRepository {
             delete_current_user: mock_delete_current_user::call,

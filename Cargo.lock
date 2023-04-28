@@ -89,11 +89,9 @@ name = "answer_v1"
 version = "0.1.0"
 dependencies = [
  "common_api",
- "common_domain",
  "content_domain",
  "content_dto",
  "content_infra",
- "futures",
  "lambda_http",
  "tokio",
  "use_case",
@@ -113,9 +111,9 @@ dependencies = [
 
 [[package]]
 name = "async-stream"
-version = "0.3.4"
+version = "0.3.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ad445822218ce64be7a341abfb0b1ea43b5c23aa83902542a4542e78309d8e5e"
+checksum = "cd56dd203fef61ac097dd65721a419ddccb106b2d2b70ba60a6b529f03961a51"
 dependencies = [
  "async-stream-impl",
  "futures-core",
@@ -124,13 +122,13 @@ dependencies = [
 
 [[package]]
 name = "async-stream-impl"
-version = "0.3.4"
+version = "0.3.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e4655ae1a7b0cdf149156f780c5bf3f1352bc53cbd9e0a361a7ef7b22947e965"
+checksum = "16e62a023e7c117e27523144c5d2459f4397fcc3cab0085af8e2224f643a0193"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 1.0.109",
+ "syn 2.0.15",
 ]
 
 [[package]]
@@ -666,6 +664,7 @@ dependencies = [
  "common_domain",
  "common_infra",
  "lazy_static",
+ "snafu",
  "uuid",
 ]
 
@@ -797,9 +796,10 @@ dependencies = [
  "http",
  "lambda_http",
  "lambda_runtime",
- "mime",
  "serde",
  "serde_json",
+ "snafu",
+ "tower",
  "tower-http",
  "tracing",
  "tracing-subscriber",
@@ -814,6 +814,7 @@ dependencies = [
  "mockall",
  "paste",
  "snafu",
+ "testing_logger",
  "tokio",
 ]
 
@@ -829,12 +830,10 @@ dependencies = [
  "aws-smithy-http",
  "common_domain",
  "log",
- "nanoid",
  "serde",
  "serde_dynamo",
+ "snafu",
  "tokio",
- "walkdir",
- "zip",
 ]
 
 [[package]]
@@ -843,6 +842,7 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "common_domain",
+ "snafu",
 ]
 
 [[package]]
@@ -850,9 +850,13 @@ name = "content_dto"
 version = "0.1.0"
 dependencies = [
  "chrono",
+ "common_api",
  "common_domain",
  "content_domain",
  "gen",
+ "http",
+ "snafu",
+ "use_case",
  "uuid",
 ]
 
@@ -871,6 +875,7 @@ dependencies = [
  "serde",
  "serde_dynamo",
  "serde_json",
+ "snafu",
 ]
 
 [[package]]
@@ -923,10 +928,10 @@ dependencies = [
  "aws_lambda_events",
  "common_api",
  "common_domain",
- "futures",
  "lambda_runtime",
  "profile_domain",
  "profile_infra",
+ "snafu",
  "tokio",
  "use_case",
 ]
@@ -1035,9 +1040,8 @@ version = "0.1.0"
 dependencies = [
  "bucket_infra",
  "common_api",
- "common_domain",
+ "content_dto",
  "content_infra",
- "futures",
  "lambda_http",
  "tokio",
  "use_case",
@@ -1048,9 +1052,8 @@ name = "delete_profile_v1"
 version = "0.1.0"
 dependencies = [
  "common_api",
- "common_domain",
- "futures",
  "lambda_http",
+ "profile_dto",
  "profile_infra",
  "tokio",
  "use_case",
@@ -1286,8 +1289,6 @@ name = "get_profile_v1"
 version = "0.1.0"
 dependencies = [
  "common_api",
- "common_domain",
- "futures",
  "lambda_http",
  "profile_dto",
  "profile_infra",
@@ -1300,10 +1301,8 @@ name = "get_public_sections_v1"
 version = "0.1.0"
 dependencies = [
  "common_api",
- "common_domain",
  "content_dto",
  "content_infra",
- "futures",
  "lambda_http",
  "tokio",
  "use_case",
@@ -1314,10 +1313,8 @@ name = "get_public_tasks_v1"
 version = "0.1.0"
 dependencies = [
  "common_api",
- "common_domain",
  "content_dto",
  "content_infra",
- "futures",
  "lambda_http",
  "tokio",
  "use_case",
@@ -1340,10 +1337,8 @@ name = "get_tasks_v1"
 version = "0.1.0"
 dependencies = [
  "common_api",
- "common_domain",
  "content_dto",
  "content_infra",
- "futures",
  "lambda_http",
  "tokio",
  "use_case",
@@ -1577,23 +1572,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "integration-tests"
-version = "0.1.0"
-dependencies = [
- "aws-sdk-dynamodb",
- "aws_lambda_events",
- "common_infra",
- "create_profile",
- "futures",
- "get_profile_v1",
- "lambda_http",
- "lambda_runtime",
- "lazy_static",
- "serde_json",
- "tokio",
-]
-
-[[package]]
 name = "io-lifetimes"
 version = "1.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1734,11 +1712,9 @@ name = "load_content_dry_run_v1"
 version = "0.1.0"
 dependencies = [
  "common_api",
- "common_domain",
  "content_domain",
  "content_dto",
  "content_infra",
- "futures",
  "lambda_http",
  "tokio",
  "use_case",
@@ -1749,11 +1725,9 @@ name = "load_content_v1"
 version = "0.1.0"
 dependencies = [
  "common_api",
- "common_domain",
  "content_domain",
  "content_dto",
  "content_infra",
- "futures",
  "lambda_http",
  "tokio",
  "use_case",
@@ -1848,15 +1822,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "nanoid"
-version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3ffa00dec017b5b1a8b7cf5e2c008bfda1aa7e0697ac1508b491fdf2622fb4d8"
-dependencies = [
- "rand",
-]
-
-[[package]]
 name = "normalize-line-endings"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1942,10 +1907,8 @@ version = "0.1.0"
 dependencies = [
  "aws_lambda_events",
  "common_api",
- "common_domain",
  "content_domain",
  "content_infra",
- "futures",
  "lambda_runtime",
  "tokio",
  "use_case",
@@ -2043,12 +2006,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
 
 [[package]]
-name = "ppv-lite86"
-version = "0.2.17"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5b40af805b3121feab8a3c29f04d8ad262fa8e0561883e7653e024ae4479e6de"
-
-[[package]]
 name = "predicates"
 version = "2.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2098,9 +2055,12 @@ dependencies = [
 name = "profile_dto"
 version = "0.1.0"
 dependencies = [
+ "common_api",
  "common_domain",
  "gen",
  "profile_domain",
+ "snafu",
+ "use_case",
 ]
 
 [[package]]
@@ -2115,6 +2075,7 @@ dependencies = [
  "profile_domain",
  "serde",
  "serde_dynamo",
+ "snafu",
 ]
 
 [[package]]
@@ -2135,36 +2096,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4424af4bf778aae2051a77b60283332f386554255d722233d09fbfc7e30da2fc"
 dependencies = [
  "proc-macro2",
-]
-
-[[package]]
-name = "rand"
-version = "0.8.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34af8d1a0e25924bc5b7c43c079c942339d8f0a8b57c39049bef581b46327404"
-dependencies = [
- "libc",
- "rand_chacha",
- "rand_core",
-]
-
-[[package]]
-name = "rand_chacha"
-version = "0.3.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e6c10a63a0fa32252be49d21e7709d4d4baf8d231c2dbce1eaa8141b9b127d88"
-dependencies = [
- "ppv-lite86",
- "rand_core",
-]
-
-[[package]]
-name = "rand_core"
-version = "0.6.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ec0be4795e2f6a28069bec0b5ff3e2ac9bafc99e6a9a7dc3547996c5c816922c"
-dependencies = [
- "getrandom",
 ]
 
 [[package]]
@@ -2198,9 +2129,8 @@ name = "remove_push_data_v1"
 version = "0.1.0"
 dependencies = [
  "common_api",
- "common_domain",
- "futures",
  "lambda_http",
+ "profile_dto",
  "profile_infra",
  "tokio",
  "use_case",
@@ -2212,6 +2142,7 @@ version = "0.1.0"
 dependencies = [
  "bucket_infra",
  "common_api",
+ "content_dto",
  "lambda_http",
  "tokio",
  "use_case",
@@ -2223,9 +2154,8 @@ version = "0.1.0"
 dependencies = [
  "bucket_infra",
  "common_api",
- "common_domain",
- "futures",
  "lambda_http",
+ "profile_dto",
  "profile_infra",
  "tokio",
  "use_case",
@@ -2313,15 +2243,6 @@ name = "ryu"
 version = "1.0.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f91339c0467de62360649f8d3e185ca8de4224ff281f66000de5eb2a77a79041"
-
-[[package]]
-name = "same-file"
-version = "1.0.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "93fc1dc3aaa9bfed95e02e6eadabb4baf7e3078b0bd1b4d7b6b0b68378900502"
-dependencies = [
- "winapi-util",
-]
 
 [[package]]
 name = "schannel"
@@ -2439,9 +2360,9 @@ dependencies = [
 
 [[package]]
 name = "serde_with"
-version = "2.3.1"
+version = "2.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "85456ffac572dc8826334164f2fb6fb40a7c766aebe195a2a21ee69ee2885ecf"
+checksum = "331bb8c3bf9b92457ab7abecf07078c13f7d270ba490103e84e8b014490cd0b0"
 dependencies = [
  "base64 0.13.1",
  "chrono",
@@ -2455,9 +2376,9 @@ dependencies = [
 
 [[package]]
 name = "serde_with_macros"
-version = "2.3.1"
+version = "2.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7cbcd6104f8a4ab6af7f6be2a0da6be86b9de3c401f6e86bb856ab2af739232f"
+checksum = "859011bddcc11f289f07f467cc1fe01c7a941daa4d8f6c40d4d1c92eb6d9319c"
 dependencies = [
  "darling",
  "proc-macro2",
@@ -2504,6 +2425,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "900fba806f70c630b0a382d0d825e17a0f19fcd059a2ade1ff237bcddf446b31"
 dependencies = [
  "lazy_static",
+]
+
+[[package]]
+name = "signal-hook-registry"
+version = "1.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d8229b473baa5980ac72ef434c4415e70c4b5e71b423043adb4ba059f89c99a1"
+dependencies = [
+ "libc",
 ]
 
 [[package]]
@@ -2610,6 +2540,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3369f5ac52d5eb6ab48c6b4ffdc8efbcad6b89c765749064ba298f2c68a16a76"
 
 [[package]]
+name = "testing_logger"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6d92b727cb45d33ae956f7f46b966b25f1bc712092aeef9dba5ac798fc89f720"
+dependencies = [
+ "log",
+]
+
+[[package]]
 name = "thread_local"
 version = "1.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2685,6 +2624,7 @@ dependencies = [
  "num_cpus",
  "parking_lot",
  "pin-project-lite",
+ "signal-hook-registry",
  "socket2",
  "tokio-macros",
  "windows-sys 0.45.0",
@@ -2764,9 +2704,9 @@ dependencies = [
 
 [[package]]
 name = "tower-http"
-version = "0.3.5"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f873044bf02dd1e8239e9c1293ea39dad76dc594ec16185d0a1bf31d8dc8d858"
+checksum = "5d1d42a9b3f3ec46ba828e8d376aec14592ea199f70a06a548587ecd1c4ab658"
 dependencies = [
  "bitflags",
  "bytes",
@@ -2840,9 +2780,9 @@ dependencies = [
 
 [[package]]
 name = "tracing-subscriber"
-version = "0.3.16"
+version = "0.3.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a6176eae26dd70d0c919749377897b54a9276bd7061339665dd68777926b5a70"
+checksum = "30a651bc37f915e81f087d86e62a18eec5f79550c7faff886f7090b4ea757c77"
 dependencies = [
  "nu-ansi-term",
  "sharded-slab",
@@ -2902,8 +2842,6 @@ name = "update_profile_v1"
 version = "0.1.0"
 dependencies = [
  "common_api",
- "common_domain",
- "futures",
  "lambda_http",
  "profile_domain",
  "profile_dto",
@@ -2917,8 +2855,6 @@ name = "update_push_data_v1"
 version = "0.1.0"
 dependencies = [
  "common_api",
- "common_domain",
- "futures",
  "lambda_http",
  "profile_domain",
  "profile_dto",
@@ -2956,6 +2892,7 @@ dependencies = [
  "log",
  "mockall",
  "profile_domain",
+ "snafu",
  "tokio",
 ]
 
@@ -2966,6 +2903,7 @@ dependencies = [
  "common_domain",
  "common_infra",
  "lazy_static",
+ "snafu",
 ]
 
 [[package]]
@@ -3001,16 +2939,6 @@ name = "vsimd"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5c3082ca00d5a5ef149bb8b555a72ae84c9c59f7250f013ac822ac2e49b19c64"
-
-[[package]]
-name = "walkdir"
-version = "2.3.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "36df944cda56c7d8d8b7496af378e6b16de9284591917d307c9b4d313c44e698"
-dependencies = [
- "same-file",
- "winapi-util",
-]
 
 [[package]]
 name = "want"

@@ -1,6 +1,7 @@
 use aws_sdk_dynamodb::types::AttributeValue;
-use common_domain::error::{Error, Result};
-use common_infra::dynamodb_client::get_dynamodb_client;
+use common_domain::error::{Result, ResultLogExt};
+use common_infra::dynamodb::client::get_dynamodb_client;
+use snafu::ResultExt;
 
 use crate::{config::CONFIG, TASKS_TRANSACTION_PK, TASKS_TRANSACTION_SK};
 
@@ -14,6 +15,7 @@ pub async fn is_transaction_in_progress() -> Result<bool> {
         .send()
         .await
         .map(|result| result.item)
-        .map_err(|e| Error::unknown(format!("Failed to get current transaction state: {e:?}")))
         .map(|item| item.is_some())
+        .whatever_context("Failed to get current transaction state")
+        .with_error_log()
 }

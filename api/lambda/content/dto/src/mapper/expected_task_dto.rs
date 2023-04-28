@@ -1,17 +1,17 @@
 use content_domain::model::expected_task_data::ExpectedTaskData;
 
-use crate::{ExpectedTaskDto, FromDto, IntoModel};
+use crate::{ExpectedTaskDto, MapFrom, MapInto};
 
 const DEFAULT_DIFFICULTY: u8 = 1;
 const DEFAULT_DYNAMIC: bool = false;
 const DEFAULT_FOR_ANONYMOUS: bool = false;
 
-impl FromDto<ExpectedTaskDto> for ExpectedTaskData {
-    fn from_dto(dto: ExpectedTaskDto) -> Self {
+impl MapFrom<ExpectedTaskDto> for ExpectedTaskData {
+    fn map_from(dto: ExpectedTaskDto) -> Self {
         ExpectedTaskData {
             id: dto.id.simple().to_string(),
             title: dto.title,
-            content: dto.content.map(|content| *content).into_model(),
+            content: dto.content.map(|content| *content).map_into(),
             difficulty: dto.difficulty.unwrap_or(DEFAULT_DIFFICULTY),
             dynamic: dto.dynamic.unwrap_or(DEFAULT_DYNAMIC),
             for_anonymous: dto.for_anonymous.unwrap_or(DEFAULT_FOR_ANONYMOUS),
@@ -40,14 +40,14 @@ mod test {
             for_anonymous: None,
         };
 
-        let expected_task_data: ExpectedTaskData = task.into_model();
+        let expected_task_data: ExpectedTaskData = task.map_into();
 
         assert_eq!(
             expected_task_data,
             ExpectedTaskData {
                 id: uuid.simple().to_string(),
                 title: "title".to_string(),
-                content: content.into_model(),
+                content: content.map_into(),
                 difficulty: 1,
                 dynamic: false,
                 for_anonymous: false,
@@ -70,14 +70,14 @@ mod test {
             for_anonymous: Some(true),
         };
 
-        let expected_task_data: ExpectedTaskData = task.into_model();
+        let expected_task_data: ExpectedTaskData = task.map_into();
 
         assert_eq!(
             expected_task_data,
             ExpectedTaskData {
                 id: uuid.simple().to_string(),
                 title: "title".to_string(),
-                content: content.into_model(),
+                content: content.map_into(),
                 difficulty: 2,
                 dynamic: true,
                 for_anonymous: true,

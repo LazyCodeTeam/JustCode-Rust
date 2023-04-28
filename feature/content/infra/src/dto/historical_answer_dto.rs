@@ -3,8 +3,7 @@ use content_domain::model::{answer_to_save::AnswerToSave, historical_answer::His
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    answer_result_dto::AnswerResultDto, FromDto, FromModel, IntoDto, IntoModel, TASK_ID_PREFIX,
-    USER_ANSWER_ID_PREFIX,
+    answer_result_dto::AnswerResultDto, MapFrom, MapInto, TASK_ID_PREFIX, USER_ANSWER_ID_PREFIX,
 };
 
 #[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]
@@ -19,23 +18,23 @@ pub struct HistoricalAnswerDto {
     pub result: AnswerResultDto,
 }
 
-impl FromModel<AnswerToSave> for HistoricalAnswerDto {
-    fn from_model(model: AnswerToSave) -> Self {
+impl MapFrom<AnswerToSave> for HistoricalAnswerDto {
+    fn map_from(model: AnswerToSave) -> Self {
         Self {
             user_id: format!("{}{}", USER_ANSWER_ID_PREFIX, model.user_id),
             task_id: format!("{}{}", TASK_ID_PREFIX, model.answer.task_id),
-            result: model.result.into_dto(),
+            result: model.result.map_into(),
             created_at: Utc::now(),
         }
     }
 }
 
-impl FromDto<HistoricalAnswerDto> for HistoricalAnswer {
-    fn from_dto(dto: HistoricalAnswerDto) -> Self {
+impl MapFrom<HistoricalAnswerDto> for HistoricalAnswer {
+    fn map_from(dto: HistoricalAnswerDto) -> Self {
         Self {
             user_id: dto.user_id.replace(USER_ANSWER_ID_PREFIX, ""),
             task_id: dto.task_id.replace(TASK_ID_PREFIX, ""),
-            result: dto.result.into_model(),
+            result: dto.result.map_into(),
             created_at: dto.created_at,
         }
     }
@@ -61,7 +60,7 @@ mod tests {
         };
 
         let before = Utc::now();
-        let historical_answer_dto = HistoricalAnswerDto::from_model(answer_to_save);
+        let historical_answer_dto = HistoricalAnswerDto::map_from(answer_to_save);
         let after = Utc::now();
 
         assert_eq!(
@@ -87,14 +86,11 @@ mod tests {
             created_at: now,
         };
 
-        let historical_answer = HistoricalAnswer::from_dto(historical_answer_dto);
+        let historical_answer = HistoricalAnswer::map_from(historical_answer_dto);
 
         assert_eq!(historical_answer.user_id, "user_id");
         assert_eq!(historical_answer.task_id, "task_id");
-        assert_eq!(
-            historical_answer.result,
-            AnswerResultDto::Valid.into_model()
-        );
+        assert_eq!(historical_answer.result, AnswerResultDto::Valid.map_into());
         assert_eq!(historical_answer.created_at, now);
     }
 }

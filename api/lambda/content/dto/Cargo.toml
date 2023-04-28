@@ -4,10 +4,14 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+common_api = { path = "../../../common_api" }
 common_domain = { path = "../../../../feature/common/domain" }
 content_domain = { path = "../../../../feature/content/domain" }
 gen = { path = "../../../gen" }
+http = { workspace = true }
+use_case = { path = "../../../../use_case" }
 
 [dev-dependencies]
 chrono = { workspace = true }
+snafu = { workspace = true }
 uuid = { workspace = true }

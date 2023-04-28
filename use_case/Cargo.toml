@@ -12,4 +12,5 @@ futures = { workspace = true }
 log = { workspace = true }
 mockall = { workspace = true }
 profile_domain = { path = "../feature/profile/domain" }
+snafu = { workspace = true }
 tokio = { workspace = true }

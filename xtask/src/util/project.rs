@@ -52,6 +52,10 @@ impl Project {
         if !path.is_dir() {
             return vec![];
         }
+        if path.to_path_buf().ends_with("target") {
+            return vec![];
+        }
+
         let cargo_path = path.join("Cargo.toml");
 
         if cargo_path.is_file() && path != Path::project_root_path().as_path() {

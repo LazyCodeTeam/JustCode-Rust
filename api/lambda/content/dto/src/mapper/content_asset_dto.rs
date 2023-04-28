@@ -1,10 +1,10 @@
 use crate::ContentAssetDto;
 use content_domain::model::content_asset::ContentAsset;
 
-use crate::FromModel;
+use crate::MapFrom;
 
-impl FromModel<ContentAsset> for ContentAssetDto {
-    fn from_model(model: ContentAsset) -> Self {
+impl MapFrom<ContentAsset> for ContentAssetDto {
+    fn map_from(model: ContentAsset) -> Self {
         Self {
             id: model.id,
             mime: model.content_type,
@@ -19,7 +19,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn from_model() {
+    fn map_from() {
         let asset = ContentAsset {
             id: "id".to_string(),
             content_type: "content_type".to_string(),
@@ -27,7 +27,7 @@ mod tests {
             created_at: chrono::Utc::now(),
         };
 
-        let dto = ContentAssetDto::from_model(asset.clone());
+        let dto = ContentAssetDto::map_from(asset.clone());
 
         assert_eq!(dto.id, asset.id);
         assert_eq!(dto.mime, asset.content_type);
@@ -36,7 +36,7 @@ mod tests {
     }
 
     #[test]
-    fn from_model_vec() {
+    fn map_from_vec() {
         let assets = vec![
             ContentAsset {
                 id: "id1".to_string(),
@@ -52,7 +52,7 @@ mod tests {
             },
         ];
 
-        let dtos = Vec::<ContentAssetDto>::from_model(assets.clone());
+        let dtos = Vec::<ContentAssetDto>::map_from(assets.clone());
 
         assert_eq!(dtos.len(), assets.len());
         assert_eq!(dtos[0].id, assets[0].id);

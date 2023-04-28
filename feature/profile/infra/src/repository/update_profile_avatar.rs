@@ -1,7 +1,8 @@
 use crate::config::CONFIG;
 use aws_sdk_dynamodb::types::AttributeValue;
-use common_domain::error::{Error, Result};
-use common_infra::dynamodb_client::get_dynamodb_client;
+use common_domain::error::{Result, ResultLogExt};
+use common_infra::dynamodb::client::get_dynamodb_client;
+use snafu::ResultExt;
 
 use crate::{PROFILE_ID_PREFIX, PROFILE_PRIMARY_KEY};
 
@@ -31,5 +32,6 @@ where
         .send()
         .await
         .map(|_| ())
-        .map_err(|e| Error::unknown(format!("{e:?}")))
+        .whatever_context("Failed to update profile avatar")
+        .with_error_log()
 }

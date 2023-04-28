@@ -7,18 +7,9 @@ edition = "2021"
 aws_lambda_events = { workspace = true }
 common_api = { path = "../../../common_api" }
 common_domain = { path = "../../../../feature/common/domain" }
-futures = { workspace = true }
 lambda_runtime = { workspace = true }
 profile_domain = { path = "../../../../feature/profile/domain" }
 profile_infra = { path = "../../../../feature/profile/infra" }
+snafu = { workspace = true }
 tokio = { workspace = true }
 use_case = { path = "../../../../use_case" }
-
-[lib]
-name = "create_profile"
-path = "src/lib.rs"
-
-[[bin]]
-test = false
-name = "create_profile"
-path = "src/main.rs"

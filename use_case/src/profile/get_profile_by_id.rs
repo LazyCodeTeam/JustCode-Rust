@@ -1,10 +1,9 @@
-use std::collections::HashMap;
-
 use common_domain::{
     define_repo,
-    error::{Error, ErrorOutput, ErrorType, Result},
+    error::{Error, Result, ResultLogExt},
 };
 use profile_domain::model::profile::Profile;
+use snafu::{OptionExt, ResultExt, Snafu};
 
 define_repo! {
     pub struct GetProfileByIdRepository<T> {
@@ -12,21 +11,23 @@ define_repo! {
     }
 }
 
-pub async fn get_profile_by_id<T>(id: String, repo: GetProfileByIdRepository<T>) -> Result<Profile>
+#[derive(Debug, Snafu)]
+pub enum GetProfileByIdError {
+    NotFound,
+    Infra { source: Error },
+}
+
+pub async fn get_profile_by_id<T>(
+    id: String,
+    repo: GetProfileByIdRepository<T>,
+) -> std::result::Result<Profile, GetProfileByIdError>
 where
     T: GetProfileByIdType,
 {
-    (repo.get_profile_by_id)(&id).await.and_then(|result| {
-        result.ok_or_else(|| Error {
-            debug_message: format!("Profile with id {id} not found"),
-            error_type: ErrorType::NotFound,
-            output: Box::new(ErrorOutput {
-                message: "Profile not found".to_string(),
-                code: "profile_not_found".to_string(),
-                args: HashMap::new(),
-            }),
-        })
-    })
+    (repo.get_profile_by_id)(&id)
+        .await
+        .context(InfraSnafu)
+        .and_then(|result| result.context(NotFoundSnafu).with_debug_log())
 }
 
 #[cfg(test)]
@@ -53,7 +54,10 @@ mod test {
         .await;
 
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err().error_type, ErrorType::NotFound);
+        assert!(matches!(
+            result.err().unwrap(),
+            GetProfileByIdError::NotFound
+        ));
     }
 
     #[tokio::test]

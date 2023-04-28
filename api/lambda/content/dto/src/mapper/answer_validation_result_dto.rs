@@ -1,12 +1,12 @@
 use content_domain::model::answer_validation_result::AnswerValidationResult;
 use gen::models::AnswerValidationResultDto;
 
-use crate::{FromModel, IntoDto};
+use crate::{MapFrom, MapInto};
 
-impl FromModel<AnswerValidationResult> for AnswerValidationResultDto {
-    fn from_model(model: AnswerValidationResult) -> Self {
+impl MapFrom<AnswerValidationResult> for AnswerValidationResultDto {
+    fn map_from(model: AnswerValidationResult) -> Self {
         AnswerValidationResultDto {
-            result: model.result.into_dto(),
+            result: model.result.map_into(),
         }
     }
 }
@@ -18,12 +18,12 @@ mod tests {
     use super::*;
 
     #[test]
-    fn from_model() {
+    fn map_from() {
         let result = AnswerResult::Valid;
         let model = AnswerValidationResult { result };
 
-        let dto = AnswerValidationResultDto::from_model(model);
+        let dto = AnswerValidationResultDto::map_from(model);
 
-        assert_eq!(dto.result, result.into_dto());
+        assert_eq!(dto.result, result.map_into());
     }
 }

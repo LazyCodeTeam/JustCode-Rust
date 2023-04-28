@@ -6,12 +6,10 @@ edition = "2021"
 [dependencies]
 aws_lambda_events = { workspace = true }
 common_api = { path = "../../../common_api" }
-common_domain = { path = "../../../../feature/common/domain" }
 content_domain = { path = "../../../../feature/content/domain" }
 content_infra = { path = "../../../../feature/content/infra", features = [
   "dto",
 ] }
-futures = { workspace = true }
 lambda_runtime = { workspace = true }
 tokio = { workspace = true }
 use_case = { path = "../../../../use_case" }

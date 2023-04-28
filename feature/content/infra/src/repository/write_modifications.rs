@@ -1,14 +1,15 @@
 use aws_sdk_dynamodb::types::WriteRequest;
-use common_domain::error::Result;
-use common_infra::dynamodb_client::get_dynamodb_client;
+use common_domain::error::{Result, ResultLogExt};
+use common_infra::dynamodb::client::get_dynamodb_client;
 use content_domain::model::modification::Modification;
+use snafu::ResultExt;
 
-use crate::{config::CONFIG, modification_dto::ModificationDto, FromModel};
+use crate::{config::CONFIG, modification_dto::ModificationDto, MapFrom};
 
 pub async fn write_modifications(modifications: Vec<Modification>) -> Result<()> {
     let items = modifications
         .into_iter()
-        .map(ModificationDto::from_model)
+        .map(ModificationDto::map_from)
         .map(WriteRequest::try_from)
         .collect::<Result<Vec<WriteRequest>>>()?;
 
@@ -19,8 +20,7 @@ pub async fn write_modifications(modifications: Vec<Modification>) -> Result<()>
         .send()
         .await
         .map(|_| ())
-        .map_err(|e| {
-            common_domain::error::Error::unknown(format!("Failed to write modifications: {e:?}"))
-        })?;
+        .whatever_context("Failed to write modifications")
+        .with_error_log()?;
     Ok(())
 }

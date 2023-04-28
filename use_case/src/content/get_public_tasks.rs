@@ -1,8 +1,9 @@
 use common_domain::{
     define_repo,
-    error::{Error, Result},
+    error::{Error, Result, ResultLogExt},
 };
 use content_domain::model::task::Task;
+use snafu::{ResultExt, Snafu};
 
 define_repo! {
     pub struct GetPublicTasksRepo<A> {
@@ -10,17 +11,30 @@ define_repo! {
     }
 }
 
+#[derive(Debug, Snafu)]
+pub enum GetPublicTasksError {
+    #[snafu(display("Tasks not found for section: {section_id}"))]
+    NotFound {
+        section_id: String,
+    },
+    Infra {
+        source: Error,
+    },
+}
+
 pub async fn get_public_tasks<A>(
     section_id: String,
     repo: GetPublicTasksRepo<A>,
-) -> Result<Vec<Task>>
+) -> std::result::Result<Vec<Task>, GetPublicTasksError>
 where
     A: GetTasksType,
 {
-    let tasks = (repo.get_tasks)(section_id).await?;
+    let tasks = (repo.get_tasks)(section_id.clone())
+        .await
+        .context(InfraSnafu)?;
 
     if tasks.is_empty() {
-        return Err(Error::not_found());
+        return Err(GetPublicTasksError::NotFound { section_id }).with_debug_log();
     }
 
     Ok(tasks)
@@ -57,7 +71,7 @@ mod tests {
         ctx.expect()
             .once()
             .withf(|id| "section_id" == id)
-            .return_once(move |_| Err(Error::not_found()));
+            .return_once(move |_| Ok(vec![]));
 
         let repo = GetPublicTasksRepo {
             get_tasks: mock_get_tasks::call,
@@ -66,6 +80,8 @@ mod tests {
         let result = get_public_tasks("section_id".to_string(), repo).await;
 
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err(), Error::not_found());
+        assert!(
+            matches!(result.unwrap_err(), GetPublicTasksError::NotFound { section_id } if section_id == "section_id")
+        );
     }
 }

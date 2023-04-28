@@ -1,5 +1,9 @@
-use common_domain::{define_repo, error::Result};
+use common_domain::{
+    define_repo,
+    error::{Error, Result},
+};
 use profile_domain::model::push_data::PushData;
+use snafu::{ResultExt, Snafu};
 
 define_repo! {
     pub struct SetPushDataRepository<A, B> {
@@ -8,10 +12,15 @@ define_repo! {
     }
 }
 
+#[derive(Debug, Snafu)]
+pub enum SetPushDataError {
+    Infra { source: Error },
+}
+
 pub async fn set_push_data<A, B>(
     (id, data): (String, Option<PushData>),
     repo: SetPushDataRepository<A, B>,
-) -> Result<()>
+) -> std::result::Result<(), SetPushDataError>
 where
     A: UpdatePushDataType,
     B: RemovePushDataType,
@@ -20,6 +29,7 @@ where
         Some(data) => (repo.update_push_data)(&id, &data).await,
         None => (repo.remove_push_data)(&id).await,
     }
+    .context(InfraSnafu)
 }
 
 #[cfg(test)]

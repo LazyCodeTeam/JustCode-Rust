@@ -1,9 +1,10 @@
 use common_domain::{
     define_repo,
-    error::{ErrorOutput, ErrorType, Result},
+    error::{Error, Result, ResultLogExt},
 };
 use profile_domain::model::profile::Profile;
 use profile_domain::model::update_profile_params::UpdateProfileParams;
+use snafu::{ResultExt, Snafu};
 
 define_repo! {
     pub struct UpdateProfileRepository<T, Y> {
@@ -12,30 +13,26 @@ define_repo! {
     }
 }
 
+#[derive(Debug, Snafu)]
+pub enum UpdateProfileError {
+    NotFound,
+    Infra { source: Error },
+}
+
 pub async fn update_profile<T, Y>(
     (id, params): (String, UpdateProfileParams),
     repo: UpdateProfileRepository<T, Y>,
-) -> Result<()>
+) -> std::result::Result<(), UpdateProfileError>
 where
     T: GetProfileByIdType,
     Y: UpdateProfileType,
 {
-    let profile = (repo.get_profile_by_id)(&id).await?;
+    let profile = (repo.get_profile_by_id)(&id).await.context(InfraSnafu)?;
     match profile {
-        Some(profile) => (repo.update_profile)(profile.update(params)).await,
-        None => Err(not_found_error(&id)),
-    }
-}
-
-fn not_found_error(id: &str) -> common_domain::error::Error {
-    common_domain::error::Error {
-        debug_message: format!("profile {id} not found"),
-        error_type: ErrorType::NotFound,
-        output: Box::new(ErrorOutput {
-            message: "profile not found".to_string(),
-            code: "profile_not_found".to_string(),
-            ..Default::default()
-        }),
+        Some(profile) => (repo.update_profile)(profile.update(params))
+            .await
+            .context(InfraSnafu),
+        None => Err(UpdateProfileError::NotFound).with_debug_log(),
     }
 }
 
@@ -70,7 +67,7 @@ mod test {
         let result = update_profile((id, update_params), repo).await;
 
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err(), not_found_error("id"));
+        assert!(matches!(result.unwrap_err(), UpdateProfileError::NotFound));
     }
 
     #[tokio::test]

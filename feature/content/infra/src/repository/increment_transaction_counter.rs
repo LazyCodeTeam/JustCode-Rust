@@ -1,6 +1,7 @@
 use aws_sdk_dynamodb::types::AttributeValue;
-use common_domain::error::{Error, Result};
-use common_infra::dynamodb_client::get_dynamodb_client;
+use common_domain::error::{Result, ResultLogExt};
+use common_infra::dynamodb::client::get_dynamodb_client;
+use snafu::ResultExt;
 
 use crate::{config::CONFIG, TASKS_TRANSACTION_PK, TASKS_TRANSACTION_SK};
 
@@ -17,5 +18,6 @@ pub async fn increment_transaction_counter(count: u64) -> Result<()> {
         .send()
         .await
         .map(|_| ())
-        .map_err(|e| Error::unknown(format!("Failed to increment processed items count: {e:?}")))
+        .whatever_context("Failed to increment transaction counter")
+        .with_error_log()
 }

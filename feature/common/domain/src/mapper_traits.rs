@@ -1,139 +1,124 @@
 #[macro_export]
 macro_rules! generate_mapper_traits {
     () => {
-        pub trait FromDto<T> {
-            fn from_dto(dto: T) -> Self;
+        pub trait MapFrom<T> {
+            fn map_from(value: T) -> Self;
         }
 
-        pub trait IntoModel<T> {
-            fn into_model(self) -> T;
+        pub trait MapInto<T> {
+            fn map_into(self) -> T;
         }
 
-        pub trait IntoDto<T> {
-            fn into_dto(self) -> T;
-        }
-
-        pub trait FromModel<T> {
-            fn from_model(model: T) -> Self;
-        }
-
-        impl<T, U> IntoModel<U> for T
+        impl<T, U> MapInto<U> for T
         where
-            U: FromDto<T>,
+            U: MapFrom<T>,
         {
-            fn into_model(self) -> U {
-                U::from_dto(self)
+            fn map_into(self) -> U {
+                U::map_from(self)
             }
         }
 
-        impl<T, U> IntoDto<U> for T
+        impl<T, U> MapFrom<Vec<T>> for Vec<U>
         where
-            U: FromModel<T>,
+            U: MapFrom<T>,
         {
-            fn into_dto(self) -> U {
-                U::from_model(self)
+            fn map_from(value: Vec<T>) -> Self {
+                value.into_iter().map(MapInto::map_into).collect()
             }
         }
 
-        impl<T, U> FromModel<Vec<T>> for Vec<U>
+        impl<T, U> MapFrom<Option<T>> for Option<U>
         where
-            U: FromModel<T>,
+            U: MapFrom<T>,
         {
-            fn from_model(models: Vec<T>) -> Self {
-                models.into_iter().map(|m| m.into_dto()).collect()
+            fn map_from(value: Option<T>) -> Self {
+                value.map(MapInto::map_into)
             }
         }
 
-        impl<T, U> FromModel<Option<T>> for Option<U>
-        where
-            U: FromModel<T>,
-        {
-            fn from_model(model: Option<T>) -> Self {
-                model.map(|m| m.into_dto())
-            }
+        pub trait TryMapFrom<T>: Sized {
+            type Error;
+
+            fn try_map_from(value: T) -> Result<Self, Self::Error>;
         }
 
-        impl<T, U> FromDto<Vec<T>> for Vec<U>
-        where
-            U: FromDto<T>,
-        {
-            fn from_dto(dtos: Vec<T>) -> Self {
-                dtos.into_iter().map(|m| m.into_model()).collect()
-            }
+        pub trait TryMapInto<T>: Sized {
+            type Error;
+
+            fn try_map_into(self) -> Result<T, Self::Error>;
         }
 
-        impl<T, U> FromDto<Option<T>> for Option<U>
+        impl<T, U> TryMapInto<U> for T
         where
-            U: FromDto<T>,
+            U: TryMapFrom<T>,
         {
-            fn from_dto(dto: Option<T>) -> Self {
-                dto.map(|m| m.into_model())
+            type Error = U::Error;
+
+            fn try_map_into(self) -> Result<U, Self::Error> {
+                U::try_map_from(self)
             }
         }
     };
 }
 
 #[cfg(test)]
-mod tests {
+mod test {
     generate_mapper_traits!();
 
-    #[derive(Debug, PartialEq)]
-    struct Dto;
-
-    #[derive(Debug, PartialEq)]
-    struct Model;
-
-    impl FromDto<Dto> for Model {
-        fn from_dto(_dto: Dto) -> Self {
-            Model
-        }
-    }
-
-    impl FromModel<Model> for Dto {
-        fn from_model(_model: Model) -> Self {
-            Dto
+    impl MapFrom<i32> for String {
+        fn map_from(value: i32) -> Self {
+            value.to_string()
         }
     }
 
     #[test]
-    fn into_model() {
-        let dto = Dto;
-        let model: Model = dto.into_model();
-        assert_eq!(model, Model);
+    fn test_map_from() {
+        let x = 1;
+        let y = String::map_from(x);
+        assert_eq!(y, "1".to_string());
     }
 
     #[test]
-    fn into_dto() {
-        let model = Model;
-        let dto: Dto = model.into_dto();
-        assert_eq!(dto, Dto);
+    fn test_map_into() {
+        let x = 1;
+        let y: String = x.map_into();
+        assert_eq!(y, "1".to_string());
     }
 
     #[test]
-    fn into_model_vec() {
-        let dtos = vec![Dto, Dto];
-        let models: Vec<Model> = dtos.into_model();
-        assert_eq!(models, vec![Model, Model]);
+    fn test_map_from_vec() {
+        let x = vec![1, 2, 3];
+        let y: Vec<String> = x.map_into();
+        assert_eq!(y, vec!["1".to_string(), "2".to_string(), "3".to_string()]);
     }
 
     #[test]
-    fn into_dto_vec() {
-        let models = vec![Model, Model];
-        let dtos: Vec<Dto> = models.into_dto();
-        assert_eq!(dtos, vec![Dto, Dto]);
+    fn test_map_from_option() {
+        let x = Some(1);
+        let y: Option<String> = x.map_into();
+        assert_eq!(y, Some("1".to_string()));
     }
 
     #[test]
-    fn into_model_option() {
-        let dto = Some(Dto);
-        let model: Option<Model> = dto.into_model();
-        assert_eq!(model, Some(Model));
+    fn test_map_from_option_none() {
+        let x: Option<i32> = None;
+        let y: Option<String> = x.map_into();
+        assert_eq!(y, None::<String>);
+    }
+
+    impl TryMapFrom<i32> for String {
+        type Error = ();
+
+        fn try_map_from(value: i32) -> Result<Self, Self::Error> {
+            Ok(value.to_string())
+        }
     }
 
     #[test]
-    fn into_dto_option() {
-        let model = Some(Model);
-        let dto: Option<Dto> = model.into_dto();
-        assert_eq!(dto, Some(Dto));
+    fn test_try_map_from() {
+        let x = 1;
+        let y: Result<String, ()> = x.try_map_into();
+
+        assert_eq!(y, Ok("1".to_owned()));
     }
 }

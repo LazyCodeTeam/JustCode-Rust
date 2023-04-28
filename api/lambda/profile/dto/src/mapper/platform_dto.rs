@@ -1,9 +1,9 @@
 use profile_domain::model::platform::Platform;
 
-use crate::{FromDto, PlatformDto};
+use crate::{MapFrom, PlatformDto};
 
-impl FromDto<PlatformDto> for Platform {
-    fn from_dto(dto: PlatformDto) -> Self {
+impl MapFrom<PlatformDto> for Platform {
+    fn map_from(dto: PlatformDto) -> Self {
         match dto {
             PlatformDto::Android => Platform::Android,
             PlatformDto::Ios => Platform::Ios,
@@ -19,7 +19,7 @@ mod test {
     fn map_android_push_data() {
         let dto = PlatformDto::Android;
 
-        let result = Platform::from_dto(dto);
+        let result = Platform::map_from(dto);
 
         assert_eq!(result, Platform::Android);
     }
@@ -28,7 +28,7 @@ mod test {
     fn map_ios_push_data() {
         let dto = PlatformDto::Ios;
 
-        let result = Platform::from_dto(dto);
+        let result = Platform::map_from(dto);
 
         assert_eq!(result, Platform::Ios);
     }

@@ -1,10 +1,49 @@
-mod handler;
+use aws_lambda_events::s3;
+use bucket_infra::consts::PROFILE_AVATARS_PREFIX;
+use use_case::profile::on_avatars_created::{on_avatars_created, OnAvatarsCreatedRepository};
 
 use common_api::lambda::register_internal_handler::register_internal_handler;
-use handler::handle_event;
-use lambda_runtime::Error;
+use lambda_runtime::{Error, LambdaEvent};
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
     register_internal_handler(handle_event).await
+}
+
+pub async fn handle_event(event: LambdaEvent<s3::S3Event>) -> Result<(), Error> {
+    let ids: Vec<String> = event
+        .payload
+        .records
+        .into_iter()
+        .filter_map(|record| record.s3.object.key)
+        .map(|key| key.replace(PROFILE_AVATARS_PREFIX, ""))
+        .collect();
+
+    on_avatars_created(
+        ids,
+        OnAvatarsCreatedRepository {
+            get_bucket_object_info: |id| {
+                bucket_infra::repository::get_s3_object_info(format!(
+                    "{}{}",
+                    PROFILE_AVATARS_PREFIX, id
+                ))
+            },
+            delete_bucket_object: |id| {
+                bucket_infra::repository::delete_s3_object(format!(
+                    "{}{}",
+                    PROFILE_AVATARS_PREFIX, id
+                ))
+            },
+            get_bucket_object_url: |id| {
+                bucket_infra::repository::get_s3_object_url(format!(
+                    "{}{}",
+                    PROFILE_AVATARS_PREFIX, id
+                ))
+            },
+            update_profile_avatar: profile_infra::repository::update_profile_avatar,
+        },
+    )
+    .await?;
+
+    Ok(())
 }

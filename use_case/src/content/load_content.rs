@@ -1,8 +1,12 @@
-use common_domain::error::{ErrorOutput, ErrorType};
-use common_domain::{define_repo, error::Error, error::Result};
+use common_domain::{
+    define_repo,
+    error::Result,
+    error::{Error, ResultLogExt},
+};
 use content_domain::model::expected_technology_data::ExpectedTechnologyData;
 use content_domain::model::full_content::FullContent;
 use content_domain::model::modification::Modification;
+use snafu::{ResultExt, Snafu};
 
 define_repo! {
     pub struct LoadContentRepository<A, B, C, D, E> {
@@ -14,10 +18,17 @@ define_repo! {
     }
 }
 
+#[derive(Debug, Snafu)]
+pub enum LoadContentError {
+    NotModified,
+    TransactionAlreadyInProgress,
+    Infra { source: Error },
+}
+
 pub async fn load_tasks<A, B, C, D, E>(
     content: Vec<ExpectedTechnologyData>,
     repo: LoadContentRepository<A, B, C, D, E>,
-) -> Result<()>
+) -> std::result::Result<(), LoadContentError>
 where
     A: GetFullContentType,
     B: AddModificationsToQueueType,
@@ -25,48 +36,32 @@ where
     D: BeginTransactionType,
     E: IncreaseQueueItemsCountType,
 {
-    let result = (repo.get_full_content)().await?;
+    let result = (repo.get_full_content)().await.context(InfraSnafu)?;
     let changes = result.detect_changes(content);
 
     if changes.is_empty() {
-        return Err(not_modified_error());
+        return Err(LoadContentError::NotModified).with_debug_log();
     }
 
-    let is_transaction_in_progress = (repo.is_transaction_in_progress)().await?;
+    let is_transaction_in_progress = (repo.is_transaction_in_progress)()
+        .await
+        .context(InfraSnafu)?;
     if is_transaction_in_progress {
-        return Err(transaction_already_in_progress_error());
+        return Err(LoadContentError::TransactionAlreadyInProgress).with_debug_log();
     }
 
     let changes_count = changes.len() as u64;
-    (repo.begin_transaction)(changes_count).await?;
+    (repo.begin_transaction)(changes_count)
+        .await
+        .context(InfraSnafu)?;
 
-    (repo.add_modifications_to_queue)(changes).await?;
+    (repo.add_modifications_to_queue)(changes)
+        .await
+        .context(InfraSnafu)?;
 
-    (repo.increase_queue_items_count)(changes_count).await
-}
-
-fn transaction_already_in_progress_error() -> Error {
-    Error {
-        error_type: ErrorType::Conflict,
-        debug_message: "Transaction already in progress - load_tasks".to_owned(),
-        output: Box::new(ErrorOutput {
-            message: "Tasks upload already in progress".to_owned(),
-            code: "upload_already_in_progress".to_owned(),
-            ..Default::default()
-        }),
-    }
-}
-
-fn not_modified_error() -> Error {
-    Error {
-        error_type: ErrorType::NotModified,
-        debug_message: "No changes detected - load_tasks".to_owned(),
-        output: Box::new(ErrorOutput {
-            message: "No changes detected".to_owned(),
-            code: "no_changes_detected".to_owned(),
-            ..Default::default()
-        }),
-    }
+    (repo.increase_queue_items_count)(changes_count)
+        .await
+        .context(InfraSnafu)
 }
 
 #[cfg(test)]
@@ -101,10 +96,10 @@ mod test {
         let result = load_tasks(vec![ExpectedTechnologyData::default()], repo).await;
 
         assert!(result.is_err());
-        assert_eq!(
-            result.err().unwrap(),
-            transaction_already_in_progress_error()
-        );
+        assert!(matches!(
+            result.unwrap_err(),
+            LoadContentError::TransactionAlreadyInProgress
+        ));
     }
 
     #[tokio::test]
@@ -135,7 +130,7 @@ mod test {
         let result = load_tasks(vec![], repo).await;
 
         assert!(result.is_err());
-        assert_eq!(result.err().unwrap(), not_modified_error());
+        assert!(matches!(result.unwrap_err(), LoadContentError::NotModified));
     }
 
     #[tokio::test]

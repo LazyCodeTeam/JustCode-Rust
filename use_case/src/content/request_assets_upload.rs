@@ -1,5 +1,9 @@
 use bucket_domain::model::presigned_url::PresignedUrl;
-use common_domain::{define_repo, error::Result};
+use common_domain::{
+    define_repo,
+    error::{Error, Result},
+};
+use snafu::{ResultExt, Snafu};
 
 const UPLOAD_URL_VALID_FOR: u64 = 120; // sec - 2 min
 
@@ -9,17 +13,23 @@ define_repo! {
     }
 }
 
+#[derive(Debug, Snafu)]
+pub enum RequestAssetsUploadError {
+    Infra { source: Error },
+}
+
 pub async fn request_assets_upload<A>(
     count: u16,
     repo: RequestAssetsUploadRepository<A>,
-) -> Result<Vec<PresignedUrl>>
+) -> std::result::Result<Vec<PresignedUrl>, RequestAssetsUploadError>
 where
     A: GetUploadUrlType,
 {
     futures::future::join_all((0..count).map(|_| (repo.get_upload_url)(UPLOAD_URL_VALID_FOR)))
         .await
         .into_iter()
-        .collect()
+        .collect::<Result<Vec<_>>>()
+        .context(InfraSnafu)
 }
 
 #[cfg(test)]

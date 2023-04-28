@@ -1,9 +1,9 @@
 use aws_sdk_dynamodb::types::AttributeValue;
 use common_domain::error::Result;
-use common_infra::dynamodb_client::{get_dynamodb_client, QueryOutputExt};
+use common_infra::dynamodb::client::{get_dynamodb_client, QueryOutputExt};
 use content_domain::model::task::Task;
 
-use crate::{config::CONFIG, task_dto::TaskDto, IntoModel, SECTION_ID_PREFIX, TASK_ID_PREFIX};
+use crate::{config::CONFIG, task_dto::TaskDto, MapInto, SECTION_ID_PREFIX, TASK_ID_PREFIX};
 
 pub async fn get_tasks_for_multiple_technologies(ids: Vec<String>) -> Result<Vec<Task>> {
     let mut tasks = Vec::new();
@@ -30,7 +30,7 @@ pub async fn get_all_section_tasks(section_id: &str) -> Result<Vec<Task>> {
         .send()
         .await
         .parse::<TaskDto>()
-        .map(IntoModel::into_model)
+        .map(MapInto::map_into)
 }
 
 pub async fn get_ordered_section_tasks(section_id: String) -> Result<Vec<Task>> {
@@ -48,5 +48,5 @@ pub async fn get_ordered_section_tasks(section_id: String) -> Result<Vec<Task>> 
         .send()
         .await
         .parse::<TaskDto>()
-        .map(IntoModel::into_model)
+        .map(MapInto::map_into)
 }

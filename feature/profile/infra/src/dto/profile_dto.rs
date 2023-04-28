@@ -2,7 +2,7 @@ use chrono::{DateTime, Utc};
 use profile_domain::model::{create_profile_params::CreateProfileParams, profile::Profile};
 use serde::{Deserialize, Serialize};
 
-use crate::{FromDto, FromModel, IntoDto, IntoModel, PROFILE_ID_PREFIX, PROFILE_PRIMARY_KEY};
+use crate::{MapFrom, MapInto, PROFILE_ID_PREFIX, PROFILE_PRIMARY_KEY};
 
 use super::profile_role_dto::ProfileRoleDto;
 
@@ -21,8 +21,8 @@ pub struct ProfileDto {
     pub created_at: DateTime<Utc>,
 }
 
-impl FromDto<ProfileDto> for Profile {
-    fn from_dto(dto: ProfileDto) -> Self {
+impl MapFrom<ProfileDto> for Profile {
+    fn map_from(dto: ProfileDto) -> Self {
         Profile {
             id: dto.id.replace(PROFILE_ID_PREFIX, ""),
             name: dto.name,
@@ -30,14 +30,14 @@ impl FromDto<ProfileDto> for Profile {
             avatar_url: dto.avatar_url,
             first_name: dto.first_name,
             last_name: dto.last_name,
-            role: dto.role.map(IntoModel::into_model).unwrap_or_default(),
+            role: dto.role.map(MapInto::map_into).unwrap_or_default(),
             created_at: dto.created_at,
         }
     }
 }
 
-impl FromModel<CreateProfileParams> for ProfileDto {
-    fn from_model(model: CreateProfileParams) -> Self {
+impl MapFrom<CreateProfileParams> for ProfileDto {
+    fn map_from(model: CreateProfileParams) -> Self {
         ProfileDto {
             id: format!("{}{}", PROFILE_ID_PREFIX, model.id),
             pk: PROFILE_PRIMARY_KEY.to_string(),
@@ -52,8 +52,8 @@ impl FromModel<CreateProfileParams> for ProfileDto {
     }
 }
 
-impl FromModel<Profile> for ProfileDto {
-    fn from_model(model: Profile) -> Self {
+impl MapFrom<Profile> for ProfileDto {
+    fn map_from(model: Profile) -> Self {
         ProfileDto {
             id: format!("{}{}", PROFILE_ID_PREFIX, model.id),
             pk: PROFILE_PRIMARY_KEY.to_string(),
@@ -62,7 +62,7 @@ impl FromModel<Profile> for ProfileDto {
             avatar_url: model.avatar_url,
             first_name: model.first_name,
             last_name: model.last_name,
-            role: Some(model.role.into_dto()),
+            role: Some(model.role.map_into()),
             created_at: model.created_at,
         }
     }
@@ -82,7 +82,7 @@ mod tests {
             email: "email".to_string(),
         };
 
-        let result = ProfileDto::from_model(params);
+        let result = ProfileDto::map_from(params);
 
         assert_eq!(result.id, format!("{PROFILE_ID_PREFIX}id"));
         assert_eq!(result.name, "name");
@@ -110,7 +110,7 @@ mod tests {
         };
 
         assert_eq!(
-            Profile::from_dto(dto),
+            Profile::map_from(dto),
             Profile {
                 id: "id".to_string(),
                 name: "name".to_string(),
@@ -139,7 +139,7 @@ mod tests {
         };
 
         assert_eq!(
-            ProfileDto::from_model(profile),
+            ProfileDto::map_from(profile),
             ProfileDto {
                 id: format!("{PROFILE_ID_PREFIX}id"),
                 pk: PROFILE_PRIMARY_KEY.to_string(),

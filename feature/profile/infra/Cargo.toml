@@ -12,3 +12,4 @@ lazy_static = { workspace = true }
 profile_domain = { path = "../domain" }
 serde = { workspace = true }
 serde_dynamo = { workspace = true }
+snafu = { workspace = true }

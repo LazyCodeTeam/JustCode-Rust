@@ -1,7 +1,7 @@
 use content_domain::model::tasks_transaction_state::TasksTransactionState;
 use serde::{Deserialize, Serialize};
 
-use crate::{FromDto, TASKS_TRANSACTION_PK, TASKS_TRANSACTION_SK};
+use crate::{MapFrom, TASKS_TRANSACTION_PK, TASKS_TRANSACTION_SK};
 
 #[derive(Debug, PartialEq, Eq, Clone, Deserialize, Serialize)]
 pub struct TasksTransactionDto {
@@ -26,8 +26,8 @@ impl TasksTransactionDto {
     }
 }
 
-impl FromDto<TasksTransactionDto> for TasksTransactionState {
-    fn from_dto(dto: TasksTransactionDto) -> Self {
+impl MapFrom<TasksTransactionDto> for TasksTransactionState {
+    fn map_from(dto: TasksTransactionDto) -> Self {
         match (dto.items_passed_to_queue_count, dto.processed_items_count) {
             (0, 0) => TasksTransactionState::PopulatingQueue,
             (items_passed_to_queue_count, 0) if items_passed_to_queue_count <= dto.items_count => {
@@ -72,7 +72,7 @@ mod test {
             processed_items_count: 0,
         };
 
-        let actual = TasksTransactionState::from_dto(dto);
+        let actual = TasksTransactionState::map_from(dto);
 
         assert_eq!(TasksTransactionState::PopulatingQueue, actual);
     }
@@ -87,7 +87,7 @@ mod test {
             processed_items_count: 0,
         };
 
-        let actual = TasksTransactionState::from_dto(dto);
+        let actual = TasksTransactionState::map_from(dto);
 
         assert_eq!(TasksTransactionState::QueuePopulated, actual);
     }
@@ -102,7 +102,7 @@ mod test {
             processed_items_count: 5,
         };
 
-        let actual = TasksTransactionState::from_dto(dto);
+        let actual = TasksTransactionState::map_from(dto);
 
         assert_eq!(TasksTransactionState::ProcessingQueue, actual);
     }
@@ -117,7 +117,7 @@ mod test {
             processed_items_count: 11,
         };
 
-        let actual = TasksTransactionState::from_dto(dto);
+        let actual = TasksTransactionState::map_from(dto);
 
         assert_eq!(TasksTransactionState::Invalid, actual);
     }

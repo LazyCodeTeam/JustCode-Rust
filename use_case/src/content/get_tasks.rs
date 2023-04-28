@@ -1,12 +1,13 @@
 use common_domain::{
     define_repo,
-    error::{Error, Result},
+    error::{Error, Result, ResultLogExt},
 };
 use content_domain::model::{
     historical_answer::{HistoricalAnswer, VecHistoricalAnswerExt},
     personalized_task::PersonalizedTask,
     task::{Task, VecTaskExt},
 };
+use snafu::{ResultExt, Snafu};
 use tokio::join;
 
 define_repo! {
@@ -16,11 +17,20 @@ define_repo! {
     }
 }
 
+#[derive(Debug, Snafu)]
+pub enum GetTasksError {
+    #[snafu(display("Not found"))]
+    NotFound,
+    Infra {
+        source: Error,
+    },
+}
+
 pub async fn get_tasks<A, B>(
     section_id: String,
     user_id: String,
     repo: GetTasksRepo<A, B>,
-) -> Result<Vec<PersonalizedTask>>
+) -> std::result::Result<Vec<PersonalizedTask>, GetTasksError>
 where
     A: GetTasksType,
     B: GetValidHistoricalAnswersType,
@@ -29,11 +39,13 @@ where
         (repo.get_tasks)(section_id),
         (repo.get_valid_historical_answers)(user_id)
     );
-    let tasks = tasks?;
-    let answered_tasks = valid_historical_answers?.into_answer_per_task_id();
+    let tasks = tasks.context(InfraSnafu)?;
+    let answered_tasks = valid_historical_answers
+        .context(InfraSnafu)?
+        .into_answer_per_task_id();
 
     if tasks.is_empty() {
-        return Err(Error::not_found());
+        return Err(GetTasksError::NotFound).with_debug_log();
     }
 
     Ok(tasks.personalize(answered_tasks))

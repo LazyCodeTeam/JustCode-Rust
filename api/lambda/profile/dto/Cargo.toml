@@ -4,6 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+common_api = { path = "../../../common_api" }
 common_domain = { path = "../../../../feature/common/domain" }
 gen = { path = "../../../gen" }
 profile_domain = { path = "../../../../feature/profile/domain" }
+snafu = { workspace = true }
+use_case = { path = "../../../../use_case" }

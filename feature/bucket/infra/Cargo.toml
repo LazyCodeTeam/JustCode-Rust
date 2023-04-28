@@ -10,4 +10,5 @@ chrono = { workspace = true }
 common_domain = { path = "../../common/domain" }
 common_infra = { path = "../../common/infra" }
 lazy_static = { workspace = true }
+snafu = { workspace = true }
 uuid = { workspace = true }

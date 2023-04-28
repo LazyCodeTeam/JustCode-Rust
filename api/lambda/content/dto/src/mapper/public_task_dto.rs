@@ -1,14 +1,14 @@
-use crate::{FromModel, PublicTaskDto, TaskContentDto};
+use crate::{MapFrom, PublicTaskDto, TaskContentDto};
 use content_domain::model::task::Task;
 
-impl FromModel<Task> for PublicTaskDto {
-    fn from_model(model: Task) -> Self {
+impl MapFrom<Task> for PublicTaskDto {
+    fn map_from(model: Task) -> Self {
         if model.for_anonymous {
             Self::PublicTaskAvailableDto {
                 id: model.id,
                 title: model.title,
                 difficulty: model.difficulty,
-                content: Option::<TaskContentDto>::from_model(model.content).map(Box::new),
+                content: Option::<TaskContentDto>::map_from(model.content).map(Box::new),
             }
         } else {
             Self::PublicTaskNotAvailableDto {
@@ -37,7 +37,7 @@ mod tests {
             content: TaskContent::Empty,
             for_anonymous: true,
         };
-        let public_task_dto = PublicTaskDto::from_model(task);
+        let public_task_dto = PublicTaskDto::map_from(task);
         assert_eq!(
             public_task_dto,
             PublicTaskDto::PublicTaskAvailableDto {
@@ -60,7 +60,7 @@ mod tests {
             content: TaskContent::Empty,
             for_anonymous: false,
         };
-        let public_task_dto = PublicTaskDto::from_model(task);
+        let public_task_dto = PublicTaskDto::map_from(task);
         assert_eq!(
             public_task_dto,
             PublicTaskDto::PublicTaskNotAvailableDto {

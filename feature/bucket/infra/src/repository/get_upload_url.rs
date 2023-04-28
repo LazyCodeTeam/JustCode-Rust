@@ -4,8 +4,9 @@ use std::time::Duration;
 use aws_sdk_s3::{presigning::PresigningConfig, types::ObjectCannedAcl};
 use bucket_domain::model::presigned_url::PresignedUrl;
 use chrono::Utc;
-use common_domain::error::{Error, Result};
+use common_domain::error::{Result, ResultLogExt};
 use common_infra::s3_client::get_s3_client;
+use snafu::ResultExt;
 
 use super::get_s3_object_url;
 
@@ -34,7 +35,8 @@ where
         .acl(ObjectCannedAcl::PublicRead)
         .presigned(presigned_config(valid_for)?)
         .await
-        .map_err(|err| Error::unknown(format!("Failed to presign avatar image: {err:?}")))
+        .whatever_context("Failed to presign avatar image")
+        .with_error_log()
         .map(|presigned| PresignedUrl {
             presigned_url: presigned.uri().to_string(),
             url,
@@ -61,9 +63,7 @@ fn url_std_duration(valid_for: u64) -> Duration {
 }
 
 fn presigned_config(valid_for: u64) -> Result<PresigningConfig> {
-    PresigningConfig::expires_in(url_std_duration(valid_for)).map_err(|_| presigning_config_error())
-}
-
-fn presigning_config_error() -> Error {
-    Error::unknown("Failed to generate presigning config".to_owned())
+    PresigningConfig::expires_in(url_std_duration(valid_for))
+        .whatever_context("Failed to generate presigning config")
+        .with_error_log()
 }

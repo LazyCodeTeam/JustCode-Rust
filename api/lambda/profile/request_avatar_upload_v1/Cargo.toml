@@ -6,9 +6,8 @@ edition = "2021"
 [dependencies]
 bucket_infra = { path = "../../../../feature/bucket/infra" }
 common_api = { path = "../../../common_api" }
-common_domain = { path = "../../../../feature/common/domain" }
-futures = { workspace = true }
 lambda_http = { workspace = true }
+profile_dto = { path = "../dto" }
 profile_infra = { path = "../../../../feature/profile/infra" }
 tokio = { workspace = true }
 use_case = { path = "../../../../use_case" }

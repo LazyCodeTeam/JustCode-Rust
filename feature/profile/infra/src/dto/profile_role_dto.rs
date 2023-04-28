@@ -1,7 +1,7 @@
 use profile_domain::model::user_role::UserRole;
 use serde::{Deserialize, Serialize};
 
-use crate::{FromDto, FromModel};
+use crate::MapFrom;
 
 #[derive(Deserialize, Serialize, PartialEq, Eq, Debug)]
 #[serde(rename_all = "UPPERCASE")]
@@ -11,8 +11,8 @@ pub enum ProfileRoleDto {
     Admin,
 }
 
-impl FromDto<ProfileRoleDto> for UserRole {
-    fn from_dto(dto: ProfileRoleDto) -> Self {
+impl MapFrom<ProfileRoleDto> for UserRole {
+    fn map_from(dto: ProfileRoleDto) -> Self {
         match dto {
             ProfileRoleDto::User => UserRole::User,
             ProfileRoleDto::Editor => UserRole::Editor,
@@ -21,8 +21,8 @@ impl FromDto<ProfileRoleDto> for UserRole {
     }
 }
 
-impl FromModel<UserRole> for ProfileRoleDto {
-    fn from_model(model: UserRole) -> Self {
+impl MapFrom<UserRole> for ProfileRoleDto {
+    fn map_from(model: UserRole) -> Self {
         match model {
             UserRole::User => ProfileRoleDto::User,
             UserRole::Editor => ProfileRoleDto::Editor,
@@ -38,42 +38,42 @@ mod tests {
     #[test]
     fn from_profile_role_dto() {
         let dto = ProfileRoleDto::User;
-        let role = UserRole::from_dto(dto);
+        let role = UserRole::map_from(dto);
         assert_eq!(role, UserRole::User);
     }
 
     #[test]
     fn from_profile_role_dto_editor() {
         let dto = ProfileRoleDto::Editor;
-        let role = UserRole::from_dto(dto);
+        let role = UserRole::map_from(dto);
         assert_eq!(role, UserRole::Editor);
     }
 
     #[test]
     fn from_profile_role_dto_admin() {
         let dto = ProfileRoleDto::Admin;
-        let role = UserRole::from_dto(dto);
+        let role = UserRole::map_from(dto);
         assert_eq!(role, UserRole::Admin);
     }
 
     #[test]
     fn from_user_role() {
         let role = UserRole::User;
-        let dto = ProfileRoleDto::from_model(role);
+        let dto = ProfileRoleDto::map_from(role);
         assert_eq!(dto, ProfileRoleDto::User);
     }
 
     #[test]
     fn from_user_role_editor() {
         let role = UserRole::Editor;
-        let dto = ProfileRoleDto::from_model(role);
+        let dto = ProfileRoleDto::map_from(role);
         assert_eq!(dto, ProfileRoleDto::Editor);
     }
 
     #[test]
     fn from_user_role_admin() {
         let role = UserRole::Admin;
-        let dto = ProfileRoleDto::from_model(role);
+        let dto = ProfileRoleDto::map_from(role);
         assert_eq!(dto, ProfileRoleDto::Admin);
     }
 }

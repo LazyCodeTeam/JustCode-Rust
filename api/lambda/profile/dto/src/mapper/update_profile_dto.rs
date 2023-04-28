@@ -1,9 +1,9 @@
 use profile_domain::model::update_profile_params::UpdateProfileParams;
 
-use crate::{FromDto, UpdateProfileDto};
+use crate::{MapFrom, UpdateProfileDto};
 
-impl FromDto<UpdateProfileDto> for UpdateProfileParams {
-    fn from_dto(dto: UpdateProfileDto) -> Self {
+impl MapFrom<UpdateProfileDto> for UpdateProfileParams {
+    fn map_from(dto: UpdateProfileDto) -> Self {
         Self {
             first_name: dto.first_name,
             last_name: dto.last_name,
@@ -21,7 +21,7 @@ mod tests {
             first_name: Some("John".to_owned()),
             last_name: Some("Doe".to_owned()),
         };
-        let params = UpdateProfileParams::from_dto(dto);
+        let params = UpdateProfileParams::map_from(dto);
         assert_eq!(
             params,
             UpdateProfileParams {

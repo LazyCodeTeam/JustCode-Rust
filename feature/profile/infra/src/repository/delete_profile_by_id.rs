@@ -1,6 +1,7 @@
 use aws_sdk_dynamodb::types::AttributeValue;
-use common_domain::error::{Error, Result};
-use common_infra::dynamodb_client::get_dynamodb_client;
+use common_domain::error::{Result, ResultLogExt};
+use common_infra::dynamodb::client::get_dynamodb_client;
+use snafu::ResultExt;
 
 use crate::{config::CONFIG, PROFILE_ID_PREFIX, PROFILE_PRIMARY_KEY};
 
@@ -17,5 +18,6 @@ pub async fn delete_profile_by_id(id: impl Into<String>) -> Result<()> {
         .send()
         .await
         .map(|_| ())
-        .map_err(|e| Error::unknown(format!("Failed to delete profile: {e:?}")))
+        .whatever_context("Failed to delete profile by id")
+        .with_error_log()
 }

@@ -1,7 +1,5 @@
 pub mod cognito_client;
-pub mod dynamodb_client;
-pub mod dynamodb_identifiable;
-pub mod repository;
+pub mod dynamodb;
 pub mod s3_client;
 pub mod sqs_client;
 

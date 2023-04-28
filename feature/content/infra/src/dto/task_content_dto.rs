@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use content_domain::model::task_content::TaskContent;
 use serde::{Deserialize, Serialize};
 
-use crate::{IntoDto, IntoModel};
+use crate::MapInto;
 
 use super::{
     hint_dto::HintDto, keyword_dto::KeywordDto, option_dto::OptionDataDto,
@@ -67,7 +67,7 @@ impl From<TaskContent> for TaskContentDto {
                 content,
                 variations: variations
                     .into_iter()
-                    .map(|(key, value)| (key, value.into_dto()))
+                    .map(|(key, value)| (key, value.map_into()))
                     .collect(),
                 dynamic_description,
             },
@@ -78,9 +78,9 @@ impl From<TaskContent> for TaskContentDto {
                 hints,
             } => Self::SingleSelection {
                 content,
-                options: options.into_dto(),
+                options: options.map_into(),
                 correct_option,
-                hints: hints.into_dto(),
+                hints: hints.map_into(),
             },
             TaskContent::MultipleSelection {
                 content,
@@ -89,9 +89,9 @@ impl From<TaskContent> for TaskContentDto {
                 hints,
             } => Self::MultipleSelection {
                 content,
-                options: options.into_dto(),
+                options: options.map_into(),
                 correct_options,
-                hints: hints.into_dto(),
+                hints: hints.map_into(),
             },
             TaskContent::KeywordsArrangement {
                 content,
@@ -100,9 +100,9 @@ impl From<TaskContent> for TaskContentDto {
                 hints,
             } => Self::KeywordsArrangement {
                 content,
-                keywords: keywords.into_dto(),
+                keywords: keywords.map_into(),
                 correct_order,
-                hints: hints.into_dto(),
+                hints: hints.map_into(),
             },
             TaskContent::LinesArrangement {
                 content,
@@ -111,9 +111,9 @@ impl From<TaskContent> for TaskContentDto {
                 hints,
             } => Self::LinesArrangement {
                 content,
-                lines: lines.into_dto(),
+                lines: lines.map_into(),
                 correct_order,
-                hints: hints.into_dto(),
+                hints: hints.map_into(),
             },
             TaskContent::MissingCode {
                 content,
@@ -122,7 +122,7 @@ impl From<TaskContent> for TaskContentDto {
             } => Self::MissingCode {
                 content,
                 correct_code,
-                hints: hints.into_dto(),
+                hints: hints.map_into(),
             },
         }
     }
@@ -141,7 +141,7 @@ impl From<TaskContentDto> for TaskContent {
                 content,
                 variations: variations
                     .into_iter()
-                    .map(|(key, value)| (key, value.into_model()))
+                    .map(|(key, value)| (key, value.map_into()))
                     .collect(),
                 dynamic_description,
             },
@@ -152,9 +152,9 @@ impl From<TaskContentDto> for TaskContent {
                 hints,
             } => Self::SingleSelection {
                 content,
-                options: options.into_model(),
+                options: options.map_into(),
                 correct_option,
-                hints: hints.into_iter().map(IntoModel::into_model).collect(),
+                hints: hints.into_iter().map(MapInto::map_into).collect(),
             },
             TaskContentDto::MultipleSelection {
                 content,
@@ -163,9 +163,9 @@ impl From<TaskContentDto> for TaskContent {
                 hints,
             } => Self::MultipleSelection {
                 content,
-                options: options.into_model(),
+                options: options.map_into(),
                 correct_options,
-                hints: hints.into_model(),
+                hints: hints.map_into(),
             },
             TaskContentDto::KeywordsArrangement {
                 content,
@@ -174,9 +174,9 @@ impl From<TaskContentDto> for TaskContent {
                 hints,
             } => Self::KeywordsArrangement {
                 content,
-                keywords: keywords.into_model(),
+                keywords: keywords.map_into(),
                 correct_order,
-                hints: hints.into_model(),
+                hints: hints.map_into(),
             },
             TaskContentDto::LinesArrangement {
                 content,
@@ -185,9 +185,9 @@ impl From<TaskContentDto> for TaskContent {
                 hints,
             } => Self::LinesArrangement {
                 content,
-                lines: lines.into_model(),
+                lines: lines.map_into(),
                 correct_order,
-                hints: hints.into_model(),
+                hints: hints.map_into(),
             },
             TaskContentDto::MissingCode {
                 content,
@@ -196,7 +196,7 @@ impl From<TaskContentDto> for TaskContent {
             } => Self::MissingCode {
                 content,
                 correct_code,
-                hints: hints.into_model(),
+                hints: hints.map_into(),
             },
         }
     }
@@ -249,7 +249,7 @@ mod tests {
                 content: "content".to_string(),
                 variations: variations
                     .into_iter()
-                    .map(|(key, value)| (key, value.into_dto()))
+                    .map(|(key, value)| (key, value.map_into()))
                     .collect(),
                 dynamic_description,
             }
@@ -271,9 +271,9 @@ mod tests {
             task_content_dto,
             TaskContentDto::SingleSelection {
                 content: "content".to_string(),
-                options: options.into_dto(),
+                options: options.map_into(),
                 correct_option: 0,
-                hints: hints.into_dto(),
+                hints: hints.map_into(),
             }
         );
     }
@@ -293,9 +293,9 @@ mod tests {
             task_content_dto,
             TaskContentDto::MultipleSelection {
                 content: "content".to_string(),
-                options: options.into_dto(),
+                options: options.map_into(),
                 correct_options: vec![0],
-                hints: hints.into_dto(),
+                hints: hints.map_into(),
             }
         );
     }
@@ -315,9 +315,9 @@ mod tests {
             task_content_dto,
             TaskContentDto::KeywordsArrangement {
                 content: "content".to_string(),
-                keywords: keywords.into_dto(),
+                keywords: keywords.map_into(),
                 correct_order: vec![0],
-                hints: hints.into_dto(),
+                hints: hints.map_into(),
             }
         );
     }
@@ -337,9 +337,9 @@ mod tests {
             task_content_dto,
             TaskContentDto::LinesArrangement {
                 content: "content".to_string(),
-                lines: lines.into_dto(),
+                lines: lines.map_into(),
                 correct_order: vec![0],
-                hints: hints.into_dto(),
+                hints: hints.map_into(),
             }
         );
     }
@@ -359,7 +359,7 @@ mod tests {
             TaskContentDto::MissingCode {
                 content: "content".to_string(),
                 correct_code,
-                hints: hints.into_dto(),
+                hints: hints.map_into(),
             }
         );
     }
@@ -399,7 +399,7 @@ mod tests {
                 content: "content".to_string(),
                 variations: variations
                     .into_iter()
-                    .map(|(key, value)| (key, value.into_model()))
+                    .map(|(key, value)| (key, value.map_into()))
                     .collect(),
                 dynamic_description,
             }
@@ -423,9 +423,9 @@ mod tests {
             task_content,
             TaskContent::SingleSelection {
                 content: "content".to_string(),
-                options: options.into_model(),
+                options: options.map_into(),
                 correct_option: 0,
-                hints: hints.into_model(),
+                hints: hints.map_into(),
             }
         );
     }
@@ -447,9 +447,9 @@ mod tests {
             task_content,
             TaskContent::MultipleSelection {
                 content: "content".to_string(),
-                options: options.into_model(),
+                options: options.map_into(),
                 correct_options: vec![0],
-                hints: hints.into_model(),
+                hints: hints.map_into(),
             }
         );
     }
@@ -471,9 +471,9 @@ mod tests {
             task_content,
             TaskContent::KeywordsArrangement {
                 content: "content".to_string(),
-                keywords: keywords.into_model(),
+                keywords: keywords.map_into(),
                 correct_order: vec![0],
-                hints: hints.into_model(),
+                hints: hints.map_into(),
             }
         );
     }
@@ -495,9 +495,9 @@ mod tests {
             task_content,
             TaskContent::LinesArrangement {
                 content: "content".to_string(),
-                lines: lines.into_model(),
+                lines: lines.map_into(),
                 correct_order: vec![0],
-                hints: hints.into_model(),
+                hints: hints.map_into(),
             }
         );
     }
@@ -519,7 +519,7 @@ mod tests {
             TaskContent::MissingCode {
                 content: "content".to_string(),
                 correct_code,
-                hints: hints.into_model(),
+                hints: hints.map_into(),
             }
         );
     }

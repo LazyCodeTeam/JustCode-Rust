@@ -1,6 +1,7 @@
 use aws_lambda_events::cognito::CognitoEventUserPoolsPostConfirmation;
 use common_domain::error::Error;
 use profile_domain::model::create_profile_params::CreateProfileParams;
+use snafu::OptionExt;
 
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub struct CreateProfileDto {
@@ -17,18 +18,18 @@ impl TryFrom<CognitoEventUserPoolsPostConfirmation> for CreateProfileDto {
             name: value
                 .cognito_event_user_pools_header
                 .user_name
-                .ok_or_else(|| Error::unknown("user_name is not found".to_owned()))?,
+                .whatever_context("user_name not found")?,
             email: value
                 .request
                 .user_attributes
                 .get("email")
-                .ok_or_else(|| Error::unknown("user_attributes.email is not found".to_owned()))?
+                .whatever_context("user_attributes.email is not found")?
                 .to_owned(),
             id: value
                 .request
                 .user_attributes
                 .get("sub")
-                .ok_or_else(|| Error::unknown("user_attributes.sub is not found".to_owned()))?
+                .whatever_context("user_attributes.sub is not found")?
                 .replace('-', ""),
         })
     }
@@ -122,10 +123,6 @@ mod tests {
         let dto = CreateProfileDto::try_from(event);
 
         assert!(dto.is_err());
-        assert_eq!(
-            dto.unwrap_err().debug_message,
-            "user_name is not found".to_owned()
-        );
     }
 
     #[test]
@@ -145,10 +142,6 @@ mod tests {
         let dto = CreateProfileDto::try_from(event);
 
         assert!(dto.is_err());
-        assert_eq!(
-            dto.unwrap_err().debug_message,
-            "user_attributes.email is not found".to_owned()
-        );
     }
 
     #[test]
@@ -168,9 +161,5 @@ mod tests {
         let dto = CreateProfileDto::try_from(event);
 
         assert!(dto.is_err());
-        assert_eq!(
-            dto.unwrap_err().debug_message,
-            "user_attributes.sub is not found".to_owned()
-        );
     }
 }

@@ -1,19 +1,15 @@
 use content_domain::model::expected_technology_data::ExpectedTechnologyData;
 
-use crate::{ExpectedTechnologyDto, FromDto, IntoModel};
+use crate::{ExpectedTechnologyDto, MapFrom, MapInto};
 
-impl FromDto<ExpectedTechnologyDto> for ExpectedTechnologyData {
-    fn from_dto(dto: ExpectedTechnologyDto) -> Self {
+impl MapFrom<ExpectedTechnologyDto> for ExpectedTechnologyData {
+    fn map_from(dto: ExpectedTechnologyDto) -> Self {
         ExpectedTechnologyData {
             id: dto.id.simple().to_string(),
             name: dto.name,
             description: dto.description,
             image: dto.image,
-            sections: dto
-                .sections
-                .into_iter()
-                .map(IntoModel::into_model)
-                .collect(),
+            sections: dto.sections.into_iter().map(MapInto::map_into).collect(),
         }
     }
 }
@@ -42,10 +38,10 @@ mod test {
             name: "title".to_string(),
             description: None,
             image: None,
-            sections: vec![section.into_model()],
+            sections: vec![section.map_into()],
         };
 
-        let result = ExpectedTechnologyData::from_dto(technology);
+        let result = ExpectedTechnologyData::map_from(technology);
 
         assert_eq!(result, expected);
     }

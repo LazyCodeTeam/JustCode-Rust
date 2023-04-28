@@ -1,6 +1,10 @@
 use bucket_domain::model::bucket_object_head::BucketObjectHead;
-use common_domain::{define_repo, error::Result};
+use common_domain::{
+    define_repo,
+    error::{Error, Result},
+};
 use futures::future::join_all;
+use snafu::{ResultExt, Snafu};
 
 const ALLOWED_CONTENT_TYPES: [&str; 2] = ["image/png", "image/jpeg"];
 const MAX_SIZE: u64 = 1024 * 1024 * 3; // 3 MB
@@ -14,10 +18,15 @@ define_repo! {
     }
 }
 
+#[derive(Debug, Snafu)]
+pub enum OnAvatarsCreatedError {
+    Infra { source: Error },
+}
+
 pub async fn on_avatars_created<A, B, C, D>(
     users_ids: Vec<String>,
     repo: OnAvatarsCreatedRepository<A, B, C, D>,
-) -> Result<()>
+) -> std::result::Result<(), OnAvatarsCreatedError>
 where
     A: GetBucketObjectInfoType,
     B: DeleteBucketObjectType,
@@ -31,7 +40,9 @@ where
     )
     .await
     .into_iter()
-    .collect()
+    .collect::<Result<Vec<_>>>()
+    .map(|_| ())
+    .context(InfraSnafu)
 }
 
 async fn on_single_avatar_created<A, B, C, D>(

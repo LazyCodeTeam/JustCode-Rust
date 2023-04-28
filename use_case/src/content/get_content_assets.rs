@@ -1,5 +1,9 @@
-use common_domain::{define_repo, error::Result};
+use common_domain::{
+    define_repo,
+    error::{Error, Result},
+};
 use content_domain::model::content_asset::ContentAsset;
+use snafu::{ResultExt, Snafu};
 
 define_repo! {
     pub struct GetContentAssetsRepository<A> {
@@ -7,11 +11,18 @@ define_repo! {
     }
 }
 
-pub async fn get_content_assets<A>(repo: GetContentAssetsRepository<A>) -> Result<Vec<ContentAsset>>
+#[derive(Debug, Snafu)]
+pub enum GetContentAssetsError {
+    Infra { source: Error },
+}
+
+pub async fn get_content_assets<A>(
+    repo: GetContentAssetsRepository<A>,
+) -> std::result::Result<Vec<ContentAsset>, GetContentAssetsError>
 where
     A: GetAssetsType,
 {
-    (repo.get_assets)().await
+    (repo.get_assets)().await.context(InfraSnafu)
 }
 
 #[cfg(test)]

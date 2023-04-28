@@ -1,8 +1,8 @@
-use crate::{FromModel, IntoDto, SectionDto};
+use crate::{MapFrom, MapInto, SectionDto};
 use content_domain::model::section::Section;
 
-impl FromModel<Section> for SectionDto {
-    fn from_model(model: Section) -> Self {
+impl MapFrom<Section> for SectionDto {
+    fn map_from(model: Section) -> Self {
         Self {
             id: model.id,
             title: model.title,
@@ -11,7 +11,7 @@ impl FromModel<Section> for SectionDto {
             tasks_preview: model
                 .tasks_preview
                 .into_iter()
-                .map(IntoDto::into_dto)
+                .map(MapInto::map_into)
                 .collect(),
         }
     }
@@ -40,7 +40,7 @@ mod tests {
             }],
         };
 
-        let section_dto = SectionDto::from_model(section);
+        let section_dto = SectionDto::map_from(section);
 
         assert_eq!(
             section_dto,

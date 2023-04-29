@@ -1,10 +1,10 @@
 use aws_sdk_dynamodb::types::AttributeValue;
 use common_domain::error::Result;
-use common_infra::dynamodb_client::{get_dynamodb_client, QueryOutputExt};
+use common_infra::dynamodb::client::{get_dynamodb_client, QueryOutputExt};
 use content_domain::model::historical_answer::HistoricalAnswer;
 
 use crate::{
-    config::CONFIG, historical_answer_dto::HistoricalAnswerDto, IntoModel, TASK_ID_PREFIX,
+    config::CONFIG, historical_answer_dto::HistoricalAnswerDto, MapInto, TASK_ID_PREFIX,
     USER_ANSWER_ID_PREFIX,
 };
 
@@ -29,5 +29,5 @@ pub async fn get_previous_answers_for_task(
         .send()
         .await
         .parse::<HistoricalAnswerDto>()
-        .map(IntoModel::into_model)
+        .map(MapInto::map_into)
 }

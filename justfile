@@ -27,8 +27,8 @@ gen:
   rm -r {{gen_apis_dir}}
 
   echo "#[macro_use] extern crate serde; pub mod models;" > {{gen_lib_dir}}
-  sed -i -e 's/serde = \(.*\)/serde = { workspace = true, features = ["derive"] }/g' {{gen_cargo_dir}}
-  sed -i -e 's/uuid = \(.*\)/uuid = { workspace = true, features = ["serde"] }/g' {{gen_cargo_dir}}
+  sed -i -e 's/serde = \(.*\)/serde = { workspace = true }/g' {{gen_cargo_dir}}
+  sed -i -e 's/uuid = \(.*\)/uuid = { workspace = true }/g' {{gen_cargo_dir}}
   
   just fix
 

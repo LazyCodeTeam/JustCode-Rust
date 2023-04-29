@@ -4,9 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-aws_lambda_events = { workspace = true, features = ["apigw"] }
-common_api = { path = "../../../common_api", features = ["lambda"] }
+aws_lambda_events = { workspace = true }
+common_api = { path = "../../../common_api" }
 lambda_runtime = { workspace = true }
 serde_json = { workspace = true }
 tokio = { workspace = true }
-use_case = { path = "../../../../use_case", features = ["validate_secret_key"] }
+use_case = { path = "../../../../use_case" }

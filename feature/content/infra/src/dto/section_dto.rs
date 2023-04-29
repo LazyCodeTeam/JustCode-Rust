@@ -1,11 +1,8 @@
-use common_infra::dynamodb_identifiable::DynamoDbIdentifiable;
+use common_infra::dynamodb::identifiable::DynamoDbIdentifiable;
 use content_domain::model::section::Section;
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    FromDto, FromModel, IntoDto, IntoModel, POSITIONED_ID_LENGTH, SECTION_ID_PREFIX,
-    TECHNOLOGY_ID_PREFIX,
-};
+use crate::{MapFrom, MapInto, POSITIONED_ID_LENGTH, SECTION_ID_PREFIX, TECHNOLOGY_ID_PREFIX};
 
 use super::task_preview_dto::TaskPreviewDto;
 
@@ -33,8 +30,8 @@ impl DynamoDbIdentifiable for SectionDto {
     }
 }
 
-impl FromModel<Section> for SectionDto {
-    fn from_model(model: Section) -> Self {
+impl MapFrom<Section> for SectionDto {
+    fn map_from(model: Section) -> Self {
         Self {
             id: format!("{}{}", SECTION_ID_PREFIX, model.id),
             technology_id: format!("{}{}", TECHNOLOGY_ID_PREFIX, model.technology_id),
@@ -47,13 +44,13 @@ impl FromModel<Section> for SectionDto {
             title: model.title,
             description: model.description,
             image: model.image,
-            tasks_preview: model.tasks_preview.into_dto(),
+            tasks_preview: model.tasks_preview.map_into(),
         }
     }
 }
 
-impl FromDto<SectionDto> for Section {
-    fn from_dto(dto: SectionDto) -> Self {
+impl MapFrom<SectionDto> for Section {
+    fn map_from(dto: SectionDto) -> Self {
         Self {
             id: dto.id.replace(SECTION_ID_PREFIX, ""),
             technology_id: dto.technology_id.replace(TECHNOLOGY_ID_PREFIX, ""),
@@ -65,7 +62,7 @@ impl FromDto<SectionDto> for Section {
                 .unwrap_or_default(),
             description: dto.description,
             image: dto.image,
-            tasks_preview: dto.tasks_preview.into_model(),
+            tasks_preview: dto.tasks_preview.map_into(),
         }
     }
 }
@@ -90,7 +87,7 @@ mod tests {
             tasks_preview: tasks_preview.clone(),
         };
 
-        let section_dto = SectionDto::from_model(section);
+        let section_dto = SectionDto::map_from(section);
 
         assert_eq!(
             section_dto,
@@ -101,7 +98,7 @@ mod tests {
                 title: "title".to_string(),
                 description: Some("description".to_string()),
                 image: Some("image".to_string()),
-                tasks_preview: tasks_preview.into_dto(),
+                tasks_preview: tasks_preview.map_into(),
             }
         );
     }
@@ -124,7 +121,7 @@ mod tests {
             tasks_preview: tasks_preview.clone(),
         };
 
-        let section = Section::from_dto(section_dto);
+        let section = Section::map_from(section_dto);
 
         assert_eq!(
             section,
@@ -135,7 +132,7 @@ mod tests {
                 position: 1,
                 description: Some("description".to_string()),
                 image: Some("image".to_string()),
-                tasks_preview: tasks_preview.into_model(),
+                tasks_preview: tasks_preview.map_into(),
             }
         );
     }

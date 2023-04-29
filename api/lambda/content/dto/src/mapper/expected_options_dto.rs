@@ -1,9 +1,9 @@
 use content_domain::model::option_data::OptionData;
 
-use crate::{ExpectedOptionDto, FromDto};
+use crate::{ExpectedOptionDto, MapFrom};
 
-impl FromDto<Vec<ExpectedOptionDto>> for Vec<OptionData> {
-    fn from_dto(dto: Vec<ExpectedOptionDto>) -> Self {
+impl MapFrom<Vec<ExpectedOptionDto>> for Vec<OptionData> {
+    fn map_from(dto: Vec<ExpectedOptionDto>) -> Self {
         dto.into_iter()
             .enumerate()
             .map(|(i, option)| OptionData {
@@ -16,7 +16,7 @@ impl FromDto<Vec<ExpectedOptionDto>> for Vec<OptionData> {
 
 #[cfg(test)]
 mod test {
-    use crate::IntoModel;
+    use crate::MapInto;
 
     use super::*;
 
@@ -31,7 +31,7 @@ mod test {
             },
         ];
 
-        let options_data: Vec<OptionData> = options.into_model();
+        let options_data: Vec<OptionData> = options.map_into();
 
         assert_eq!(
             options_data,

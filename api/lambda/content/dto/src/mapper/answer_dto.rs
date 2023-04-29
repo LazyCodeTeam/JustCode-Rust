@@ -1,19 +1,19 @@
 use crate::AnswerDto;
 use content_domain::model::{answer::Answer, answer_content::AnswerContent};
 
-use crate::{FromDto, IntoModel};
+use crate::{MapFrom, MapInto};
 
-impl FromDto<(String, AnswerDto)> for Answer {
-    fn from_dto((task_id, dto): (String, AnswerDto)) -> Self {
+impl MapFrom<(String, AnswerDto)> for Answer {
+    fn map_from((task_id, dto): (String, AnswerDto)) -> Self {
         Answer {
             task_id,
-            content: dto.into_model(),
+            content: dto.map_into(),
         }
     }
 }
 
-impl FromDto<AnswerDto> for AnswerContent {
-    fn from_dto(dto: AnswerDto) -> Self {
+impl MapFrom<AnswerDto> for AnswerContent {
+    fn map_from(dto: AnswerDto) -> Self {
         match dto {
             AnswerDto::EmptyAnswerDto {} => AnswerContent::Empty,
             AnswerDto::SingleAnswerDto { answer } => AnswerContent::SingleAnswer { answer },
@@ -35,7 +35,7 @@ mod tests {
     fn from_answer_dto_with_id() {
         let dto = AnswerDto::SingleAnswerDto { answer: 1 };
 
-        let answer = Answer::from_dto(("task_id".to_owned(), dto));
+        let answer = Answer::map_from(("task_id".to_owned(), dto));
 
         assert_eq!(
             answer,
@@ -50,7 +50,7 @@ mod tests {
     fn from_empyt_answer_dto() {
         let dto = AnswerDto::EmptyAnswerDto {};
 
-        let answer_content = AnswerContent::from_dto(dto);
+        let answer_content = AnswerContent::map_from(dto);
 
         assert_eq!(answer_content, AnswerContent::Empty);
     }
@@ -59,7 +59,7 @@ mod tests {
     fn from_single_answer_dto() {
         let dto = AnswerDto::SingleAnswerDto { answer: 1 };
 
-        let answer_content = AnswerContent::from_dto(dto);
+        let answer_content = AnswerContent::map_from(dto);
 
         assert_eq!(answer_content, AnswerContent::SingleAnswer { answer: 1 });
     }
@@ -70,7 +70,7 @@ mod tests {
             answer: vec![1, 2, 3],
         };
 
-        let answer_content = AnswerContent::from_dto(dto);
+        let answer_content = AnswerContent::map_from(dto);
 
         assert_eq!(
             answer_content,
@@ -85,7 +85,7 @@ mod tests {
         let map = HashMap::from([("key".to_string(), "value".to_string())]);
         let dto = AnswerDto::HashMapAnswersDto { answer: map };
 
-        let answer_content = AnswerContent::from_dto(dto);
+        let answer_content = AnswerContent::map_from(dto);
 
         assert_eq!(
             answer_content,

@@ -1,12 +1,12 @@
-use crate::{FromModel, IntoDto, KeywordDto};
+use crate::{KeywordDto, MapFrom, MapInto};
 use content_domain::model::keyword::Keyword;
 
-impl FromModel<Keyword> for KeywordDto {
-    fn from_model(model: Keyword) -> Self {
+impl MapFrom<Keyword> for KeywordDto {
+    fn map_from(model: Keyword) -> Self {
         Self {
             id: model.id,
             content: model.content,
-            modifiers: model.modifiers.into_iter().map(IntoDto::into_dto).collect(),
+            modifiers: model.modifiers.into_iter().map(MapInto::map_into).collect(),
         }
     }
 }
@@ -25,7 +25,7 @@ mod tests {
             content: "content".to_string(),
             modifiers: vec![KeywordModifier::NewLine],
         };
-        let keyword_dto = KeywordDto::from_model(keyword);
+        let keyword_dto = KeywordDto::map_from(keyword);
         assert_eq!(keyword_dto.id, 1);
         assert_eq!(keyword_dto.content, "content");
         assert_eq!(keyword_dto.modifiers, vec![KeywordModifierDto::NewLine]);

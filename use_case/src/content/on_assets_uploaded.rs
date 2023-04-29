@@ -1,7 +1,11 @@
 use bucket_domain::model::bucket_object_head::BucketObjectHead;
-use common_domain::{define_repo, error::Result};
+use common_domain::{
+    define_repo,
+    error::{Error, Result},
+};
 use content_domain::model::content_asset_creation_data::ContentAssetCreationData;
 use futures::future::join_all;
+use snafu::{ResultExt, Snafu};
 
 define_repo! {
     pub struct OnAssetsUploadedRepository<A, B, C> {
@@ -11,10 +15,15 @@ define_repo! {
     }
 }
 
+#[derive(Debug, Snafu)]
+pub enum OnAssetsUploadedError {
+    Infra { source: Error },
+}
+
 pub async fn on_assets_uploaded<A, B, C>(
     keys: Vec<String>,
     repo: OnAssetsUploadedRepository<A, B, C>,
-) -> Result<()>
+) -> std::result::Result<(), OnAssetsUploadedError>
 where
     A: GetBucketObjectInfoType,
     B: GetBucketObjectUrlType,
@@ -26,7 +35,8 @@ where
     )
     .await
     .into_iter()
-    .collect::<Result<Vec<()>>>()?;
+    .collect::<Result<Vec<()>>>()
+    .context(InfraSnafu)?;
 
     Ok(())
 }

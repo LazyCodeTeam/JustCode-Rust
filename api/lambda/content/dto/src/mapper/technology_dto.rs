@@ -1,9 +1,9 @@
 use content_domain::model::technology::Technology;
 
-use crate::{FromModel, IntoDto, TechnologyDto};
+use crate::{MapFrom, MapInto, TechnologyDto};
 
-impl FromModel<Technology> for TechnologyDto {
-    fn from_model(model: Technology) -> Self {
+impl MapFrom<Technology> for TechnologyDto {
+    fn map_from(model: Technology) -> Self {
         Self {
             id: model.id,
             name: model.name,
@@ -12,7 +12,7 @@ impl FromModel<Technology> for TechnologyDto {
             sections_preview: model
                 .sections_preview
                 .into_iter()
-                .map(IntoDto::into_dto)
+                .map(MapInto::map_into)
                 .collect(),
         }
     }
@@ -37,7 +37,7 @@ mod tests {
             sections_preview: section_previews.clone(),
         };
 
-        let technology_dto = TechnologyDto::from_model(technology);
+        let technology_dto = TechnologyDto::map_from(technology);
 
         assert_eq!(
             technology_dto,
@@ -48,7 +48,7 @@ mod tests {
                 image: Some("image".to_string()),
                 sections_preview: section_previews
                     .into_iter()
-                    .map(IntoDto::into_dto)
+                    .map(MapInto::map_into)
                     .collect(),
             }
         );

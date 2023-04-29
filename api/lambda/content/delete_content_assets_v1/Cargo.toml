@@ -5,12 +5,9 @@ edition = "2021"
 
 [dependencies]
 bucket_infra = { path = "../../../../feature/bucket/infra" }
-common_api = { path = "../../../common_api", features = ["lambda"] }
-common_domain = { path = "../../../../feature/common/domain" }
+common_api = { path = "../../../common_api" }
+content_dto = { path = "../dto" }
 content_infra = { path = "../../../../feature/content/infra" }
-futures = { workspace = true }
 lambda_http = { workspace = true }
 tokio = { workspace = true }
-use_case = { path = "../../../../use_case", features = [
-  "delete_content_assets",
-] }
+use_case = { path = "../../../../use_case" }

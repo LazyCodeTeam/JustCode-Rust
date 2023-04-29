@@ -1,8 +1,8 @@
-use crate::{FromModel, IntoDto, TaskContentDto};
+use crate::{MapFrom, MapInto, TaskContentDto};
 use content_domain::model::task_content::TaskContent;
 
-impl FromModel<TaskContent> for Option<TaskContentDto> {
-    fn from_model(model: TaskContent) -> Self {
+impl MapFrom<TaskContent> for Option<TaskContentDto> {
+    fn map_from(model: TaskContent) -> Self {
         match model {
             TaskContent::Empty => None,
             TaskContent::Lesson { content } => {
@@ -16,7 +16,7 @@ impl FromModel<TaskContent> for Option<TaskContentDto> {
                 content,
                 variations: variations
                     .into_iter()
-                    .map(|(key, value)| (key, value.into_iter().map(IntoDto::into_dto).collect()))
+                    .map(|(key, value)| (key, value.into_iter().map(MapInto::map_into).collect()))
                     .collect(),
                 dynamic_content: dynamic_description,
             }),
@@ -27,9 +27,9 @@ impl FromModel<TaskContent> for Option<TaskContentDto> {
                 hints,
             } => Some(TaskContentDto::TaskContentSingleSelectionDto {
                 content,
-                options: options.into_iter().map(IntoDto::into_dto).collect(),
+                options: options.into_iter().map(MapInto::map_into).collect(),
                 correct_option,
-                hints: hints.into_iter().map(IntoDto::into_dto).collect(),
+                hints: hints.into_iter().map(MapInto::map_into).collect(),
             }),
             TaskContent::MultipleSelection {
                 content,
@@ -38,9 +38,9 @@ impl FromModel<TaskContent> for Option<TaskContentDto> {
                 hints,
             } => Some(TaskContentDto::TaskContentMultipleSelectionDto {
                 content,
-                options: options.into_iter().map(IntoDto::into_dto).collect(),
+                options: options.into_iter().map(MapInto::map_into).collect(),
                 correct_options,
-                hints: hints.into_iter().map(IntoDto::into_dto).collect(),
+                hints: hints.into_iter().map(MapInto::map_into).collect(),
             }),
             TaskContent::KeywordsArrangement {
                 content,
@@ -49,9 +49,9 @@ impl FromModel<TaskContent> for Option<TaskContentDto> {
                 hints,
             } => Some(TaskContentDto::TaskContentKeywordsArrangementDto {
                 content,
-                keywords: keywords.into_iter().map(IntoDto::into_dto).collect(),
+                keywords: keywords.into_iter().map(MapInto::map_into).collect(),
                 correct_order,
-                hints: hints.into_iter().map(IntoDto::into_dto).collect(),
+                hints: hints.into_iter().map(MapInto::map_into).collect(),
             }),
             TaskContent::LinesArrangement {
                 content,
@@ -60,9 +60,9 @@ impl FromModel<TaskContent> for Option<TaskContentDto> {
                 hints,
             } => Some(TaskContentDto::TaskContentLinesArrangementDto {
                 content,
-                options: lines.into_iter().map(IntoDto::into_dto).collect(),
+                options: lines.into_iter().map(MapInto::map_into).collect(),
                 correct_order,
-                hints: hints.into_iter().map(IntoDto::into_dto).collect(),
+                hints: hints.into_iter().map(MapInto::map_into).collect(),
             }),
             TaskContent::MissingCode {
                 content,
@@ -71,7 +71,7 @@ impl FromModel<TaskContent> for Option<TaskContentDto> {
             } => Some(TaskContentDto::TaskContentMissingCodeDto {
                 content,
                 correct_code,
-                hints: hints.into_iter().map(IntoDto::into_dto).collect(),
+                hints: hints.into_iter().map(MapInto::map_into).collect(),
             }),
         }
     }
@@ -91,7 +91,7 @@ mod tests {
     #[test]
     fn from_task_content_empty() {
         let task_content = TaskContent::Empty;
-        let task_content_dto = Option::<TaskContentDto>::from_model(task_content);
+        let task_content_dto = Option::<TaskContentDto>::map_from(task_content);
         assert!(task_content_dto.is_none());
     }
 
@@ -100,7 +100,7 @@ mod tests {
         let task_content = TaskContent::Lesson {
             content: "content".to_string(),
         };
-        let task_content_dto = Option::<TaskContentDto>::from_model(task_content);
+        let task_content_dto = Option::<TaskContentDto>::map_from(task_content);
         assert_eq!(
             task_content_dto.unwrap(),
             TaskContentDto::TaskContentLessonDto {
@@ -118,14 +118,14 @@ mod tests {
             variations: variations.clone(),
             dynamic_description: dynamic_description.clone(),
         };
-        let task_content_dto = Option::<TaskContentDto>::from_model(task_content);
+        let task_content_dto = Option::<TaskContentDto>::map_from(task_content);
         assert_eq!(
             task_content_dto.unwrap(),
             TaskContentDto::TaskContentPlaygroundDto {
                 content: "content".to_string(),
                 variations: variations
                     .into_iter()
-                    .map(|(key, value)| (key, value.into_iter().map(IntoDto::into_dto).collect()))
+                    .map(|(key, value)| (key, value.into_iter().map(MapInto::map_into).collect()))
                     .collect(),
                 dynamic_content: dynamic_description,
             }
@@ -142,14 +142,14 @@ mod tests {
             correct_option: 0,
             hints: hints.clone(),
         };
-        let task_content_dto = Option::<TaskContentDto>::from_model(task_content);
+        let task_content_dto = Option::<TaskContentDto>::map_from(task_content);
         assert_eq!(
             task_content_dto.unwrap(),
             TaskContentDto::TaskContentSingleSelectionDto {
                 content: "content".to_string(),
-                options: options.into_iter().map(IntoDto::into_dto).collect(),
+                options: options.into_iter().map(MapInto::map_into).collect(),
                 correct_option: 0,
-                hints: hints.into_iter().map(IntoDto::into_dto).collect(),
+                hints: hints.into_iter().map(MapInto::map_into).collect(),
             }
         );
     }
@@ -164,14 +164,14 @@ mod tests {
             correct_options: vec![0],
             hints: hints.clone(),
         };
-        let task_content_dto = Option::<TaskContentDto>::from_model(task_content);
+        let task_content_dto = Option::<TaskContentDto>::map_from(task_content);
         assert_eq!(
             task_content_dto.unwrap(),
             TaskContentDto::TaskContentMultipleSelectionDto {
                 content: "content".to_string(),
-                options: options.into_iter().map(IntoDto::into_dto).collect(),
+                options: options.into_iter().map(MapInto::map_into).collect(),
                 correct_options: vec![0],
-                hints: hints.into_iter().map(IntoDto::into_dto).collect(),
+                hints: hints.into_iter().map(MapInto::map_into).collect(),
             }
         );
     }
@@ -186,14 +186,14 @@ mod tests {
             correct_order: vec![0],
             hints: hints.clone(),
         };
-        let task_content_dto = Option::<TaskContentDto>::from_model(task_content);
+        let task_content_dto = Option::<TaskContentDto>::map_from(task_content);
         assert_eq!(
             task_content_dto.unwrap(),
             TaskContentDto::TaskContentKeywordsArrangementDto {
                 content: "content".to_string(),
-                keywords: keywords.into_iter().map(IntoDto::into_dto).collect(),
+                keywords: keywords.into_iter().map(MapInto::map_into).collect(),
                 correct_order: vec![0],
-                hints: hints.into_iter().map(IntoDto::into_dto).collect(),
+                hints: hints.into_iter().map(MapInto::map_into).collect(),
             }
         );
     }
@@ -208,14 +208,14 @@ mod tests {
             correct_order: vec![0],
             hints: hints.clone(),
         };
-        let task_content_dto = Option::<TaskContentDto>::from_model(task_content);
+        let task_content_dto = Option::<TaskContentDto>::map_from(task_content);
         assert_eq!(
             task_content_dto.unwrap(),
             TaskContentDto::TaskContentLinesArrangementDto {
                 content: "content".to_string(),
-                options: lines.into_iter().map(IntoDto::into_dto).collect(),
+                options: lines.into_iter().map(MapInto::map_into).collect(),
                 correct_order: vec![0],
-                hints: hints.into_iter().map(IntoDto::into_dto).collect(),
+                hints: hints.into_iter().map(MapInto::map_into).collect(),
             }
         );
     }
@@ -229,13 +229,13 @@ mod tests {
             correct_code: correct_code.clone(),
             hints: hints.clone(),
         };
-        let task_content_dto = Option::<TaskContentDto>::from_model(task_content);
+        let task_content_dto = Option::<TaskContentDto>::map_from(task_content);
         assert_eq!(
             task_content_dto.unwrap(),
             TaskContentDto::TaskContentMissingCodeDto {
                 content: "content".to_string(),
                 correct_code,
-                hints: hints.into_iter().map(IntoDto::into_dto).collect(),
+                hints: hints.into_iter().map(MapInto::map_into).collect(),
             }
         );
     }

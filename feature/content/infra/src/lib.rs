@@ -2,7 +2,6 @@ mod config;
 mod dto;
 pub mod repository;
 
-#[cfg(feature = "dto")]
 pub use dto::*;
 
 const TECHNOLOGY_PK: &str = "technology";

@@ -1,6 +1,6 @@
 use common_domain::{
     define_repo,
-    error::{Error, Result},
+    error::{Error, Result, ResultLogExt},
 };
 use content_domain::model::{
     answer::Answer,
@@ -10,6 +10,7 @@ use content_domain::model::{
     historical_answer::{HistoricalAnswer, VecHistoricalAnswerExt},
     task::Task,
 };
+use snafu::{ResultExt, Snafu};
 use tokio::join;
 
 define_repo! {
@@ -20,11 +21,25 @@ define_repo! {
     }
 }
 
+#[derive(Debug, Snafu)]
+pub enum AnswerError {
+    #[snafu(display("Task not found: {task_id}"))]
+    TaskNotFound {
+        task_id: String,
+    },
+    InvalidAnswerType {
+        source: Error,
+    },
+    Infra {
+        source: Error,
+    },
+}
+
 pub async fn answer<A, B, C>(
     user_id: String,
     answer: Answer,
     repo: AnswerRepository<A, B, C>,
-) -> Result<AnswerValidationResult>
+) -> std::result::Result<AnswerValidationResult, AnswerError>
 where
     A: GetTaskType,
     B: GetPreviousAnswersType,
@@ -35,11 +50,13 @@ where
         (repo.get_task)(answer.task_id.clone()),
         (repo.get_previous_answers)(user_id.clone(), answer.task_id.clone())
     );
-    let Some(task) = task? else {
-        return Err(Error::not_found());
+    let Some(task) = task.context(InfraSnafu)? else {
+        return Err(AnswerError::TaskNotFound {
+            task_id: answer.task_id,
+        }).with_debug_log();
     };
-    let previous_answers = previous_answers?;
-    let is_valid = answer.is_valid_for(&task)?;
+    let previous_answers = previous_answers.context(InfraSnafu)?;
+    let is_valid = answer.is_valid_for(&task).context(InvalidAnswerTypeSnafu)?;
     let had_valid_answer_before = previous_answers.had_valid_answer();
     let result = AnswerResult::new(is_valid, had_valid_answer_before);
 
@@ -48,7 +65,8 @@ where
         result,
         answer,
     })
-    .await?;
+    .await
+    .context(InfraSnafu)?;
 
     Ok(AnswerValidationResult { result })
 }
@@ -95,7 +113,11 @@ mod tests {
         )
         .await;
 
-        assert_eq!(result, Err(Error::not_found()));
+        assert!(result.is_err());
+        assert!(match result.unwrap_err() {
+            AnswerError::TaskNotFound { task_id } => task_id == "task_id",
+            _ => false,
+        })
     }
 
     #[tokio::test]
@@ -150,11 +172,12 @@ mod tests {
         )
         .await;
 
+        assert!(result.is_ok());
         assert_eq!(
-            result,
-            Ok(AnswerValidationResult {
+            result.unwrap(),
+            AnswerValidationResult {
                 result: AnswerResult::Valid,
-            })
+            }
         );
     }
 
@@ -215,11 +238,12 @@ mod tests {
         )
         .await;
 
+        assert!(result.is_ok());
         assert_eq!(
-            result,
-            Ok(AnswerValidationResult {
+            result.unwrap(),
+            AnswerValidationResult {
                 result: AnswerResult::AgainValid,
-            })
+            }
         );
     }
 
@@ -278,11 +302,12 @@ mod tests {
         )
         .await;
 
+        assert!(result.is_ok());
         assert_eq!(
-            result,
-            Ok(AnswerValidationResult {
+            result.unwrap(),
+            AnswerValidationResult {
                 result: AnswerResult::Invalid,
-            })
+            }
         );
     }
 }

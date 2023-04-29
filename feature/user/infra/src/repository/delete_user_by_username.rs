@@ -1,6 +1,7 @@
 use crate::config::CONFIG;
-use common_domain::error::{Error, Result};
+use common_domain::error::Result;
 use common_infra::cognito_client::get_cognito_client;
+use snafu::ResultExt;
 
 pub async fn delete_user_by_username(username: impl Into<String>) -> Result<()> {
     get_cognito_client()
@@ -11,5 +12,5 @@ pub async fn delete_user_by_username(username: impl Into<String>) -> Result<()> 
         .send()
         .await
         .map(|_| ())
-        .map_err(|e| Error::unknown(format!("Failed to delete user by username: {:?}", e)))
+        .whatever_context("Failed to delete user by username")
 }

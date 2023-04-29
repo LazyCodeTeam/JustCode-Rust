@@ -1,9 +1,10 @@
 use bucket_domain::model::presigned_url::PresignedUrl;
 use common_domain::{
     define_repo,
-    error::{Error, ErrorOutput, ErrorType, Result},
+    error::{Error, Result, ResultLogExt},
 };
 use profile_domain::model::profile::Profile;
+use snafu::{ResultExt, Snafu};
 
 const UPLOAD_AVATAR_VALID_FOR: u64 = 60; // sec
 
@@ -14,33 +15,31 @@ define_repo! {
     }
 }
 
+#[derive(Debug, Snafu)]
+pub enum RequestAvatarUploadError {
+    NotFound,
+    Infra { source: Error },
+}
+
 pub async fn request_avatar_upload<A, B>(
     profile_id: String,
     repo: RequestAvatarUploadRepository<A, B>,
-) -> Result<PresignedUrl>
+) -> std::result::Result<PresignedUrl, RequestAvatarUploadError>
 where
     A: GetProfileByIdType,
     B: GetAvatarUploadUrlType,
 {
-    let profile = (repo.get_profile_by_id)(&profile_id).await?;
+    let profile = (repo.get_profile_by_id)(&profile_id)
+        .await
+        .context(InfraSnafu)?;
 
     if profile.is_none() {
-        return Err(profile_not_created(&profile_id));
+        return Err(RequestAvatarUploadError::NotFound).with_debug_log();
     }
 
-    (repo.get_avatar_upload_url)(profile_id, UPLOAD_AVATAR_VALID_FOR).await
-}
-
-fn profile_not_created(profile_id: &str) -> Error {
-    Error {
-        debug_message: format!("Profile {profile_id} not created, cannot upload avatar"),
-        error_type: ErrorType::Conflict,
-        output: Box::new(ErrorOutput {
-            message: "Profile not created, cannot upload avatar".to_owned(),
-            code: "profile_not_created".to_owned(),
-            ..Default::default()
-        }),
-    }
+    (repo.get_avatar_upload_url)(profile_id, UPLOAD_AVATAR_VALID_FOR)
+        .await
+        .context(InfraSnafu)
 }
 
 #[cfg(test)]
@@ -74,8 +73,10 @@ mod test {
         .await;
 
         assert!(result.is_err());
-        assert_eq!(result.as_ref().unwrap_err().error_type, ErrorType::Conflict);
-        assert_eq!(result.unwrap_err(), profile_not_created(id));
+        assert!(matches!(
+            result.unwrap_err(),
+            RequestAvatarUploadError::NotFound
+        ));
     }
 
     #[tokio::test]

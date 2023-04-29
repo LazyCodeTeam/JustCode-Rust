@@ -1,3 +1,4 @@
+mod error_dto;
 mod platform_dto;
 mod profile_dto;
 mod push_data_dto;

@@ -1,8 +1,8 @@
-use crate::{ExpectedKeywordDto, FromDto, IntoModel};
+use crate::{ExpectedKeywordDto, MapFrom, MapInto};
 use content_domain::model::keyword::Keyword;
 
-impl FromDto<Vec<ExpectedKeywordDto>> for Vec<Keyword> {
-    fn from_dto(dto: Vec<ExpectedKeywordDto>) -> Self {
+impl MapFrom<Vec<ExpectedKeywordDto>> for Vec<Keyword> {
+    fn map_from(dto: Vec<ExpectedKeywordDto>) -> Self {
         dto.into_iter()
             .enumerate()
             .map(|(i, keyword)| Keyword {
@@ -11,7 +11,7 @@ impl FromDto<Vec<ExpectedKeywordDto>> for Vec<Keyword> {
                 modifiers: keyword
                     .modifiers
                     .into_iter()
-                    .map(IntoModel::into_model)
+                    .map(MapInto::map_into)
                     .collect(),
             })
             .collect()
@@ -38,7 +38,7 @@ mod test {
             },
         ];
 
-        let keywords = Vec::<Keyword>::from_dto(dtos);
+        let keywords = Vec::<Keyword>::map_from(dtos);
 
         assert_eq!(
             Into::<Vec<Keyword>>::into(keywords),

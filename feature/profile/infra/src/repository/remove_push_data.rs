@@ -1,7 +1,8 @@
 use crate::config::CONFIG;
 use aws_sdk_dynamodb::types::AttributeValue;
-use common_domain::error::{Error, Result};
-use common_infra::dynamodb_client::get_dynamodb_client;
+use common_domain::error::{Result, ResultLogExt};
+use common_infra::dynamodb::client::get_dynamodb_client;
+use snafu::ResultExt;
 
 use crate::{PROFILE_ID_PREFIX, PROFILE_PRIMARY_KEY};
 
@@ -16,5 +17,6 @@ pub async fn remove_push_data(id: &str) -> Result<()> {
         .send()
         .await
         .map(|_| ())
-        .map_err(|e| Error::unknown(format!("Failed to remove push data: {e:?}")))
+        .whatever_context("Failed to remove push data")
+        .with_error_log()
 }

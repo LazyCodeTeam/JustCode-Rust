@@ -1,6 +1,7 @@
 use aws_sdk_dynamodb::types::AttributeValue;
-use common_domain::error::{Error, Result};
-use common_infra::dynamodb_client::get_dynamodb_client;
+use common_domain::error::{Result, ResultLogExt};
+use common_infra::dynamodb::client::get_dynamodb_client;
+use snafu::ResultExt;
 
 use crate::{config::CONFIG, TASKS_TRANSACTION_PK, TASKS_TRANSACTION_SK};
 
@@ -22,5 +23,6 @@ pub async fn increase_queue_items_count(count_to_add: u64) -> Result<()> {
         .send()
         .await
         .map(|_| ())
-        .map_err(|e| Error::unknown(format!("Failed to increase queue items count: {e:?}")))
+        .whatever_context("Failed to increase queue items count")
+        .with_error_log()
 }

@@ -1,18 +1,18 @@
 use content_domain::model::task_content::TaskContent;
 
-use crate::{ExpectedTaskContentDto, FromDto, IntoModel};
+use crate::{ExpectedTaskContentDto, MapFrom, MapInto};
 
-impl FromDto<Option<ExpectedTaskContentDto>> for TaskContent {
-    fn from_dto(dto: Option<ExpectedTaskContentDto>) -> Self {
+impl MapFrom<Option<ExpectedTaskContentDto>> for TaskContent {
+    fn map_from(dto: Option<ExpectedTaskContentDto>) -> Self {
         match dto {
-            Some(dto) => dto.into_model(),
+            Some(dto) => dto.map_into(),
             None => TaskContent::Empty,
         }
     }
 }
 
-impl FromDto<ExpectedTaskContentDto> for TaskContent {
-    fn from_dto(dto: ExpectedTaskContentDto) -> Self {
+impl MapFrom<ExpectedTaskContentDto> for TaskContent {
+    fn map_from(dto: ExpectedTaskContentDto) -> Self {
         match dto {
             ExpectedTaskContentDto::TaskContentLessonDto { content } => {
                 TaskContent::Lesson { content }
@@ -26,7 +26,7 @@ impl FromDto<ExpectedTaskContentDto> for TaskContent {
                 content,
                 variations: variations
                     .into_iter()
-                    .map(|(k, v)| (k, v.into_iter().map(IntoModel::into_model).collect()))
+                    .map(|(k, v)| (k, v.into_iter().map(MapInto::map_into).collect()))
                     .collect(),
                 dynamic_description: dynamic_content,
             },
@@ -38,9 +38,9 @@ impl FromDto<ExpectedTaskContentDto> for TaskContent {
                 hints,
             } => TaskContent::SingleSelection {
                 content,
-                options: options.into_model(),
+                options: options.map_into(),
                 correct_option,
-                hints: hints.into_iter().map(IntoModel::into_model).collect(),
+                hints: hints.into_iter().map(MapInto::map_into).collect(),
             },
 
             ExpectedTaskContentDto::ExpectedTaskContentMultipleSelectionDto {
@@ -50,9 +50,9 @@ impl FromDto<ExpectedTaskContentDto> for TaskContent {
                 hints,
             } => TaskContent::MultipleSelection {
                 content,
-                options: options.into_model(),
+                options: options.map_into(),
                 correct_options,
-                hints: hints.into_iter().map(IntoModel::into_model).collect(),
+                hints: hints.into_iter().map(MapInto::map_into).collect(),
             },
 
             ExpectedTaskContentDto::ExpectedTaskContentKeywordsArrangementDto {
@@ -62,9 +62,9 @@ impl FromDto<ExpectedTaskContentDto> for TaskContent {
                 hints,
             } => TaskContent::KeywordsArrangement {
                 content,
-                keywords: keywords.into_model(),
+                keywords: keywords.map_into(),
                 correct_order,
-                hints: hints.into_iter().map(IntoModel::into_model).collect(),
+                hints: hints.into_iter().map(MapInto::map_into).collect(),
             },
 
             ExpectedTaskContentDto::ExpectedTaskContentLinesArrangementDto {
@@ -74,9 +74,9 @@ impl FromDto<ExpectedTaskContentDto> for TaskContent {
                 hints,
             } => TaskContent::LinesArrangement {
                 content,
-                lines: options.into_model(),
+                lines: options.map_into(),
                 correct_order,
-                hints: hints.into_iter().map(IntoModel::into_model).collect(),
+                hints: hints.into_iter().map(MapInto::map_into).collect(),
             },
 
             ExpectedTaskContentDto::TaskContentMissingCodeDto {
@@ -86,7 +86,7 @@ impl FromDto<ExpectedTaskContentDto> for TaskContent {
             } => TaskContent::MissingCode {
                 content,
                 correct_code,
-                hints: hints.into_iter().map(IntoModel::into_model).collect(),
+                hints: hints.into_iter().map(MapInto::map_into).collect(),
             },
         }
     }
@@ -101,7 +101,7 @@ mod test {
     #[test]
     fn option_task_content_none() {
         let dto = None;
-        let content: TaskContent = dto.into_model();
+        let content: TaskContent = dto.map_into();
         assert_eq!(content, TaskContent::Empty);
     }
 
@@ -110,7 +110,7 @@ mod test {
         let dto = ExpectedTaskContentDto::TaskContentLessonDto {
             content: "content".to_string(),
         };
-        let content: TaskContent = dto.into_model();
+        let content: TaskContent = dto.map_into();
         assert_eq!(
             content,
             TaskContent::Lesson {
@@ -131,14 +131,14 @@ mod test {
             variations: variations.clone(),
             dynamic_content: HashMap::from([("key".to_string(), "description".to_string())]),
         };
-        let content: TaskContent = dto.into_model();
+        let content: TaskContent = dto.map_into();
         assert_eq!(
             content,
             TaskContent::Playground {
                 content: "content".to_string(),
                 variations: variations
                     .into_iter()
-                    .map(|(k, v)| (k, v.into_iter().map(IntoModel::into_model).collect()))
+                    .map(|(k, v)| (k, v.into_iter().map(MapInto::map_into).collect()))
                     .collect(),
                 dynamic_description: HashMap::from([(
                     "key".to_string(),
@@ -162,14 +162,14 @@ mod test {
             correct_option: 0,
             hints: hints.clone(),
         };
-        let content: TaskContent = dto.into_model();
+        let content: TaskContent = dto.map_into();
         assert_eq!(
             content,
             TaskContent::SingleSelection {
                 content: "content".to_string(),
-                options: options.into_model(),
+                options: options.map_into(),
                 correct_option: 0,
-                hints: hints.into_iter().map(IntoModel::into_model).collect()
+                hints: hints.into_iter().map(MapInto::map_into).collect()
             }
         );
     }
@@ -188,14 +188,14 @@ mod test {
             correct_options: vec![0],
             hints: hints.clone(),
         };
-        let content: TaskContent = dto.into_model();
+        let content: TaskContent = dto.map_into();
         assert_eq!(
             content,
             TaskContent::MultipleSelection {
                 content: "content".to_string(),
-                options: options.into_model(),
+                options: options.map_into(),
                 correct_options: vec![0],
-                hints: hints.into_iter().map(IntoModel::into_model).collect()
+                hints: hints.into_iter().map(MapInto::map_into).collect()
             }
         );
     }
@@ -216,14 +216,14 @@ mod test {
             correct_order: vec![0],
             hints: hints.clone(),
         };
-        let content: TaskContent = dto.into_model();
+        let content: TaskContent = dto.map_into();
         assert_eq!(
             content,
             TaskContent::KeywordsArrangement {
                 content: "content".to_string(),
-                keywords: keywords.into_model(),
+                keywords: keywords.map_into(),
                 correct_order: vec![0],
-                hints: hints.into_iter().map(IntoModel::into_model).collect()
+                hints: hints.into_iter().map(MapInto::map_into).collect()
             }
         );
     }
@@ -243,15 +243,15 @@ mod test {
             hints: hints.clone(),
         };
 
-        let content: TaskContent = dto.into_model();
+        let content: TaskContent = dto.map_into();
 
         assert_eq!(
             content,
             TaskContent::LinesArrangement {
                 content: "content".to_string(),
-                lines: lines.into_model(),
+                lines: lines.map_into(),
                 correct_order: vec![0],
-                hints: hints.into_iter().map(IntoModel::into_model).collect()
+                hints: hints.into_iter().map(MapInto::map_into).collect()
             }
         );
     }
@@ -267,13 +267,13 @@ mod test {
             correct_code: correct_code.clone(),
             hints: hints.clone(),
         };
-        let content: TaskContent = dto.into_model();
+        let content: TaskContent = dto.map_into();
         assert_eq!(
             content,
             TaskContent::MissingCode {
                 content: "content".to_string(),
                 correct_code,
-                hints: hints.into_iter().map(IntoModel::into_model).collect()
+                hints: hints.into_iter().map(MapInto::map_into).collect()
             }
         );
     }

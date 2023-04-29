@@ -1,10 +1,9 @@
-use std::collections::HashMap;
-
 use common_domain::{
     define_repo,
-    error::{Error, ErrorOutput, Result},
+    error::{Error, Result, ResultLogExt},
 };
 use futures::{future::join_all, FutureExt};
+use snafu::{ResultExt, Snafu};
 
 define_repo! {
     pub struct DeleteContentAssetsRepository<A, B> {
@@ -13,10 +12,21 @@ define_repo! {
     }
 }
 
+#[derive(Debug, Snafu)]
+pub enum DeleteContentAssetsError {
+    #[snafu(display("Failed to delete some assets: {failed:?}"))]
+    SomeAssetsNotDeleted {
+        failed: Vec<String>,
+    },
+    Infra {
+        source: Error,
+    },
+}
+
 pub async fn delete_content_assets<A, B>(
     ids: Vec<String>,
     repo: DeleteContentAssetsRepository<A, B>,
-) -> Result<()>
+) -> std::result::Result<(), DeleteContentAssetsError>
 where
     A: DeleteAssetObjectType,
     B: DeleteAssetsDataType,
@@ -30,7 +40,7 @@ where
     let failed = results
         .iter()
         .filter(|(_, r)| r.is_err())
-        .filter_map(|(id, r)| r.to_owned().map_err(|e| (id.to_owned(), e)).err())
+        .map(|(id, _)| id.to_owned())
         .collect::<Vec<_>>();
 
     let ids = results
@@ -38,32 +48,20 @@ where
         .filter_map(|(id, r)| r.map(|_| id).ok())
         .collect::<Vec<_>>();
 
-    (repo.delete_assets_data)(ids).await?;
+    (repo.delete_assets_data)(ids).await.context(InfraSnafu)?;
 
     if failed.is_empty() {
         Ok(())
     } else {
-        Err(failed_to_delete_objects_error(failed))
+        Err(DeleteContentAssetsError::SomeAssetsNotDeleted { failed })
     }
-}
-
-fn failed_to_delete_objects_error(failed: Vec<(String, Error)>) -> Error {
-    Error {
-        debug_message: "Failed to delete some objects".to_owned(),
-        output: Box::new(ErrorOutput {
-            message: "Some objects were not deleted".to_owned(),
-            code: "not_all_objects_deleted".to_owned(),
-            args: failed
-                .into_iter()
-                .map(|(id, error)| (id, error.to_string()))
-                .collect::<HashMap<_, _>>(),
-        }),
-        ..Default::default()
-    }
+    .with_debug_log()
 }
 
 #[cfg(test)]
 mod tests {
+    use snafu::whatever;
+
     use super::*;
 
     #[tokio::test]
@@ -99,17 +97,15 @@ mod tests {
 
     #[tokio::test]
     async fn not_all_objects_deleted() {
-        let error = Error::unknown("error".to_owned());
         let (ctx, _delete_asset_object_lock) = mock_delete_asset_object::ctx().await;
         ctx.expect()
             .with(mockall::predicate::eq("id_1".to_owned()))
             .times(1)
             .returning(|_| Ok(()));
-        let out = error.clone();
         ctx.expect()
             .with(mockall::predicate::eq("id_2".to_owned()))
             .times(1)
-            .return_once(move |_| Err(out));
+            .return_once(move |_| whatever!(""));
 
         let (ctx, _delete_assets_data_lock) = mock_delete_assets_data::ctx().await;
         ctx.expect()
@@ -125,9 +121,11 @@ mod tests {
         let result = delete_content_assets(vec!["id_1".to_owned(), "id_2".to_owned()], repo).await;
 
         assert!(result.is_err());
-        assert_eq!(
-            result.unwrap_err(),
-            failed_to_delete_objects_error(vec![("id_2".to_owned(), error)])
-        );
+        assert!(match result.unwrap_err() {
+            DeleteContentAssetsError::SomeAssetsNotDeleted { failed } => {
+                failed == vec!["id_2".to_owned()]
+            }
+            _ => false,
+        });
     }
 }

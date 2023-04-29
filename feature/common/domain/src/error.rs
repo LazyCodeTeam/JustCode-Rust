@@ -1,191 +1,213 @@
-use log::Level;
-
-use std::{collections::HashMap, fmt::Display};
+use snafu::{Backtrace, Snafu};
 
 pub type Result<T> = std::result::Result<T, Error>;
 
-const UNKNOWN_ERROR_MESSAGE: &str = "Unknown server error";
-const UNKNOWN_ERROR_CODE: &str = "unknown";
-
-#[derive(PartialEq, Eq, Clone, Copy, Debug, Default)]
-pub enum ErrorType {
-    InvalidInput,
-    Conflict,
-    NotFound,
-    NotModified,
-    Forbidden,
-    Unauthorized,
-    #[default]
-    Unknown,
-}
-
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(Debug, Snafu)]
+#[snafu(whatever, display("{message} --- {source:?}\n{backtrace}"))]
 pub struct Error {
-    pub debug_message: String,
-    pub error_type: ErrorType,
-    pub output: Box<ErrorOutput>,
+    message: String,
+    #[snafu(source(from(Box<dyn std::error::Error + Send + Sync>, Some)))]
+    source: Option<Box<dyn std::error::Error + Send + Sync>>,
+    backtrace: Backtrace,
 }
 
-#[derive(Clone, PartialEq, Eq, Debug)]
-pub struct ErrorOutput {
-    pub message: String,
-    pub code: String,
-    pub args: HashMap<String, String>,
-}
-
-impl Default for Error {
-    fn default() -> Self {
-        Self {
-            debug_message: "".to_owned(),
-            error_type: ErrorType::Unknown,
-            output: Default::default(),
+impl<TOk, TErr> ResultLogExt<TOk> for std::result::Result<TOk, TErr>
+where
+    TErr: std::error::Error,
+{
+    fn log(&self, level: log::Level) {
+        if let Err(e) = self {
+            log::log!(level, "{}", e);
         }
     }
 }
 
-impl Default for ErrorOutput {
-    fn default() -> Self {
-        Self {
-            message: UNKNOWN_ERROR_MESSAGE.to_owned(),
-            code: UNKNOWN_ERROR_CODE.to_owned(),
-            args: HashMap::new(),
-        }
-    }
-}
+pub trait ResultLogExt<T>: Sized {
+    fn log(&self, level: log::Level);
 
-impl Error {
-    pub fn unknown(message: impl ToString) -> Self {
-        Self {
-            debug_message: message.to_string(),
-            ..Default::default()
-        }
+    fn with_log(self, level: log::Level) -> Self {
+        self.log(level);
+        self
     }
 
-    pub fn not_found() -> Self {
-        Self {
-            error_type: ErrorType::NotFound,
-            output: Box::new(ErrorOutput {
-                message: "Not found".to_owned(),
-                code: "not_found".to_owned(),
-                ..Default::default()
-            }),
-            ..Default::default()
-        }
+    fn with_error_log(self) -> Self {
+        self.with_log(log::Level::Error)
     }
 
-    pub fn log(&self) {
-        log::log!(self.error_type.into(), "{self}");
+    fn with_warn_log(self) -> Self {
+        self.with_log(log::Level::Warn)
     }
-}
 
-impl Display for Error {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{self:?}")
+    fn with_info_log(self) -> Self {
+        self.with_log(log::Level::Info)
     }
-}
 
-impl std::error::Error for Error {}
+    fn with_debug_log(self) -> Self {
+        self.with_log(log::Level::Debug)
+    }
 
-impl From<ErrorType> for Level {
-    fn from(ty: ErrorType) -> Self {
-        match ty {
-            ErrorType::InvalidInput => Level::Info,
-            ErrorType::Unknown => Level::Error,
-            ErrorType::Conflict => Level::Info,
-            ErrorType::Forbidden => Level::Info,
-            ErrorType::NotModified => Level::Debug,
-            ErrorType::Unauthorized => Level::Info,
-            ErrorType::NotFound => Level::Info,
-        }
+    fn with_trace_log(self) -> Self {
+        self.with_log(log::Level::Trace)
+    }
+
+    fn log_error(&self) {
+        self.log(log::Level::Error)
+    }
+
+    fn log_warn(&self) {
+        self.log(log::Level::Warn)
+    }
+
+    fn log_info(&self) {
+        self.log(log::Level::Info)
+    }
+
+    fn log_debug(&self) {
+        self.log(log::Level::Debug)
+    }
+
+    fn log_trace(&self) {
+        self.log(log::Level::Trace)
     }
 }
 
 #[cfg(test)]
-pub mod test {
+mod test {
+    use snafu::whatever;
+
     use super::*;
 
-    #[test]
-    fn default_value() {
-        let value = Error::default();
-
-        assert_eq!(
-            value,
-            Error {
-                debug_message: "".to_owned(),
-                error_type: ErrorType::Unknown,
-                output: Box::new(ErrorOutput {
-                    message: UNKNOWN_ERROR_MESSAGE.to_owned(),
-                    code: UNKNOWN_ERROR_CODE.to_owned(),
-                    args: HashMap::new(),
-                })
-            }
-        )
+    fn test_error(s: &str) -> Result<()> {
+        whatever!("{}", s)
     }
 
     #[test]
-    fn unknown() {
-        let value = Error::unknown("Custom message".to_owned());
+    fn no_error() {
+        testing_logger::setup();
+        Ok::<(), Error>(()).log(log::Level::Error);
 
-        assert_eq!(
-            value,
-            Error {
-                debug_message: "Custom message".to_owned(),
-                error_type: ErrorType::Unknown,
-                output: Box::new(ErrorOutput {
-                    message: UNKNOWN_ERROR_MESSAGE.to_owned(),
-                    code: UNKNOWN_ERROR_CODE.to_owned(),
-                    args: HashMap::new(),
-                })
-            }
-        )
+        testing_logger::validate(|captured_logs| {
+            assert!(captured_logs.is_empty());
+        });
     }
 
     #[test]
-    fn default_output() {
-        let out = ErrorOutput::default();
+    fn log_error() {
+        testing_logger::setup();
+        test_error("test log").log_error();
 
-        assert_eq!(
-            out,
-            ErrorOutput {
-                message: UNKNOWN_ERROR_MESSAGE.to_owned(),
-                code: UNKNOWN_ERROR_CODE.to_owned(),
-                args: HashMap::new(),
-            }
-        )
+        testing_logger::validate(|captured_logs| {
+            assert_eq!(captured_logs.len(), 1);
+            assert_eq!(captured_logs[0].level, log::Level::Error);
+            assert!(captured_logs[0].body.contains("test log"));
+        });
     }
 
     #[test]
-    fn default_error_type() {
-        let ty = ErrorType::default();
+    fn log_warn() {
+        testing_logger::setup();
+        test_error("test log").log_warn();
 
-        assert_eq!(ty, ErrorType::Unknown)
+        testing_logger::validate(|captured_logs| {
+            assert_eq!(captured_logs.len(), 1);
+            assert_eq!(captured_logs[0].level, log::Level::Warn);
+            assert!(captured_logs[0].body.contains("test log"));
+        });
     }
 
     #[test]
-    fn error_type_from_level() {
-        assert_eq!(Level::from(ErrorType::InvalidInput), Level::Info);
-        assert_eq!(Level::from(ErrorType::Unknown), Level::Error);
-        assert_eq!(Level::from(ErrorType::Conflict), Level::Info);
-        assert_eq!(Level::from(ErrorType::Forbidden), Level::Info);
-        assert_eq!(Level::from(ErrorType::Unauthorized), Level::Info);
-        assert_eq!(Level::from(ErrorType::NotFound), Level::Info);
+    fn log_info() {
+        testing_logger::setup();
+        test_error("test log").log_info();
+
+        testing_logger::validate(|captured_logs| {
+            assert_eq!(captured_logs.len(), 1);
+            assert_eq!(captured_logs[0].level, log::Level::Info);
+            assert!(captured_logs[0].body.contains("test log"));
+        });
     }
 
     #[test]
-    fn not_found() {
-        let value = Error::not_found();
+    fn log_debug() {
+        testing_logger::setup();
+        test_error("test log").log_debug();
 
-        assert_eq!(
-            value,
-            Error {
-                error_type: ErrorType::NotFound,
-                output: Box::new(ErrorOutput {
-                    message: "Not found".to_owned(),
-                    code: "not_found".to_owned(),
-                    ..Default::default()
-                }),
-                ..Default::default()
-            }
-        )
+        testing_logger::validate(|captured_logs| {
+            assert_eq!(captured_logs.len(), 1);
+            assert_eq!(captured_logs[0].level, log::Level::Debug);
+            assert!(captured_logs[0].body.contains("test log"));
+        });
+    }
+
+    #[test]
+    fn log_trace() {
+        testing_logger::setup();
+        test_error("test log").log_trace();
+
+        testing_logger::validate(|captured_logs| {
+            assert_eq!(captured_logs.len(), 1);
+            assert_eq!(captured_logs[0].level, log::Level::Trace);
+            assert!(captured_logs[0].body.contains("test log"));
+        });
+    }
+
+    #[test]
+    fn with_error_log() {
+        testing_logger::setup();
+        let _ = test_error("test log").with_error_log();
+
+        testing_logger::validate(|captured_logs| {
+            assert_eq!(captured_logs.len(), 1);
+            assert_eq!(captured_logs[0].level, log::Level::Error);
+            assert!(captured_logs[0].body.contains("test log"));
+        });
+    }
+
+    #[test]
+    fn with_warn_log() {
+        testing_logger::setup();
+        let _ = test_error("test log").with_warn_log();
+
+        testing_logger::validate(|captured_logs| {
+            assert_eq!(captured_logs.len(), 1);
+            assert_eq!(captured_logs[0].level, log::Level::Warn);
+            assert!(captured_logs[0].body.contains("test log"));
+        });
+    }
+
+    #[test]
+    fn with_info_log() {
+        testing_logger::setup();
+        let _ = test_error("test log").with_info_log();
+
+        testing_logger::validate(|captured_logs| {
+            assert_eq!(captured_logs.len(), 1);
+            assert_eq!(captured_logs[0].level, log::Level::Info);
+            assert!(captured_logs[0].body.contains("test log"));
+        });
+    }
+
+    #[test]
+    fn with_debug_log() {
+        testing_logger::setup();
+        let _ = test_error("test log").with_debug_log();
+
+        testing_logger::validate(|captured_logs| {
+            assert_eq!(captured_logs.len(), 1);
+            assert_eq!(captured_logs[0].level, log::Level::Debug);
+            assert!(captured_logs[0].body.contains("test log"));
+        });
+    }
+
+    #[test]
+    fn with_trace_log() {
+        testing_logger::setup();
+        let _ = test_error("test log").with_trace_log();
+
+        testing_logger::validate(|captured_logs| {
+            assert_eq!(captured_logs.len(), 1);
+            assert_eq!(captured_logs[0].level, log::Level::Trace);
+            assert!(captured_logs[0].body.contains("test log"));
+        });
     }
 }

@@ -1,7 +1,7 @@
 use content_domain::model::keyword::{Keyword, KeywordModifier};
 use serde::{Deserialize, Serialize};
 
-use crate::{FromDto, FromModel, IntoDto, IntoModel};
+use crate::{MapFrom, MapInto};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub struct KeywordDto {
@@ -18,8 +18,8 @@ pub enum KeywordModifierDto {
     RemoveIndentation,
 }
 
-impl FromModel<KeywordModifier> for KeywordModifierDto {
-    fn from_model(model: KeywordModifier) -> Self {
+impl MapFrom<KeywordModifier> for KeywordModifierDto {
+    fn map_from(model: KeywordModifier) -> Self {
         match model {
             KeywordModifier::NewLine => Self::NewLine,
             KeywordModifier::AddIndentation => Self::AddIndentation,
@@ -28,8 +28,8 @@ impl FromModel<KeywordModifier> for KeywordModifierDto {
     }
 }
 
-impl FromDto<KeywordModifierDto> for KeywordModifier {
-    fn from_dto(dto: KeywordModifierDto) -> Self {
+impl MapFrom<KeywordModifierDto> for KeywordModifier {
+    fn map_from(dto: KeywordModifierDto) -> Self {
         match dto {
             KeywordModifierDto::NewLine => Self::NewLine,
             KeywordModifierDto::AddIndentation => Self::AddIndentation,
@@ -38,22 +38,22 @@ impl FromDto<KeywordModifierDto> for KeywordModifier {
     }
 }
 
-impl FromModel<Keyword> for KeywordDto {
-    fn from_model(model: Keyword) -> Self {
+impl MapFrom<Keyword> for KeywordDto {
+    fn map_from(model: Keyword) -> Self {
         Self {
             id: model.id,
             content: model.content,
-            modifiers: model.modifiers.into_dto(),
+            modifiers: model.modifiers.map_into(),
         }
     }
 }
 
-impl FromDto<KeywordDto> for Keyword {
-    fn from_dto(dto: KeywordDto) -> Self {
+impl MapFrom<KeywordDto> for Keyword {
+    fn map_from(dto: KeywordDto) -> Self {
         Self {
             id: dto.id,
             content: dto.content,
-            modifiers: dto.modifiers.into_model(),
+            modifiers: dto.modifiers.map_into(),
         }
     }
 }
@@ -65,15 +65,15 @@ mod tests {
     #[test]
     fn from_keyword_modifier() {
         assert_eq!(
-            KeywordModifierDto::from_model(KeywordModifier::NewLine),
+            KeywordModifierDto::map_from(KeywordModifier::NewLine),
             KeywordModifierDto::NewLine
         );
         assert_eq!(
-            KeywordModifierDto::from_model(KeywordModifier::AddIndentation),
+            KeywordModifierDto::map_from(KeywordModifier::AddIndentation),
             KeywordModifierDto::AddIndentation
         );
         assert_eq!(
-            KeywordModifierDto::from_model(KeywordModifier::RemoveIndentation),
+            KeywordModifierDto::map_from(KeywordModifier::RemoveIndentation),
             KeywordModifierDto::RemoveIndentation
         );
     }
@@ -81,15 +81,15 @@ mod tests {
     #[test]
     fn from_keyword_modifier_dto() {
         assert_eq!(
-            KeywordModifier::from_dto(KeywordModifierDto::NewLine),
+            KeywordModifier::map_from(KeywordModifierDto::NewLine),
             KeywordModifier::NewLine
         );
         assert_eq!(
-            KeywordModifier::from_dto(KeywordModifierDto::AddIndentation),
+            KeywordModifier::map_from(KeywordModifierDto::AddIndentation),
             KeywordModifier::AddIndentation
         );
         assert_eq!(
-            KeywordModifier::from_dto(KeywordModifierDto::RemoveIndentation),
+            KeywordModifier::map_from(KeywordModifierDto::RemoveIndentation),
             KeywordModifier::RemoveIndentation
         );
     }
@@ -101,7 +101,7 @@ mod tests {
             content: "keyword".to_string(),
             modifiers: vec![KeywordModifier::NewLine],
         };
-        let keyword_dto = KeywordDto::from_model(keyword);
+        let keyword_dto = KeywordDto::map_from(keyword);
 
         assert_eq!(keyword_dto.id, 1);
         assert_eq!(keyword_dto.content, "keyword");
@@ -115,7 +115,7 @@ mod tests {
             content: "keyword".to_string(),
             modifiers: vec![KeywordModifierDto::NewLine],
         };
-        let keyword = Keyword::from_dto(keyword_dto);
+        let keyword = Keyword::map_from(keyword_dto);
 
         assert_eq!(keyword.id, 1);
         assert_eq!(keyword.content, "keyword");

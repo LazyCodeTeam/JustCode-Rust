@@ -1,15 +1,15 @@
-use crate::{FromModel, PersonalizedTaskDto};
+use crate::{MapFrom, PersonalizedTaskDto};
 use content_domain::model::personalized_task::PersonalizedTask;
 use gen::models::TaskContentDto;
 
-impl FromModel<PersonalizedTask> for PersonalizedTaskDto {
-    fn from_model(model: PersonalizedTask) -> Self {
+impl MapFrom<PersonalizedTask> for PersonalizedTaskDto {
+    fn map_from(model: PersonalizedTask) -> Self {
         Self {
             id: model.id,
             title: model.title,
             difficulty: model.difficulty,
             done_at: model.done_at.map(|date| date.to_rfc3339()),
-            content: Option::<TaskContentDto>::from_model(model.content).map(Box::new),
+            content: Option::<TaskContentDto>::map_from(model.content).map(Box::new),
         }
     }
 }
@@ -21,7 +21,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn from_models_vec() {
+    fn map_froms_vec() {
         let now = chrono::Utc::now();
         let models = vec![
             PersonalizedTask {
@@ -46,7 +46,7 @@ mod tests {
             },
         ];
 
-        let dtos = Vec::<PersonalizedTaskDto>::from_model(models);
+        let dtos = Vec::<PersonalizedTaskDto>::map_from(models);
 
         assert_eq!(dtos.len(), 2);
         assert_eq!(dtos[0].id, "id");
@@ -62,7 +62,7 @@ mod tests {
     }
 
     #[test]
-    fn from_model() {
+    fn map_from() {
         let now = chrono::Utc::now();
         let model = PersonalizedTask {
             id: "id".to_owned(),
@@ -75,7 +75,7 @@ mod tests {
             content: TaskContent::Empty,
         };
 
-        let dto = PersonalizedTaskDto::from_model(model);
+        let dto = PersonalizedTaskDto::map_from(model);
 
         assert_eq!(dto.id, "id");
         assert_eq!(dto.title, "title");

@@ -1,9 +1,10 @@
 use bucket_domain::model::presigned_url::PresignedUrl;
+use gen::models::PresignedUrlDto;
 
-use crate::{dto::PresignedUrlDto, FromModel};
+use crate::MapFrom;
 
-impl FromModel<PresignedUrl> for PresignedUrlDto {
-    fn from_model(model: PresignedUrl) -> Self {
+impl MapFrom<PresignedUrl> for PresignedUrlDto {
+    fn map_from(model: PresignedUrl) -> Self {
         Self {
             presigned_url: model.presigned_url,
             url: model.url,
@@ -30,7 +31,7 @@ mod tests {
             headers: HashMap::from([("key".to_string(), "value".to_string())]),
         };
 
-        let presigned_url_dto = PresignedUrlDto::from_model(presigned_url.clone());
+        let presigned_url_dto = PresignedUrlDto::map_from(presigned_url.clone());
 
         assert_eq!(presigned_url_dto.presigned_url, presigned_url.presigned_url);
         assert_eq!(presigned_url_dto.url, presigned_url.url);

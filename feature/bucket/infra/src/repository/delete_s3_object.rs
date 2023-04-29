@@ -1,6 +1,7 @@
 use crate::config::CONFIG;
-use common_domain::error::{Error, Result};
+use common_domain::error::{Result, ResultLogExt};
 use common_infra::s3_client::get_s3_client;
+use snafu::ResultExt;
 
 pub async fn delete_s3_object(key: impl Into<String>) -> Result<()> {
     get_s3_client()
@@ -11,5 +12,6 @@ pub async fn delete_s3_object(key: impl Into<String>) -> Result<()> {
         .send()
         .await
         .map(|_| ())
-        .map_err(|e| Error::unknown(format!("Failed to delete object: {e:?}")))
+        .whatever_context("Failed to delete object")
+        .with_error_log()
 }

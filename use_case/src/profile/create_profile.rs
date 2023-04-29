@@ -1,5 +1,9 @@
-use common_domain::{define_repo, error::Result};
+use common_domain::{
+    define_repo,
+    error::{Error, Result},
+};
 use profile_domain::model::{create_profile_params::CreateProfileParams, profile::Profile};
+use snafu::{ResultExt, Snafu};
 
 define_repo! {
     pub struct CreateProfileRepository<T, Y> {
@@ -8,20 +12,27 @@ define_repo! {
     }
 }
 
+#[derive(Debug, Snafu)]
+pub enum CreateProfileError {
+    Infra { source: Error },
+}
+
 pub async fn create_profile<T, Y>(
     params: CreateProfileParams,
     repo: CreateProfileRepository<T, Y>,
-) -> Result<()>
+) -> std::result::Result<(), CreateProfileError>
 where
     T: GetProfileByIdType,
     Y: SaveProfileType,
 {
-    let profile = (repo.get_profile_by_id)(&params.id).await?;
+    let profile = (repo.get_profile_by_id)(&params.id)
+        .await
+        .context(InfraSnafu)?;
     if profile.is_some() {
         return Ok(());
     }
 
-    (repo.save_profile)(params).await
+    (repo.save_profile)(params).await.context(InfraSnafu)
 }
 
 #[cfg(test)]

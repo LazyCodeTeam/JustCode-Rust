@@ -1,9 +1,9 @@
 use aws_sdk_dynamodb::types::AttributeValue;
 use common_domain::error::Result;
-use common_infra::dynamodb_client::{get_dynamodb_client, QueryOutputExt};
+use common_infra::dynamodb::client::{get_dynamodb_client, QueryOutputExt};
 use content_domain::model::content_asset::ContentAsset;
 
-use crate::{config::CONFIG, content_asset_dto::ContentAssetDto, IntoModel, CONTENT_ASSET_PK};
+use crate::{config::CONFIG, content_asset_dto::ContentAssetDto, MapInto, CONTENT_ASSET_PK};
 
 pub async fn get_content_assets() -> Result<Vec<ContentAsset>> {
     get_dynamodb_client()
@@ -15,5 +15,5 @@ pub async fn get_content_assets() -> Result<Vec<ContentAsset>> {
         .send()
         .await
         .parse::<ContentAssetDto>()
-        .map(IntoModel::into_model)
+        .map(MapInto::map_into)
 }

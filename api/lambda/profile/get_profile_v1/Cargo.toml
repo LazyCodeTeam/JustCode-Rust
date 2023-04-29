@@ -4,20 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-common_api = { path = "../../../common_api", features = ["lambda"] }
-common_domain = { path = "../../../../feature/common/domain" }
-futures = { workspace = true }
+common_api = { path = "../../../common_api" }
 lambda_http = { workspace = true }
 profile_dto = { path = "../dto" }
 profile_infra = { path = "../../../../feature/profile/infra" }
 tokio = { workspace = true }
-use_case = { path = "../../../../use_case", features = ["get_profile_by_id"] }
-
-[lib]
-name = "get_profile_v1"
-path = "src/lib.rs"
-
-[[bin]]
-test = false
-name = "get_profile_v1"
-path = "src/main.rs"
+use_case = { path = "../../../../use_case" }

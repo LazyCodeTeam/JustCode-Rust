@@ -1,4 +1,5 @@
-use common_domain::error::{Error, ErrorOutput, ErrorType, Result};
+use common_domain::error::{Result, ResultLogExt};
+use snafu::whatever;
 
 use super::{answer_content::AnswerContent, task::Task, task_content::TaskContent};
 
@@ -64,20 +65,9 @@ impl Answer {
                 },
                 AnswerContent::HashMapAnswer { answers },
             ) => Ok(answers == correct_code),
-            (_, _) => Err(invalid_answer_type_error()),
+            (_, _) => whatever!("Invalid answer type"),
         }
-    }
-}
-
-fn invalid_answer_type_error() -> Error {
-    Error {
-        debug_message: "Invalid answer type".to_owned(),
-        error_type: ErrorType::InvalidInput,
-        output: Box::new(ErrorOutput {
-            message: "Invalid answer type".to_owned(),
-            code: "invalid_answer_type".to_owned(),
-            ..Default::default()
-        }),
+        .with_info_log()
     }
 }
 
@@ -122,7 +112,6 @@ mod tests {
         let result = answer.is_valid_for(&task);
 
         assert!(result.is_err());
-        assert_eq!(result.err().unwrap(), invalid_answer_type_error());
     }
 
     #[test]
@@ -164,7 +153,6 @@ mod tests {
         let result = answer.is_valid_for(&task);
 
         assert!(result.is_err());
-        assert_eq!(result.err().unwrap(), invalid_answer_type_error());
     }
 
     #[test]
@@ -230,7 +218,6 @@ mod tests {
         let result = answer.is_valid_for(&task);
 
         assert!(result.is_err());
-        assert_eq!(result.err().unwrap(), invalid_answer_type_error());
     }
 
     #[test]
@@ -300,7 +287,6 @@ mod tests {
         let result = answer.is_valid_for(&task);
 
         assert!(result.is_err());
-        assert_eq!(result.err().unwrap(), invalid_answer_type_error());
     }
 
     #[test]
@@ -370,7 +356,6 @@ mod tests {
         let result = answer.is_valid_for(&task);
 
         assert!(result.is_err());
-        assert_eq!(result.err().unwrap(), invalid_answer_type_error());
     }
 
     #[test]
@@ -440,7 +425,6 @@ mod tests {
         let result = answer.is_valid_for(&task);
 
         assert!(result.is_err());
-        assert_eq!(result.err().unwrap(), invalid_answer_type_error());
     }
 
     #[test]
@@ -523,6 +507,5 @@ mod tests {
         let result = answer.is_valid_for(&task);
 
         assert!(result.is_err());
-        assert_eq!(result.err().unwrap(), invalid_answer_type_error());
     }
 }

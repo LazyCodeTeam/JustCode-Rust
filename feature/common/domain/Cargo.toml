@@ -8,4 +8,8 @@ lazy_static = { workspace = true }
 log = { workspace = true }
 mockall = { workspace = true }
 paste = { workspace = true }
+snafu = { workspace = true }
 tokio = { workspace = true }
+
+[dev-dependencies]
+testing_logger = { workspace = true }

@@ -1,9 +1,9 @@
 use profile_domain::model::profile::Profile;
 
-use crate::{FromModel, ProfileDto};
+use crate::{MapFrom, ProfileDto};
 
-impl FromModel<Profile> for ProfileDto {
-    fn from_model(model: Profile) -> Self {
+impl MapFrom<Profile> for ProfileDto {
+    fn map_from(model: Profile) -> Self {
         Self {
             id: model.id,
             name: model.name,
@@ -30,7 +30,7 @@ mod tests {
             last_name: Some("Doe".to_owned()),
             ..Default::default()
         };
-        let profile_dto = ProfileDto::from_model(profile);
+        let profile_dto = ProfileDto::map_from(profile);
         assert_eq!(
             profile_dto,
             ProfileDto {

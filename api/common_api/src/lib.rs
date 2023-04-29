@@ -1,5 +1,5 @@
 pub mod dto;
-#[cfg(feature = "lambda")]
+mod error;
 pub mod lambda;
 mod mapper;
 

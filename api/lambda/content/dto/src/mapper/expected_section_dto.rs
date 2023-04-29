@@ -1,15 +1,15 @@
 use content_domain::model::expected_section_data::ExpectedSectionData;
 
-use crate::{ExpectedSectionDto, FromDto, IntoModel};
+use crate::{ExpectedSectionDto, MapFrom, MapInto};
 
-impl FromDto<ExpectedSectionDto> for ExpectedSectionData {
-    fn from_dto(dto: ExpectedSectionDto) -> Self {
+impl MapFrom<ExpectedSectionDto> for ExpectedSectionData {
+    fn map_from(dto: ExpectedSectionDto) -> Self {
         ExpectedSectionData {
             id: dto.id.simple().to_string(),
             title: dto.title,
             description: dto.description,
             image: dto.image,
-            tasks: dto.tasks.into_iter().map(IntoModel::into_model).collect(),
+            tasks: dto.tasks.into_iter().map(MapInto::map_into).collect(),
         }
     }
 }
@@ -37,10 +37,10 @@ mod test {
             title: "title".to_string(),
             description: None,
             image: None,
-            tasks: vec![task.into_model()],
+            tasks: vec![task.map_into()],
         };
 
-        let result = ExpectedSectionData::from_dto(section);
+        let result = ExpectedSectionData::map_from(section);
 
         assert_eq!(result, expected);
     }

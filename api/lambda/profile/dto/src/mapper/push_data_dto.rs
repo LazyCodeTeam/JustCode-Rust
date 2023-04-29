@@ -1,12 +1,12 @@
 use profile_domain::model::push_data::PushData;
 
-use crate::{FromDto, IntoModel, PushDataDto};
+use crate::{MapFrom, MapInto, PushDataDto};
 
-impl FromDto<PushDataDto> for PushData {
-    fn from_dto(dto: PushDataDto) -> Self {
+impl MapFrom<PushDataDto> for PushData {
+    fn map_from(dto: PushDataDto) -> Self {
         Self {
             token: dto.token,
-            platform: dto.platform.into_model(),
+            platform: dto.platform.map_into(),
         }
     }
 }
@@ -25,7 +25,7 @@ mod test {
             platform: PlatformDto::Android,
         };
 
-        let result = PushData::from_dto(dto);
+        let result = PushData::map_from(dto);
 
         assert_eq!(result.token, "token");
         assert_eq!(result.platform, Platform::Android);

@@ -1,8 +1,8 @@
-use crate::{FromDto, FromModel, PlaygroundVariationDto};
+use crate::{MapFrom, PlaygroundVariationDto};
 use content_domain::model::playground_variation::PlaygroundVariation;
 
-impl FromModel<PlaygroundVariation> for PlaygroundVariationDto {
-    fn from_model(model: PlaygroundVariation) -> Self {
+impl MapFrom<PlaygroundVariation> for PlaygroundVariationDto {
+    fn map_from(model: PlaygroundVariation) -> Self {
         Self {
             content: model.content,
             description: model.description,
@@ -10,8 +10,8 @@ impl FromModel<PlaygroundVariation> for PlaygroundVariationDto {
     }
 }
 
-impl FromDto<PlaygroundVariationDto> for PlaygroundVariation {
-    fn from_dto(dto: PlaygroundVariationDto) -> Self {
+impl MapFrom<PlaygroundVariationDto> for PlaygroundVariation {
+    fn map_from(dto: PlaygroundVariationDto) -> Self {
         Self {
             content: dto.content,
             description: dto.description,
@@ -29,7 +29,7 @@ mod tests {
             content: "content".to_string(),
             description: "description".to_string(),
         };
-        let playground_variation_dto = PlaygroundVariationDto::from_model(playground_variation);
+        let playground_variation_dto = PlaygroundVariationDto::map_from(playground_variation);
         assert_eq!(playground_variation_dto.content, "content");
         assert_eq!(playground_variation_dto.description, "description");
     }
@@ -40,7 +40,7 @@ mod tests {
             content: "content".to_string(),
             description: "description".to_string(),
         };
-        let playground_variation = PlaygroundVariation::from_dto(playground_variation_dto);
+        let playground_variation = PlaygroundVariation::map_from(playground_variation_dto);
         assert_eq!(playground_variation.content, "content");
         assert_eq!(playground_variation.description, "description");
     }

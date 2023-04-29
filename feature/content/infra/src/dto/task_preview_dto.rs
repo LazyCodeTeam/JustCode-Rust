@@ -1,7 +1,7 @@
 use content_domain::model::task_preview::TaskPreview;
 use serde::{Deserialize, Serialize};
 
-use crate::{FromDto, FromModel};
+use crate::MapFrom;
 
 #[derive(Debug, PartialEq, Eq, Clone, Deserialize, Serialize)]
 pub struct TaskPreviewDto {
@@ -10,8 +10,8 @@ pub struct TaskPreviewDto {
     pub for_anonymous: bool,
 }
 
-impl FromModel<TaskPreview> for TaskPreviewDto {
-    fn from_model(model: TaskPreview) -> Self {
+impl MapFrom<TaskPreview> for TaskPreviewDto {
+    fn map_from(model: TaskPreview) -> Self {
         Self {
             id: model.id,
             title: model.title,
@@ -20,8 +20,8 @@ impl FromModel<TaskPreview> for TaskPreviewDto {
     }
 }
 
-impl FromDto<TaskPreviewDto> for TaskPreview {
-    fn from_dto(dto: TaskPreviewDto) -> Self {
+impl MapFrom<TaskPreviewDto> for TaskPreview {
+    fn map_from(dto: TaskPreviewDto) -> Self {
         Self {
             id: dto.id,
             title: dto.title,
@@ -42,7 +42,7 @@ mod tests {
             for_anonymous: false,
         };
 
-        let task_preview_dto = TaskPreviewDto::from_model(task_preview);
+        let task_preview_dto = TaskPreviewDto::map_from(task_preview);
 
         assert_eq!(
             task_preview_dto,
@@ -62,7 +62,7 @@ mod tests {
             for_anonymous: false,
         };
 
-        let task_preview = TaskPreview::from_dto(task_preview_dto);
+        let task_preview = TaskPreview::map_from(task_preview_dto);
 
         assert_eq!(
             task_preview,

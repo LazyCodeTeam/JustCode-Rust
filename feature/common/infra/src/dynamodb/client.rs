@@ -6,8 +6,9 @@ use aws_sdk_dynamodb::{
     Client,
 };
 use aws_smithy_http::result::SdkError;
-use common_domain::error::{Error, Result};
+use common_domain::error::{Result, ResultLogExt};
 use serde_dynamo::{from_item, from_items};
+use snafu::{OptionExt, ResultExt};
 
 pub async fn get_dynamodb_client() -> &'static Client {
     static CLIENT: tokio::sync::OnceCell<Client> = tokio::sync::OnceCell::const_new();
@@ -47,15 +48,13 @@ impl GetItemOutputExt for std::result::Result<GetItemOutput, SdkError<GetItemErr
         T: serde::Deserialize<'a>,
     {
         self.map(|result| result.item)
-            .map_err(|e| Error::unknown(format!("Failed to get item: {e:?}")))
+            .whatever_context("Failed to get item from DynamoDB")
+            .with_error_log()
             .and_then(|item| match item {
-                Some(item) => from_item::<_, T>(item).map(Some).map_err(|e| {
-                    Error::unknown(format!(
-                        "Failed to parse item {}: {:?}",
-                        std::any::type_name::<T>(),
-                        e
-                    ))
-                }),
+                Some(item) => from_item::<_, T>(item)
+                    .map(Some)
+                    .whatever_context("Failed to parse item from DynamoDB")
+                    .with_error_log(),
                 None => Ok(None),
             })
     }
@@ -66,21 +65,14 @@ impl QueryOutputExt for std::result::Result<QueryOutput, SdkError<QueryError>> {
     where
         T: serde::Deserialize<'a>,
     {
-        self.map_err(|e| Error::unknown(format!("Failed preform query: {e:?}")))
+        self.whatever_context("Failed to query DynamoDB")
             .map(|output| output.items)
             .and_then(|items| {
                 items
-                    .ok_or_else(|| {
-                        Error::unknown("Failed to parse query result - empty option".to_owned())
-                    })
+                    .whatever_context("Failed to get items from DynamoDB")
                     .and_then(|items| {
-                        from_items::<_, T>(items).map_err(|e| {
-                            Error::unknown(format!(
-                                "Failed to parse output {}: {:?}",
-                                std::any::type_name::<T>(),
-                                e
-                            ))
-                        })
+                        from_items::<_, T>(items)
+                            .whatever_context("Failed to parse items from DynamoDB")
                     })
             })
     }
@@ -90,17 +82,11 @@ impl QueryOutputExt for std::result::Result<QueryOutput, SdkError<QueryError>> {
         T: serde::Deserialize<'a>,
     {
         let result: Option<_> = self
-            .map_err(|e| Error::unknown(format!("Failed preform query: {e:?}")))
+            .whatever_context("Failed to query single item from DynamoDB")
             .map(|output| output.items.and_then(|items| items.into_iter().next()))?;
 
         match result {
-            Some(item) => from_item(item).map_err(|e| {
-                Error::unknown(format!(
-                    "Failed to parse output {}: {:?}",
-                    std::any::type_name::<T>(),
-                    e
-                ))
-            }),
+            Some(item) => from_item(item).whatever_context("Failed to parse item from DynamoDB"),
             _ => Ok(None),
         }
     }

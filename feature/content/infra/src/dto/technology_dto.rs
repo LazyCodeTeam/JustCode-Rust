@@ -1,11 +1,8 @@
-use common_infra::dynamodb_identifiable::DynamoDbIdentifiable;
+use common_infra::dynamodb::identifiable::DynamoDbIdentifiable;
 use content_domain::model::technology::Technology;
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    FromDto, FromModel, IntoDto, IntoModel, POSITIONED_ID_LENGTH, TECHNOLOGY_ID_PREFIX,
-    TECHNOLOGY_PK,
-};
+use crate::{MapFrom, MapInto, POSITIONED_ID_LENGTH, TECHNOLOGY_ID_PREFIX, TECHNOLOGY_PK};
 
 use super::section_preview_dto::SectionPreviewDto;
 
@@ -33,8 +30,8 @@ impl DynamoDbIdentifiable for TechnologyDto {
     }
 }
 
-impl FromModel<Technology> for TechnologyDto {
-    fn from_model(model: Technology) -> Self {
+impl MapFrom<Technology> for TechnologyDto {
+    fn map_from(model: Technology) -> Self {
         Self {
             pk: TECHNOLOGY_PK.to_string(),
             id: format!("{}{}", TECHNOLOGY_ID_PREFIX, model.id),
@@ -47,13 +44,13 @@ impl FromModel<Technology> for TechnologyDto {
             name: model.name,
             description: model.description,
             image: model.image,
-            sections_preview: model.sections_preview.into_dto(),
+            sections_preview: model.sections_preview.map_into(),
         }
     }
 }
 
-impl FromDto<TechnologyDto> for Technology {
-    fn from_dto(dto: TechnologyDto) -> Self {
+impl MapFrom<TechnologyDto> for Technology {
+    fn map_from(dto: TechnologyDto) -> Self {
         Self {
             id: dto.id.replace(TECHNOLOGY_ID_PREFIX, ""),
             position: dto
@@ -64,7 +61,7 @@ impl FromDto<TechnologyDto> for Technology {
             name: dto.name,
             description: dto.description,
             image: dto.image,
-            sections_preview: dto.sections_preview.into_model(),
+            sections_preview: dto.sections_preview.map_into(),
         }
     }
 }
@@ -88,7 +85,7 @@ mod tests {
             sections_preview: sections_preview.clone(),
         };
 
-        let technology_dto = TechnologyDto::from_model(technology);
+        let technology_dto = TechnologyDto::map_from(technology);
 
         assert_eq!(
             technology_dto,
@@ -99,7 +96,7 @@ mod tests {
                 name: "name".to_string(),
                 description: Some("description".to_string()),
                 image: Some("image".to_string()),
-                sections_preview: sections_preview.into_dto(),
+                sections_preview: sections_preview.map_into(),
             }
         );
     }
@@ -118,7 +115,7 @@ mod tests {
             sections_preview: sections_preview.clone(),
         };
 
-        let technology = Technology::from_dto(technology_dto);
+        let technology = Technology::map_from(technology_dto);
 
         assert_eq!(
             technology,
@@ -128,7 +125,7 @@ mod tests {
                 name: "name".to_string(),
                 description: Some("description".to_string()),
                 image: Some("image".to_string()),
-                sections_preview: sections_preview.into_model(),
+                sections_preview: sections_preview.map_into(),
             }
         );
     }

@@ -1,5 +1,10 @@
-use common_domain::{define_repo, error::Error, error::Result};
+use common_domain::{
+    define_repo,
+    error::Result,
+    error::{Error, ResultLogExt},
+};
 use content_domain::model::section::Section;
+use snafu::{ResultExt, Snafu};
 
 define_repo! {
     pub struct GetPublicSectionsRepo<A> {
@@ -7,17 +12,30 @@ define_repo! {
     }
 }
 
+#[derive(Debug, Snafu)]
+pub enum GetPublicSectionsError {
+    #[snafu(display("Sections for technology {} not found", technology_id))]
+    NotFound {
+        technology_id: String,
+    },
+    Infra {
+        source: Error,
+    },
+}
+
 pub async fn get_public_sections<A>(
     technology_id: String,
     repo: GetPublicSectionsRepo<A>,
-) -> Result<Vec<Section>>
+) -> std::result::Result<Vec<Section>, GetPublicSectionsError>
 where
     A: GetSectionsType,
 {
-    let sections = (repo.get_sections)(&technology_id).await?;
+    let sections = (repo.get_sections)(&technology_id)
+        .await
+        .context(InfraSnafu)?;
 
     if sections.is_empty() {
-        return Err(Error::not_found());
+        return Err(GetPublicSectionsError::NotFound { technology_id }).with_debug_log();
     }
 
     Ok(sections)
@@ -41,7 +59,11 @@ mod test {
 
         let result = get_public_sections("technology_id".to_owned(), repo).await;
 
-        assert_eq!(result, Err(Error::not_found()));
+        assert!(result.is_err());
+        assert!(matches!(
+            result.unwrap_err(),
+            GetPublicSectionsError::NotFound { technology_id } if technology_id == "technology_id"
+        ));
     }
 
     #[tokio::test]
@@ -60,6 +82,7 @@ mod test {
 
         let result = get_public_sections("technology_id".to_owned(), repo).await;
 
-        assert_eq!(result, Ok(sections));
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap(), sections);
     }
 }

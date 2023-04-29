@@ -1,10 +1,10 @@
 use aws_sdk_dynamodb::types::AttributeValue;
 use common_domain::error::Result;
-use common_infra::dynamodb_client::{get_dynamodb_client, QueryOutputExt};
+use common_infra::dynamodb::client::{get_dynamodb_client, QueryOutputExt};
 use content_domain::model::technology::Technology;
 
 use crate::{
-    config::CONFIG, dto::technology_dto::TechnologyDto, IntoModel, TECHNOLOGY_ID_PREFIX,
+    config::CONFIG, dto::technology_dto::TechnologyDto, MapInto, TECHNOLOGY_ID_PREFIX,
     TECHNOLOGY_PK,
 };
 
@@ -19,7 +19,7 @@ pub async fn get_all_technologies() -> Result<Vec<Technology>> {
         .send()
         .await
         .parse::<TechnologyDto>()
-        .map(IntoModel::into_model)
+        .map(MapInto::map_into)
 }
 
 pub async fn get_ordered_technologies() -> Result<Vec<Technology>> {
@@ -37,5 +37,5 @@ pub async fn get_ordered_technologies() -> Result<Vec<Technology>> {
         .send()
         .await
         .parse::<TechnologyDto>()
-        .map(IntoModel::into_model)
+        .map(MapInto::map_into)
 }

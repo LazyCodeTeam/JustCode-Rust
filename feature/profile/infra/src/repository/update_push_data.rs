@@ -1,8 +1,9 @@
-use crate::{config::CONFIG, FromModel};
+use crate::{config::CONFIG, MapFrom};
 use aws_sdk_dynamodb::types::AttributeValue;
-use common_domain::error::{Error, Result};
-use common_infra::dynamodb_client::get_dynamodb_client;
+use common_domain::error::{Result, ResultLogExt};
+use common_infra::dynamodb::client::get_dynamodb_client;
 use profile_domain::model::push_data::PushData;
+use snafu::ResultExt;
 
 use crate::{dto::platform_dto::PlatformDto, PROFILE_ID_PREFIX, PROFILE_PRIMARY_KEY};
 
@@ -17,16 +18,13 @@ pub async fn update_push_data(id: &str, data: &PushData) -> Result<()> {
         .expression_attribute_values(":push_token", AttributeValue::S(data.token.clone()))
         .expression_attribute_values(
             ":platform",
-            serde_dynamo::to_attribute_value(PlatformDto::from_model(data.platform)).map_err(
-                |e| {
-                    Error::unknown(format!(
-                        "Failed to convert platform to attribute value: {e:?}"
-                    ))
-                },
-            )?,
+            serde_dynamo::to_attribute_value(PlatformDto::map_from(data.platform))
+                .whatever_context("Failed to serialize platform")
+                .with_error_log()?,
         )
         .send()
         .await
         .map(|_| ())
-        .map_err(|e| Error::unknown(format!("Failed to set push data: {e:?}")))
+        .whatever_context("Failed to update push data")
+        .with_error_log()
 }

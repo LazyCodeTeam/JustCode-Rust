@@ -1,10 +1,10 @@
-use common_infra::dynamodb_identifiable::DynamoDbIdentifiable;
+use common_infra::dynamodb::identifiable::DynamoDbIdentifiable;
 use content_domain::model::task::Task;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    FromDto, FromModel, DYNAMIC_TASK_ID_PREFIX, POSITIONED_ID_LENGTH, SECTION_ID_PREFIX,
-    TASK_GSI_PK, TASK_ID_PREFIX,
+    MapFrom, DYNAMIC_TASK_ID_PREFIX, POSITIONED_ID_LENGTH, SECTION_ID_PREFIX, TASK_GSI_PK,
+    TASK_ID_PREFIX,
 };
 
 use super::task_content_dto::TaskContentDto;
@@ -37,8 +37,8 @@ impl DynamoDbIdentifiable for TaskDto {
     }
 }
 
-impl FromModel<Task> for TaskDto {
-    fn from_model(model: Task) -> Self {
+impl MapFrom<Task> for TaskDto {
+    fn map_from(model: Task) -> Self {
         let lsi = match model.position {
             None => format!("{}{}", DYNAMIC_TASK_ID_PREFIX, model.id),
             Some(position) => format!(
@@ -63,8 +63,8 @@ impl FromModel<Task> for TaskDto {
     }
 }
 
-impl FromDto<TaskDto> for Task {
-    fn from_dto(dto: TaskDto) -> Self {
+impl MapFrom<TaskDto> for Task {
+    fn map_from(dto: TaskDto) -> Self {
         Self {
             id: dto.id.replace(TASK_ID_PREFIX, ""),
             section_id: dto.section_id.replace(SECTION_ID_PREFIX, ""),
@@ -96,7 +96,7 @@ mod tests {
             content: content.clone(),
         };
 
-        let task_dto = TaskDto::from_model(task);
+        let task_dto = TaskDto::map_from(task);
 
         assert_eq!(
             task_dto,
@@ -127,7 +127,7 @@ mod tests {
             content: content.clone(),
         };
 
-        let task_dto = TaskDto::from_model(task);
+        let task_dto = TaskDto::map_from(task);
 
         assert_eq!(
             task_dto,
@@ -160,7 +160,7 @@ mod tests {
             gsi_sk: "task-id".to_string(),
         };
 
-        let task = Task::from_dto(task_dto);
+        let task = Task::map_from(task_dto);
 
         assert_eq!(
             task,
@@ -191,7 +191,7 @@ mod tests {
             gsi_sk: "task-id".to_string(),
         };
 
-        let task = Task::from_dto(task_dto);
+        let task = Task::map_from(task_dto);
 
         assert_eq!(
             task,

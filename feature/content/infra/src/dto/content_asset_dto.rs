@@ -4,7 +4,7 @@ use content_domain::model::{
 };
 use serde::{Deserialize, Serialize};
 
-use crate::{FromDto, FromModel, CONTENT_ASSET_PK};
+use crate::{MapFrom, CONTENT_ASSET_PK};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ContentAssetDto {
@@ -17,8 +17,8 @@ pub struct ContentAssetDto {
     pub created_at: DateTime<Utc>,
 }
 
-impl FromModel<ContentAssetCreationData> for ContentAssetDto {
-    fn from_model(model: ContentAssetCreationData) -> Self {
+impl MapFrom<ContentAssetCreationData> for ContentAssetDto {
+    fn map_from(model: ContentAssetCreationData) -> Self {
         let now = Utc::now();
         Self {
             pk: CONTENT_ASSET_PK.to_owned(),
@@ -30,8 +30,8 @@ impl FromModel<ContentAssetCreationData> for ContentAssetDto {
     }
 }
 
-impl FromDto<ContentAssetDto> for ContentAsset {
-    fn from_dto(dto: ContentAssetDto) -> Self {
+impl MapFrom<ContentAssetDto> for ContentAsset {
+    fn map_from(dto: ContentAssetDto) -> Self {
         Self {
             id: dto.id,
             content_type: dto.content_type,
@@ -56,7 +56,7 @@ mod test {
         };
 
         let before = Utc::now();
-        let content_asset_dto = ContentAssetDto::from_model(content_asset_creation_data);
+        let content_asset_dto = ContentAssetDto::map_from(content_asset_creation_data);
         let after = Utc::now();
 
         assert_eq!(content_asset_dto.pk, CONTENT_ASSET_PK);
@@ -77,7 +77,7 @@ mod test {
             created_at: Utc::now(),
         };
 
-        let content_asset = ContentAsset::from_dto(content_asset_dto.clone());
+        let content_asset = ContentAsset::map_from(content_asset_dto.clone());
 
         assert_eq!(content_asset.id, content_asset_dto.id);
         assert_eq!(content_asset.content_type, content_asset_dto.content_type);

@@ -1,8 +1,8 @@
-use crate::{FromDto, FromModel, KeywordModifierDto};
+use crate::{KeywordModifierDto, MapFrom};
 use content_domain::model::keyword::KeywordModifier;
 
-impl FromModel<KeywordModifier> for KeywordModifierDto {
-    fn from_model(model: KeywordModifier) -> Self {
+impl MapFrom<KeywordModifier> for KeywordModifierDto {
+    fn map_from(model: KeywordModifier) -> Self {
         match model {
             KeywordModifier::NewLine => Self::NewLine,
             KeywordModifier::AddIndentation => Self::AddIndentation,
@@ -11,8 +11,8 @@ impl FromModel<KeywordModifier> for KeywordModifierDto {
     }
 }
 
-impl FromDto<KeywordModifierDto> for KeywordModifier {
-    fn from_dto(dto: KeywordModifierDto) -> Self {
+impl MapFrom<KeywordModifierDto> for KeywordModifier {
+    fn map_from(dto: KeywordModifierDto) -> Self {
         match dto {
             KeywordModifierDto::NewLine => Self::NewLine,
             KeywordModifierDto::AddIndentation => Self::AddIndentation,
@@ -28,15 +28,15 @@ mod tests {
     #[test]
     fn from_keyword_modifier() {
         assert_eq!(
-            KeywordModifierDto::from_model(KeywordModifier::NewLine),
+            KeywordModifierDto::map_from(KeywordModifier::NewLine),
             KeywordModifierDto::NewLine
         );
         assert_eq!(
-            KeywordModifierDto::from_model(KeywordModifier::AddIndentation),
+            KeywordModifierDto::map_from(KeywordModifier::AddIndentation),
             KeywordModifierDto::AddIndentation
         );
         assert_eq!(
-            KeywordModifierDto::from_model(KeywordModifier::RemoveIndentation),
+            KeywordModifierDto::map_from(KeywordModifier::RemoveIndentation),
             KeywordModifierDto::RemoveIndentation
         );
     }
@@ -44,15 +44,15 @@ mod tests {
     #[test]
     fn from_keyword_modifier_dto() {
         assert_eq!(
-            KeywordModifier::from_dto(KeywordModifierDto::NewLine),
+            KeywordModifier::map_from(KeywordModifierDto::NewLine),
             KeywordModifier::NewLine
         );
         assert_eq!(
-            KeywordModifier::from_dto(KeywordModifierDto::AddIndentation),
+            KeywordModifier::map_from(KeywordModifierDto::AddIndentation),
             KeywordModifier::AddIndentation
         );
         assert_eq!(
-            KeywordModifier::from_dto(KeywordModifierDto::RemoveIndentation),
+            KeywordModifier::map_from(KeywordModifierDto::RemoveIndentation),
             KeywordModifier::RemoveIndentation
         );
     }

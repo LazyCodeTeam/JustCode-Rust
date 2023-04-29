@@ -1,8 +1,8 @@
-use crate::{FromModel, TaskPreviewDto};
+use crate::{MapFrom, TaskPreviewDto};
 use content_domain::model::task_preview::TaskPreview;
 
-impl FromModel<TaskPreview> for TaskPreviewDto {
-    fn from_model(model: TaskPreview) -> Self {
+impl MapFrom<TaskPreview> for TaskPreviewDto {
+    fn map_from(model: TaskPreview) -> Self {
         Self {
             id: model.id,
             title: model.title,
@@ -23,7 +23,7 @@ mod tests {
             for_anonymous: true,
         };
 
-        let task_preview_dto = TaskPreviewDto::from_model(task_preview);
+        let task_preview_dto = TaskPreviewDto::map_from(task_preview);
 
         assert_eq!(
             task_preview_dto,

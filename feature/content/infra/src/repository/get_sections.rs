@@ -1,10 +1,10 @@
 use aws_sdk_dynamodb::types::AttributeValue;
 use common_domain::error::Result;
-use common_infra::dynamodb_client::{get_dynamodb_client, QueryOutputExt};
+use common_infra::dynamodb::client::{get_dynamodb_client, QueryOutputExt};
 use content_domain::model::section::Section;
 
 use crate::{
-    config::CONFIG, section_dto::SectionDto, IntoModel, SECTION_ID_PREFIX, TECHNOLOGY_ID_PREFIX,
+    config::CONFIG, section_dto::SectionDto, MapInto, SECTION_ID_PREFIX, TECHNOLOGY_ID_PREFIX,
 };
 
 pub async fn get_sections_for_multiple_technologies(ids: Vec<String>) -> Result<Vec<Section>> {
@@ -32,7 +32,7 @@ pub async fn get_all_technology_sections(technology_id: &str) -> Result<Vec<Sect
         .send()
         .await
         .parse::<SectionDto>()
-        .map(IntoModel::into_model)
+        .map(MapInto::map_into)
 }
 
 pub async fn get_ordered_technology_sections(technology_id: &str) -> Result<Vec<Section>> {
@@ -50,5 +50,5 @@ pub async fn get_ordered_technology_sections(technology_id: &str) -> Result<Vec<
         .send()
         .await
         .parse::<SectionDto>()
-        .map(IntoModel::into_model)
+        .map(MapInto::map_into)
 }

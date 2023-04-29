@@ -1,12 +1,14 @@
-use common_domain::error::{Error, Result};
-use common_infra::dynamodb_client::get_dynamodb_client;
+use common_domain::error::{Result, ResultLogExt};
+use common_infra::dynamodb::client::get_dynamodb_client;
 use serde_dynamo::to_item;
+use snafu::ResultExt;
 
 use crate::{config::CONFIG, dto::tasks_transaction_dto::TasksTransactionDto};
 
 pub async fn begin_transaction(items_count: u64) -> Result<()> {
     let item = to_item(TasksTransactionDto::new(items_count))
-        .map_err(|e| Error::unknown(format!("Failed to serialize transaction ({e:?})")))?;
+        .whatever_context("Failed to serialize transaction")
+        .with_error_log()?;
 
     get_dynamodb_client()
         .await
@@ -15,6 +17,7 @@ pub async fn begin_transaction(items_count: u64) -> Result<()> {
         .set_item(Some(item))
         .send()
         .await
-        .map_err(|e| Error::unknown(format!("Failed to begin transaction: {e:?}")))
         .map(|_| ())
+        .whatever_context("Failed to begin transaction")
+        .with_error_log()
 }

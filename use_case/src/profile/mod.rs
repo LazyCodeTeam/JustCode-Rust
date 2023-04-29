@@ -1,14 +1,7 @@
-#[cfg(feature = "create_profile")]
 pub mod create_profile;
-#[cfg(feature = "delete_profile")]
 pub mod delete_profile;
-#[cfg(feature = "get_profile_by_id")]
 pub mod get_profile_by_id;
-#[cfg(feature = "on_avatars_created")]
 pub mod on_avatars_created;
-#[cfg(feature = "request_avatar_upload")]
 pub mod request_avatar_upload;
-#[cfg(feature = "set_push_data")]
 pub mod set_push_data;
-#[cfg(feature = "update_profile")]
 pub mod update_profile;

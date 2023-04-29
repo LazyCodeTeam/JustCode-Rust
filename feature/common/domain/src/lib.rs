@@ -3,7 +3,6 @@ pub mod error;
 pub mod identifiable;
 pub mod into_future;
 pub mod mapper_traits;
-pub mod tmp;
 
 pub use lazy_static;
 pub use paste;

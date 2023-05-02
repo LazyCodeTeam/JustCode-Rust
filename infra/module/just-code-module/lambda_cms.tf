@@ -8,7 +8,6 @@ module "load_content_v1_lambda" {
   zip_path      = "${path.module}/../../../target/lambdas/load_content_v1.zip"
   env_variables = local.env_vars
   policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
     "arn:aws:iam::aws:policy/AmazonSQSFullAccess",
   ]
@@ -28,7 +27,6 @@ module "on_modifications_batch" {
   zip_path      = "${path.module}/../../../target/lambdas/on_modifications_batch.zip"
   env_variables = local.env_vars
   policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
     "arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole",
   ]
@@ -50,7 +48,6 @@ module "load_content_dry_run_v1_lambda" {
   zip_path      = "${path.module}/../../../target/lambdas/load_content_dry_run_v1.zip"
   env_variables = local.env_vars
   policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
   ]
   invoker = {
@@ -69,7 +66,6 @@ module "request_assets_upload_v1_lambda" {
   zip_path      = "${path.module}/../../../target/lambdas/request_assets_upload_v1.zip"
   env_variables = local.env_vars
   policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonS3FullAccess",
   ]
   invoker = {
@@ -88,7 +84,6 @@ module "on_assets_uploaded_lambda" {
   zip_path      = "${path.module}/../../../target/lambdas/on_assets_uploaded.zip"
   env_variables = local.env_vars
   policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
     "arn:aws:iam::aws:policy/AmazonS3FullAccess",
   ]
@@ -108,7 +103,6 @@ module "get_content_assets_v1_lambda" {
   zip_path      = "${path.module}/../../../target/lambdas/get_content_assets_v1.zip"
   env_variables = local.env_vars
   policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
   ]
   invoker = {
@@ -127,7 +121,6 @@ module "delete_content_assets_v1_lambda" {
   zip_path      = "${path.module}/../../../target/lambdas/delete_content_assets_v1.zip"
   env_variables = local.env_vars
   policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
     "arn:aws:iam::aws:policy/AmazonS3FullAccess",
   ]

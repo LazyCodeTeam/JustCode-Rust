@@ -10,6 +10,11 @@ variable "name" {
   type = string
 }
 
+variable "policies_jsons" {
+  type    = map(string)
+  default = {}
+}
+
 variable "env_variables" {
   type    = map(string)
   default = {}
@@ -29,7 +34,8 @@ variable "arch" {
 }
 
 variable "policies" {
-  type = list(string)
+  type    = list(string)
+  default = []
 }
 
 variable "layers" {

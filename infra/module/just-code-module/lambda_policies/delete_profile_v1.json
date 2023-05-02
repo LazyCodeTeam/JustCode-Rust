@@ -1,0 +1,22 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1683025955596",
+      "Action": [
+        "dynamodb:DeleteItem",
+        "dynamodb:GetItem"
+      ],
+      "Effect": "Allow",
+      "Resource": "${DYNAMODB_TABLE_ARN}"
+    },
+    {
+      "Sid": "Stmt1683025980408",
+      "Action": [
+        "cognito-idp:AdminDeleteUser"
+      ],
+      "Effect": "Allow",
+      "Resource": "${COGNITO_USER_POOL_ARN}"
+    }
+  ]
+}

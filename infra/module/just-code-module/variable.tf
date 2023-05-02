@@ -59,3 +59,8 @@ variable "create_profile_memory_size" {
   type    = number
   default = 128
 }
+
+variable "delete_profile_v1_memory_size" {
+  type    = number
+  default = 128
+}

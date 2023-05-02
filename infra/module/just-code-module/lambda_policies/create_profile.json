@@ -5,9 +5,7 @@
       "Sid": "Stmt1683023660000",
       "Action": [
         "dynamodb:GetItem",
-        "dynamodb:PutItem",
-        "dynamodb:Query",
-        "dynamodb:UpdateItem"
+        "dynamodb:PutItem"
       ],
       "Effect": "Allow",
       "Resource": "${DYNAMODB_TABLE_ARN}"

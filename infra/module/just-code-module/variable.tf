@@ -69,3 +69,28 @@ variable "get_profile_v1_memory_size" {
   type    = number
   default = 128
 }
+
+variable "update_push_data_v1_memory_size" {
+  type    = number
+  default = 128
+}
+
+variable "remove_push_data_v1_memory_size" {
+  type    = number
+  default = 128
+}
+
+variable "update_profile_v1_memory_size" {
+  type    = number
+  default = 128
+}
+
+variable "request_avatar_upload_v1_memory_size" {
+  type    = number
+  default = 128
+}
+
+variable "on_avatars_created_memory_size" {
+  type    = number
+  default = 128
+}

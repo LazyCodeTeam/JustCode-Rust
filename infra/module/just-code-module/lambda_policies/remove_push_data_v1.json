@@ -1,0 +1,13 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1683058475000",
+      "Action": [
+        "dynamodb:UpdateItem"
+      ],
+      "Effect": "Allow",
+      "Resource": "${DYNAMODB_TABLE_ARN}"
+    }
+  ]
+}

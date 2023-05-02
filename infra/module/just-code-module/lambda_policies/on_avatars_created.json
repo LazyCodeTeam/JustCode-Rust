@@ -1,0 +1,22 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1683059605975",
+      "Action": [
+        "s3:DeleteObject",
+        "s3:GetObject"
+      ],
+      "Effect": "Allow",
+      "Resource": "${S3_BUCKET_ARN}/*"
+    },
+    {
+      "Sid": "Stmt1683059658016",
+      "Action": [
+        "dynamodb:UpdateItem"
+      ],
+      "Effect": "Allow",
+      "Resource": "${DYNAMODB_TABLE_ARN}"
+    }
+  ]
+}

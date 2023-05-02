@@ -47,11 +47,13 @@ module "get_profile_v1_lambda" {
   env           = var.env
   name          = "get-profile-v1"
   app_name      = local.app_name
-  memory_size   = 128
+  memory_size   = var.get_profile_v1_memory_size
   zip_path      = "${path.module}/../../../target/lambdas/get_profile_v1.zip"
   env_variables = local.env_vars
-  policies = [
-    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+  policies_jsons = [
+    templatefile("${path.module}/lambda_policies/get_profile_v1.json", {
+      DYNAMODB_TABLE_ARN = aws_dynamodb_table.main.arn
+    })
   ]
   invoker = {
     principal = "apigateway.amazonaws.com"

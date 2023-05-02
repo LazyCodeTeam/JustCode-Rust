@@ -54,3 +54,8 @@ variable "moderator_api_key" {
 variable "app_api_key" {
   type = string
 }
+
+variable "create_profile_memory_size" {
+  type    = number
+  default = 128
+}

@@ -4,13 +4,14 @@ module "create_profile_lambda" {
   env           = var.env
   name          = "create-profile"
   app_name      = local.app_name
-  memory_size   = 128
+  memory_size   = var.create_profile_memory_size
   zip_path      = "${path.module}/../../../target/lambdas/create_profile.zip"
   env_variables = local.env_vars
-  policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
-  ]
+  policies_jsons = {
+    "dynamodb" = templatefile("${path.module}/lambda_policies/create_profile.json", {
+      DYNAMODB_TABLE_ARN = aws_dynamodb_table.main.arn
+    })
+  }
   invoker = {
     principal = "cognito-idp.amazonaws.com"
     arn       = aws_cognito_user_pool.pool.arn
@@ -29,7 +30,6 @@ module "delete_profile_v1_lambda" {
     USER_POOL_ID = aws_cognito_user_pool.pool.id
   })
   policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
     "arn:aws:iam::aws:policy/AmazonCognitoPowerUser"
   ]
@@ -49,7 +49,6 @@ module "get_profile_v1_lambda" {
   zip_path      = "${path.module}/../../../target/lambdas/get_profile_v1.zip"
   env_variables = local.env_vars
   policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
   ]
   invoker = {
@@ -68,7 +67,6 @@ module "update_push_data_v1_lambda" {
   zip_path      = "${path.module}/../../../target/lambdas/update_push_data_v1.zip"
   env_variables = local.env_vars
   policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
   ]
   invoker = {
@@ -87,7 +85,6 @@ module "remove_push_data_v1_lambda" {
   zip_path      = "${path.module}/../../../target/lambdas/remove_push_data_v1.zip"
   env_variables = local.env_vars
   policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
   ]
   invoker = {
@@ -106,7 +103,6 @@ module "update_profile_v1_lambda" {
   zip_path      = "${path.module}/../../../target/lambdas/update_profile_v1.zip"
   env_variables = local.env_vars
   policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
   ]
   invoker = {
@@ -125,7 +121,6 @@ module "request_avatar_upload_v1_lambda" {
   zip_path      = "${path.module}/../../../target/lambdas/request_avatar_upload_v1.zip"
   env_variables = local.env_vars
   policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
     "arn:aws:iam::aws:policy/AmazonS3FullAccess",
   ]
@@ -145,7 +140,6 @@ module "on_avatars_created" {
   zip_path      = "${path.module}/../../../target/lambdas/on_avatars_created.zip"
   env_variables = local.env_vars
   policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
     "arn:aws:iam::aws:policy/AmazonS3FullAccess",
   ]

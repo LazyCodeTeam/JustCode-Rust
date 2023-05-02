@@ -9,9 +9,7 @@ module "moderator_api_key_validator" {
   env_variables = merge(local.env_vars, {
     API_KEY = var.moderator_api_key
   })
-  policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-  ]
+  policies = []
   invoker = {
     principal = "apigateway.amazonaws.com"
     arn       = "${aws_apigatewayv2_api.just_code.execution_arn}/*/*"
@@ -29,9 +27,7 @@ module "app_api_key_validator" {
   env_variables = merge(local.env_vars, {
     API_KEY = var.app_api_key
   })
-  policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-  ]
+  policies = []
   invoker = {
     principal = "apigateway.amazonaws.com"
     arn       = "${aws_apigatewayv2_api.just_code.execution_arn}/*/*"

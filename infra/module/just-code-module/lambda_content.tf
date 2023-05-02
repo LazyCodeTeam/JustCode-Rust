@@ -8,7 +8,6 @@ module "get_public_technologies_v1_lambda" {
   zip_path      = "${path.module}/../../../target/lambdas/get_public_technologies_v1.zip"
   env_variables = local.env_vars
   policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
   ]
   invoker = {
@@ -27,7 +26,6 @@ module "get_public_sections_v1_lambda" {
   zip_path      = "${path.module}/../../../target/lambdas/get_public_sections_v1.zip"
   env_variables = local.env_vars
   policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
   ]
   invoker = {
@@ -46,7 +44,6 @@ module "get_public_tasks_v1_lambda" {
   zip_path      = "${path.module}/../../../target/lambdas/get_public_tasks_v1.zip"
   env_variables = local.env_vars
   policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
   ]
   invoker = {
@@ -65,7 +62,6 @@ module "answer_v1_lambda" {
   zip_path      = "${path.module}/../../../target/lambdas/answer_v1.zip"
   env_variables = local.env_vars
   policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
   ]
   invoker = {
@@ -84,7 +80,6 @@ module "get_tasks_v1_lambda" {
   zip_path      = "${path.module}/../../../target/lambdas/get_tasks_v1.zip"
   env_variables = local.env_vars
   policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
   ]
   invoker = {

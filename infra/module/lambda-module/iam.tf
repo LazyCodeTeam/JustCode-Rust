@@ -16,11 +16,11 @@ resource "aws_iam_role" "lambda_exec" {
 }
 
 resource "aws_iam_role_policy" "custom_lambda_policy" {
-  for_each = var.policies_jsons
+  count = length(var.policies_jsons)
 
-  name   = "${var.name}-${var.env}-policy-${each.key}"
+  name   = "${var.name}-${var.env}-policy-${count.index}"
   role   = aws_iam_role.lambda_exec.name
-  policy = each.value
+  policy = var.policies_jsons[count.index]
 }
 
 resource "aws_iam_role_policy_attachment" "basic_lambda_policy" {

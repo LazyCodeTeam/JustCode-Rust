@@ -11,8 +11,8 @@ variable "name" {
 }
 
 variable "policies_jsons" {
-  type    = map(string)
-  default = {}
+  type    = list(string)
+  default = []
 }
 
 variable "env_variables" {

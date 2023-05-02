@@ -7,11 +7,11 @@ module "create_profile_lambda" {
   memory_size   = var.create_profile_memory_size
   zip_path      = "${path.module}/../../../target/lambdas/create_profile.zip"
   env_variables = local.env_vars
-  policies_jsons = {
-    "dynamodb" = templatefile("${path.module}/lambda_policies/create_profile.json", {
+  policies_jsons = [
+    templatefile("${path.module}/lambda_policies/create_profile.json", {
       DYNAMODB_TABLE_ARN = aws_dynamodb_table.main.arn
     })
-  }
+  ]
   invoker = {
     principal = "cognito-idp.amazonaws.com"
     arn       = aws_cognito_user_pool.pool.arn
@@ -24,14 +24,16 @@ module "delete_profile_v1_lambda" {
   env         = var.env
   name        = "delete-profile-v1"
   app_name    = local.app_name
-  memory_size = 128
+  memory_size = var.delete_profile_v1_memory_size
   zip_path    = "${path.module}/../../../target/lambdas/delete_profile_v1.zip"
   env_variables = merge(local.env_vars, {
     USER_POOL_ID = aws_cognito_user_pool.pool.id
   })
-  policies = [
-    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
-    "arn:aws:iam::aws:policy/AmazonCognitoPowerUser"
+  policies_jsons = [
+    templatefile("${path.module}/lambda_policies/delete_profile_v1.json", {
+      DYNAMODB_TABLE_ARN    = aws_dynamodb_table.main.arn
+      COGNITO_USER_POOL_ARN = aws_cognito_user_pool.pool.arn
+    })
   ]
   invoker = {
     principal = "apigateway.amazonaws.com"

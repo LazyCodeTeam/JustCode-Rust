@@ -4,7 +4,7 @@ module "load_content_v1_lambda" {
   env           = var.env
   name          = "load-content-v1"
   app_name      = local.app_name
-  memory_size   = 128
+  memory_size   = var.load_content_v1_memory_size
   zip_path      = "${path.module}/../../../target/lambdas/load_content_v1.zip"
   env_variables = local.env_vars
   policies = [
@@ -23,7 +23,7 @@ module "on_modifications_batch" {
   env           = var.env
   name          = "on-modifications-batch"
   app_name      = local.app_name
-  memory_size   = 128
+  memory_size   = var.on_modifications_batch_memory_size
   zip_path      = "${path.module}/../../../target/lambdas/on_modifications_batch.zip"
   env_variables = local.env_vars
   policies = [
@@ -44,7 +44,7 @@ module "load_content_dry_run_v1_lambda" {
   env           = var.env
   name          = "load-content-dry-run-v1"
   app_name      = local.app_name
-  memory_size   = 128
+  memory_size   = var.load_content_dry_run_v1_memory_size
   zip_path      = "${path.module}/../../../target/lambdas/load_content_dry_run_v1.zip"
   env_variables = local.env_vars
   policies = [
@@ -62,7 +62,7 @@ module "request_assets_upload_v1_lambda" {
   env           = var.env
   name          = "request-assets-upload-v1"
   app_name      = local.app_name
-  memory_size   = 128
+  memory_size   = var.request_assets_upload_v1_memory_size
   zip_path      = "${path.module}/../../../target/lambdas/request_assets_upload_v1.zip"
   env_variables = local.env_vars
   policies = [
@@ -80,7 +80,7 @@ module "on_assets_uploaded_lambda" {
   env           = var.env
   name          = "on-assets-uploaded"
   app_name      = local.app_name
-  memory_size   = 128
+  memory_size   = var.on_assets_uploaded_memory_size
   zip_path      = "${path.module}/../../../target/lambdas/on_assets_uploaded.zip"
   env_variables = local.env_vars
   policies = [
@@ -99,7 +99,7 @@ module "get_content_assets_v1_lambda" {
   env           = var.env
   name          = "get-content-assets-v1"
   app_name      = local.app_name
-  memory_size   = 128
+  memory_size   = var.get_content_assets_v1_memory_size
   zip_path      = "${path.module}/../../../target/lambdas/get_content_assets_v1.zip"
   env_variables = local.env_vars
   policies = [
@@ -117,7 +117,7 @@ module "delete_content_assets_v1_lambda" {
   env           = var.env
   name          = "delete-content-assets-v1"
   app_name      = local.app_name
-  memory_size   = 128
+  memory_size   = var.delete_content_assets_v1_memory_size
   zip_path      = "${path.module}/../../../target/lambdas/delete_content_assets_v1.zip"
   env_variables = local.env_vars
   policies = [

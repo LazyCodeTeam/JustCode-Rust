@@ -94,3 +94,73 @@ variable "on_avatars_created_memory_size" {
   type    = number
   default = 128
 }
+
+variable "get_public_technologies_v1_memory_size" {
+  type    = number
+  default = 128
+}
+
+variable "get_public_sections_v1_memory_size" {
+  type    = number
+  default = 128
+}
+
+variable "get_public_tasks_v1_memory_size" {
+  type    = number
+  default = 128
+}
+
+variable "answer_v1_memory_size" {
+  type    = number
+  default = 128
+}
+
+variable "get_tasks_v1_memory_size" {
+  type    = number
+  default = 128
+}
+
+variable "load_content_v1_memory_size" {
+  type    = number
+  default = 128
+}
+
+variable "on_modifications_batch_memory_size" {
+  type    = number
+  default = 128
+}
+
+variable "load_content_dry_run_v1_memory_size" {
+  type    = number
+  default = 128
+}
+
+variable "request_assets_upload_v1_memory_size" {
+  type    = number
+  default = 128
+}
+
+variable "on_assets_uploaded_memory_size" {
+  type    = number
+  default = 128
+}
+
+variable "get_content_assets_v1_memory_size" {
+  type    = number
+  default = 128
+}
+
+variable "delete_content_assets_v1_memory_size" {
+  type    = number
+  default = 128
+}
+
+variable "moderator_api_key_validator_memory_size" {
+  type    = number
+  default = 128
+}
+
+variable "app_api_key_validator_memory_size" {
+  type    = number
+  default = 128
+}

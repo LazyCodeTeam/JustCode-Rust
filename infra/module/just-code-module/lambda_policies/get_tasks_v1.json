@@ -2,18 +2,17 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "Stmt1683059605975",
+      "Sid": "Stmt1683132911232",
       "Action": [
-        "s3:DeleteObject",
-        "s3:GetObject"
+        "dynamodb:Query"
       ],
       "Effect": "Allow",
-      "Resource": "${S3_BUCKET_ARN}/*"
+      "Resource": "${CONTENT_DYNAMODB_TABLE_ARN}*"
     },
     {
-      "Sid": "Stmt1683059658016",
+      "Sid": "Stmt1683132919500",
       "Action": [
-        "dynamodb:UpdateItem"
+        "dynamodb:Query"
       ],
       "Effect": "Allow",
       "Resource": "${DYNAMODB_TABLE_ARN}*"

@@ -65,6 +65,10 @@ data "aws_iam_policy_document" "swaggerui" {
   statement {
     sid     = "PublicReadGetObjectSwaggerUI"
     actions = ["s3:GetObject"]
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
     resources = [
       aws_s3_bucket.swaggerui.arn,
       "${aws_s3_bucket.swaggerui.arn}/*",

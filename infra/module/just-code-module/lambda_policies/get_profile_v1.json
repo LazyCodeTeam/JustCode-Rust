@@ -7,7 +7,7 @@
         "dynamodb:GetItem"
       ],
       "Effect": "Allow",
-      "Resource": "${DYNAMODB_TABLE_ARN}"
+      "Resource": "${DYNAMODB_TABLE_ARN}*"
     }
   ]
 }

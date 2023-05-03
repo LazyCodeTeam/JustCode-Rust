@@ -2,12 +2,12 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "Stmt1683058475000",
+      "Sid": "Stmt1683128152880",
       "Action": [
-        "dynamodb:UpdateItem"
+        "dynamodb:Query"
       ],
       "Effect": "Allow",
-      "Resource": "${DYNAMODB_TABLE_ARN}*"
+      "Resource": "${CONTENT_DYNAMODB_TABLE_ARN}*"
     }
   ]
 }

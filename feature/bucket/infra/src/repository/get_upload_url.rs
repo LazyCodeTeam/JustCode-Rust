@@ -1,7 +1,7 @@
 use crate::config::CONFIG;
 use std::time::Duration;
 
-use aws_sdk_s3::{presigning::PresigningConfig, types::ObjectCannedAcl};
+use aws_sdk_s3::presigning::PresigningConfig;
 use bucket_domain::model::presigned_url::PresignedUrl;
 use chrono::Utc;
 use common_domain::error::{Result, ResultLogExt};
@@ -32,7 +32,6 @@ where
         .put_object()
         .bucket(&CONFIG.s3_bucket)
         .key(key)
-        .acl(ObjectCannedAcl::PublicRead)
         .presigned(presigned_config(valid_for)?)
         .await
         .whatever_context("Failed to presign avatar image")

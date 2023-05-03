@@ -10,11 +10,6 @@ resource "aws_s3_bucket" "swaggerui" {
   bucket = "swagger-ui-${local.app_name}-${var.env}"
 }
 
-resource "aws_s3_bucket_acl" "swaggerui" {
-  bucket = aws_s3_bucket.swaggerui.id
-  acl    = "private"
-}
-
 resource "aws_s3_bucket_website_configuration" "swaggerui" {
   bucket = aws_s3_bucket.swaggerui.id
 
@@ -23,8 +18,17 @@ resource "aws_s3_bucket_website_configuration" "swaggerui" {
   }
 }
 
+resource "aws_s3_bucket_server_side_encryption_configuration" "swaggerui" {
+  bucket = aws_s3_bucket.swaggerui.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
 resource "aws_s3_object" "swaggerui-index" {
-  acl          = "public-read"
   bucket       = aws_s3_bucket.swaggerui.id
   key          = "index.html"
   source       = "${path.module}/../../../openapi/index.html"
@@ -33,7 +37,6 @@ resource "aws_s3_object" "swaggerui-index" {
 }
 
 resource "aws_s3_object" "swaggerui-oauth2-redirect" {
-  acl          = "public-read"
   bucket       = aws_s3_bucket.swaggerui.id
   key          = "oauth2-redirect.html"
   source       = "${path.module}/../../../openapi/oauth2-redirect.html"
@@ -42,7 +45,6 @@ resource "aws_s3_object" "swaggerui-oauth2-redirect" {
 }
 
 resource "aws_s3_object" "swaggerui-yaml" {
-  acl          = "public-read"
   bucket       = aws_s3_bucket.swaggerui.id
   key          = "swagger.yaml"
   source       = "${path.module}/../../../openapi/swagger.yaml"
@@ -51,4 +53,21 @@ resource "aws_s3_object" "swaggerui-yaml" {
   depends_on = [
     local_file.rendered_swagger
   ]
+}
+
+resource "aws_s3_bucket_policy" "swaggerui" {
+  bucket = aws_s3_bucket.swaggerui.id
+
+  policy = data.aws_iam_policy_document.swaggerui.json
+}
+
+data "aws_iam_policy_document" "swaggerui" {
+  statement {
+    sid     = "PublicReadGetObjectSwaggerUI"
+    actions = ["s3:GetObject"]
+    resources = [
+      aws_s3_bucket.swaggerui.arn,
+      "${aws_s3_bucket.swaggerui.arn}/*",
+    ]
+  }
 }

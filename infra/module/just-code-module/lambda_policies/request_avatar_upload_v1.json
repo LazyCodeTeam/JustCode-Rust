@@ -12,8 +12,7 @@
     {
       "Sid": "Stmt1683059312756",
       "Action": [
-        "s3:PutObject",
-        "s3:PutObjectAcl"
+        "s3:PutObject"
       ],
       "Effect": "Allow",
       "Resource": "${S3_BUCKET_ARN}/*"

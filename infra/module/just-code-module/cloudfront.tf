@@ -24,6 +24,11 @@ resource "aws_cloudfront_cache_policy" "content" {
   }
 }
 
+
+resource "aws_cloudfront_origin_access_identity" "content" {
+  comment = "Content access identity for ${local.app_name}-${var.env}"
+}
+
 resource "aws_cloudfront_distribution" "content" {
   enabled         = true
   is_ipv6_enabled = true

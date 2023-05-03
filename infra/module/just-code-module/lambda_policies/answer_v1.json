@@ -2,21 +2,21 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "Stmt1683025955596",
+      "Sid": "Stmt1683132612357",
       "Action": [
-        "dynamodb:DeleteItem",
-        "dynamodb:GetItem"
+        "dynamodb:PutItem",
+        "dynamodb:Query"
       ],
       "Effect": "Allow",
       "Resource": "${DYNAMODB_TABLE_ARN}*"
     },
     {
-      "Sid": "Stmt1683025980408",
+      "Sid": "Stmt1683132635471",
       "Action": [
-        "cognito-idp:AdminDeleteUser"
+        "dynamodb:GetItem"
       ],
       "Effect": "Allow",
-      "Resource": "${COGNITO_USER_POOL_ARN}"
+      "Resource": "${CONTENT_DYNAMODB_TABLE_ARN}*"
     }
   ]
 }

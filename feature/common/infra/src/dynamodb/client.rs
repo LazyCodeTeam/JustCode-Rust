@@ -75,6 +75,7 @@ impl QueryOutputExt for std::result::Result<QueryOutput, SdkError<QueryError>> {
                             .whatever_context("Failed to parse items from DynamoDB")
                     })
             })
+            .with_error_log()
     }
 
     fn parse_one<'a, T>(self) -> Result<Option<T>>
@@ -83,11 +84,13 @@ impl QueryOutputExt for std::result::Result<QueryOutput, SdkError<QueryError>> {
     {
         let result: Option<_> = self
             .whatever_context("Failed to query single item from DynamoDB")
-            .map(|output| output.items.and_then(|items| items.into_iter().next()))?;
+            .map(|output| output.items.and_then(|items| items.into_iter().next()))
+            .with_error_log()?;
 
         match result {
             Some(item) => from_item(item).whatever_context("Failed to parse item from DynamoDB"),
             _ => Ok(None),
         }
+        .with_error_log()
     }
 }

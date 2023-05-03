@@ -58,6 +58,7 @@ impl MapFrom<LambdaError> for Response<Body> {
 
         let Ok(response) = Response::builder()
             .status(error.code)
+            .header("Content-Type", "application/json")
             .body(Body::from(body)) else {
             return default_error_response();
         };

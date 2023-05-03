@@ -1,0 +1,13 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1683057705732",
+      "Action": [
+        "dynamodb:GetItem"
+      ],
+      "Effect": "Allow",
+      "Resource": "${DYNAMODB_TABLE_ARN}"
+    }
+  ]
+}

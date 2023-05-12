@@ -36,7 +36,7 @@ paths:
                 $ref: "#/components/schemas/ErrorDto"
       security:
         - just-code-dev-auth:
-            - email
+            - aws.cognito.signin.user.admin
       x-amazon-apigateway-integration:
         payloadFormatVersion: "2.0"
         type: "aws_proxy"
@@ -48,7 +48,7 @@ paths:
         - profile
       security:
         - just-code-dev-auth:
-            - email
+            - aws.cognito.signin.user.admin
       responses:
         "200":
           description: Updated
@@ -84,7 +84,7 @@ paths:
                 $ref: "#/components/schemas/ErrorDto"
       security:
         - just-code-dev-auth:
-            - email
+            - aws.cognito.signin.user.admin
       x-amazon-apigateway-integration:
         payloadFormatVersion: "2.0"
         type: "aws_proxy"
@@ -110,7 +110,7 @@ paths:
                 $ref: "#/components/schemas/ErrorDto"
       security:
         - just-code-dev-auth:
-            - email
+            - aws.cognito.signin.user.admin
       x-amazon-apigateway-integration:
         payloadFormatVersion: "2.0"
         type: "aws_proxy"
@@ -144,7 +144,7 @@ paths:
                 $ref: "#/components/schemas/ErrorDto"
       security:
         - just-code-dev-auth:
-            - email
+            - aws.cognito.signin.user.admin
       x-amazon-apigateway-integration:
         payloadFormatVersion: "2.0"
         type: "aws_proxy"
@@ -165,7 +165,7 @@ paths:
                 $ref: "#/components/schemas/ErrorDto"
       security:
         - just-code-dev-auth:
-            - email
+            - aws.cognito.signin.user.admin
       x-amazon-apigateway-integration:
         payloadFormatVersion: "2.0"
         type: "aws_proxy"
@@ -309,7 +309,7 @@ paths:
                 $ref: "#/components/schemas/ErrorDto"
       security:
         - just-code-dev-auth:
-            - email
+            - aws.cognito.signin.user.admin
       x-amazon-apigateway-integration:
         payloadFormatVersion: "2.0"
         type: "aws_proxy"
@@ -349,7 +349,7 @@ paths:
               $ref: "#/components/schemas/AnswerDto"
       security:
         - just-code-dev-auth:
-            - email
+            - aws.cognito.signin.user.admin
       x-amazon-apigateway-integration:
         payloadFormatVersion: "2.0"
         type: "aws_proxy"
@@ -567,6 +567,7 @@ components:
           refreshUrl: ${cognito_base_url}/oauth2/token
           scopes:
             email: "Email access"
+            aws.cognito.signin.user.admin: "Amplify access"
       x-amazon-apigateway-authorizer:
         identitySource: "$request.header.Authorization"
         jwtConfiguration:

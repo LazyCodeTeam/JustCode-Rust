@@ -11,7 +11,7 @@ tags:
     description: Content
   - name: cms
     description: CMS
-  - name: wip 
+  - name: wip
     description: Work in progress - nie dotykać
 paths:
   ###########################################################
@@ -202,6 +202,47 @@ paths:
         httpMethod: "POST"
         uri: ${get_public_technologies_v1}
         connectionType: "INTERNET"
+  /v1/content/technology/{technology_id}/sections:
+    get:
+      tags:
+        - content
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PersonalizedSectionDto"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDto"
+      security:
+        - just-code-dev-auth:
+            - aws.cognito.signin.user.admin
+      x-amazon-apigateway-integration:
+        payloadFormatVersion: "2.0"
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: ${get_sections_v1}
+        connectionType: "INTERNET"
+    parameters:
+      - name: "technology_id"
+        in: "path"
+        description: "Generated path parameter for technology_id"
+        required: true
+        schema:
+          type: "string"
   /v1/content/public/technology/{technology_id}/sections:
     get:
       tags:
@@ -329,7 +370,7 @@ paths:
       responses:
         "200":
           description: Ok
-          content: 
+          content:
             application/json:
               schema:
                 type: array
@@ -458,7 +499,7 @@ paths:
       responses:
         "200":
           description: Ok
-          content: 
+          content:
             application/json:
               schema:
                 type: array
@@ -485,7 +526,7 @@ paths:
       responses:
         "200":
           description: Ok
-          content: 
+          content:
             application/json:
               schema:
                 type: array
@@ -694,6 +735,26 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TaskPreviewDto"
+    PersonalizedSectionDto:
+      type: object
+      required:
+        - id
+        - title
+        - tasks_preview
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+          format: uri
+        tasks_preview:
+          type: array
+          items:
+            $ref: "#/components/schemas/PersonalizedTaskPreviewDto"
     TaskPreviewDto:
       type: object
       required:
@@ -707,6 +768,19 @@ components:
           type: string
         is_available:
           type: boolean
+    PersonalizedTaskPreviewDto:
+      type: object
+      required:
+        - id
+        - title
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        done_at:
+          type: string
+          format: date-time
     PublicTaskDto:
       type: object
       oneOf:
@@ -1260,7 +1334,6 @@ components:
           SINGLE: "#/components/schemas/SingleAnswerDto"
           MULTI: "#/components/schemas/MultiAnswersDto"
           HASH_MAP: "#/components/schemas/HashMapAnswersDto"
-
     AnswerKindDto:
       type: string
       enum:
@@ -1272,7 +1345,7 @@ components:
       type: object
       required:
         - kind
-      properties: 
+      properties:
         kind:
           $ref: "#/components/schemas/AnswerKindDto"
     SingleAnswerDto:
@@ -1280,7 +1353,7 @@ components:
       required:
         - kind
         - answer
-      properties: 
+      properties:
         kind:
           $ref: "#/components/schemas/AnswerKindDto"
         answer:
@@ -1292,7 +1365,7 @@ components:
       required:
         - kind
         - answer
-      properties: 
+      properties:
         kind:
           $ref: "#/components/schemas/AnswerKindDto"
         answer:
@@ -1306,7 +1379,7 @@ components:
       required:
         - kind
         - answer
-      properties: 
+      properties:
         kind:
           $ref: "#/components/schemas/AnswerKindDto"
         answer:

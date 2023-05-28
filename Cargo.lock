@@ -1333,6 +1333,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "get_sections_v1"
+version = "0.1.0"
+dependencies = [
+ "common_api",
+ "content_dto",
+ "content_infra",
+ "lambda_http",
+ "tokio",
+ "use_case",
+]
+
+[[package]]
 name = "get_tasks_v1"
 version = "0.1.0"
 dependencies = [

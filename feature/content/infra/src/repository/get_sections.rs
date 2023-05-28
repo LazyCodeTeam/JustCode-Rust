@@ -35,7 +35,7 @@ pub async fn get_all_technology_sections(technology_id: &str) -> Result<Vec<Sect
         .map(MapInto::map_into)
 }
 
-pub async fn get_ordered_technology_sections(technology_id: &str) -> Result<Vec<Section>> {
+pub async fn get_ordered_technology_sections(technology_id: String) -> Result<Vec<Section>> {
     get_dynamodb_client()
         .await
         .query()

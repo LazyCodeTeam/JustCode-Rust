@@ -24,6 +24,7 @@ locals {
     delete_content_assets_v1   = module.delete_content_assets_v1_lambda.invoke_arn
     answer_v1                  = module.answer_v1_lambda.invoke_arn
     get_tasks_v1               = module.get_tasks_v1_lambda.invoke_arn
+    get_sections_v1            = module.get_sections_v1_lambda.invoke_arn
 
     app_api_key_validator       = module.app_api_key_validator.invoke_arn
     moderator_api_key_validator = module.moderator_api_key_validator.invoke_arn

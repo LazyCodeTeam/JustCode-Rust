@@ -27,7 +27,9 @@ docs/KeywordDto.md
 docs/KeywordModifierDto.md
 docs/MultiAnswersDto.md
 docs/OptionDto.md
+docs/PersonalizedSectionDto.md
 docs/PersonalizedTaskDto.md
+docs/PersonalizedTaskPreviewDto.md
 docs/PlatformDto.md
 docs/PlaygroundVariationDto.md
 docs/PresignedUrlDto.md
@@ -86,7 +88,9 @@ src/models/keyword_modifier_dto.rs
 src/models/mod.rs
 src/models/multi_answers_dto.rs
 src/models/option_dto.rs
+src/models/personalized_section_dto.rs
 src/models/personalized_task_dto.rs
+src/models/personalized_task_preview_dto.rs
 src/models/platform_dto.rs
 src/models/playground_variation_dto.rs
 src/models/presigned_url_dto.rs

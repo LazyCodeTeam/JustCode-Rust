@@ -8,7 +8,7 @@ use snafu::{ResultExt, Snafu};
 
 define_repo! {
     pub struct GetPublicSectionsRepo<A> {
-        pub get_sections: Fn<'a>(technology_id: &'a str) -> Result<Vec<Section>> as A,
+        pub get_sections: Fn(technology_id: String) -> Result<Vec<Section>> as A,
     }
 }
 
@@ -30,7 +30,7 @@ pub async fn get_public_sections<A>(
 where
     A: GetSectionsType,
 {
-    let sections = (repo.get_sections)(&technology_id)
+    let sections = (repo.get_sections)(technology_id.clone())
         .await
         .context(InfraSnafu)?;
 

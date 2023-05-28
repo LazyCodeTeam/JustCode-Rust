@@ -4,6 +4,7 @@ pub mod get_content_assets;
 pub mod get_public_sections;
 pub mod get_public_tasks;
 pub mod get_public_technologies;
+pub mod get_sections;
 pub mod get_tasks;
 pub mod load_content;
 pub mod on_assets_uploaded;

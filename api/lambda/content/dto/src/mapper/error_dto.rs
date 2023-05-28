@@ -4,7 +4,7 @@ use use_case::content::{
     answer::AnswerError, delete_content_assets::DeleteContentAssetsError,
     get_content_assets::GetContentAssetsError, get_public_sections::GetPublicSectionsError,
     get_public_tasks::GetPublicTasksError, get_public_technologies::GetPublicTechnologiesError,
-    get_tasks::GetTasksError, load_content::LoadContentError,
+    get_sections::GetSectionsError, get_tasks::GetTasksError, load_content::LoadContentError,
     request_assets_upload::RequestAssetsUploadError,
 };
 
@@ -111,6 +111,15 @@ impl MapFrom<RequestAssetsUploadError> for LambdaError {
     fn map_from(value: RequestAssetsUploadError) -> Self {
         match value {
             RequestAssetsUploadError::Infra { .. } => LambdaError::internal_server_error(),
+        }
+    }
+}
+
+impl MapFrom<GetSectionsError> for LambdaError {
+    fn map_from(value: GetSectionsError) -> Self {
+        match value {
+            GetSectionsError::Infra { .. } => LambdaError::internal_server_error(),
+            GetSectionsError::NotFound => LambdaError::not_found(),
         }
     }
 }

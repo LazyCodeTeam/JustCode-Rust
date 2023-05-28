@@ -1,8 +1,13 @@
+use std::collections::HashMap;
+
 use common_domain::identifiable::Identifiable;
 
-use crate::into_modification::IntoModification;
+use crate::{into_modification::IntoModification, Personalize};
 
-use super::{modification::Modification, task_preview::TaskPreview};
+use super::{
+    historical_answer::HistoricalAnswer, modification::Modification,
+    personalized_section::PersonalizedSection, task_preview::TaskPreview,
+};
 
 #[derive(Debug, PartialEq, Eq, Clone, Default)]
 pub struct Section {
@@ -13,6 +18,29 @@ pub struct Section {
     pub description: Option<String>,
     pub image: Option<String>,
     pub tasks_preview: Vec<TaskPreview>,
+}
+
+impl Personalize<PersonalizedSection> for Section {
+    fn personalize(
+        self,
+        correct_historical_answers: &HashMap<String, HistoricalAnswer>,
+    ) -> PersonalizedSection {
+        let tasks_preview = self
+            .tasks_preview
+            .into_iter()
+            .map(|task_preview| task_preview.personalize(correct_historical_answers))
+            .collect();
+
+        PersonalizedSection {
+            id: self.id,
+            technology_id: self.technology_id,
+            position: self.position,
+            title: self.title,
+            description: self.description,
+            image: self.image,
+            tasks_preview,
+        }
+    }
 }
 
 impl IntoModification for Section {

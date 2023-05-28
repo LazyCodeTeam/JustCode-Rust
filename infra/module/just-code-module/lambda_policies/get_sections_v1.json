@@ -2,22 +2,20 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "Stmt1683132612357",
+      "Sid": "Stmt1683132911233",
       "Action": [
-        "dynamodb:PutItem",
-        "dynamodb:Query"
-      ],
-      "Effect": "Allow",
-      "Resource": "${DYNAMODB_TABLE_ARN}*"
-    },
-    {
-      "Sid": "Stmt1683132635471",
-      "Action": [
-        "dynamodb:GetItem",
         "dynamodb:Query"
       ],
       "Effect": "Allow",
       "Resource": "${CONTENT_DYNAMODB_TABLE_ARN}*"
+    },
+    {
+      "Sid": "Stmt1683132919501",
+      "Action": [
+        "dynamodb:Query"
+      ],
+      "Effect": "Allow",
+      "Resource": "${DYNAMODB_TABLE_ARN}*"
     }
   ]
 }

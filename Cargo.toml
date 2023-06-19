@@ -28,7 +28,7 @@ aws_lambda_events = { version = "0.7", default-features = false, features = [
   "cognito",
 ] }
 chrono = { version = "0.4" }
-clap = { version = "4.2" }
+clap = { version = "4.3" }
 darling = { version = "0.14" }
 fake = { version = "2.5" }
 futures = { version = "0.3" }

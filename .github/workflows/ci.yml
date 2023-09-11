@@ -18,7 +18,7 @@ jobs:
     outputs:
       xtask-changes: ${{ steps.filter.outputs.xtask }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: dorny/paths-filter@v2
       id: filter
       with:
@@ -31,7 +31,7 @@ jobs:
     env:
       cache_id: tests
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Cache
         uses: actions/cache@v3
         with:
@@ -79,7 +79,7 @@ jobs:
     env:
       cache_id: tests
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Cache
         uses: actions/cache@v3
         with:
@@ -134,7 +134,7 @@ jobs:
     env:
       cache_id: tests
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Cache
         uses: actions/cache@v3
         with:
